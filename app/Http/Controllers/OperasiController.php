@@ -84,10 +84,18 @@ class OperasiController extends Controller
                     })
                     ->whereHas('pembiayaan', function ($query) use ($request) {
                         $query->where('png_jawab', 'like', '%' . $request->pembiayaan . '%');
+                    })
+                    ->with('kamarInap', function ($query) {
+                        $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                            ->where('tgl_keluar', '!=', '0000-00-00');
                     });
             } else {
                 $data = Operasi::with('paketOperasi')
-                    ->whereBetween('tgl_operasi', [$awalBulan->toDateString() . ' 00:00:00', $sekarang->toDateString() . ' 23:59:59']);
+                    ->whereBetween('tgl_operasi', [$awalBulan->toDateString() . ' 00:00:00', $sekarang->toDateString() . ' 23:59:59'])
+                    ->with('kamarInap', function ($query) {
+                        $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                            ->where('tgl_keluar', '!=', '0000-00-00');
+                    });
             }
         }
         return DataTables::of($data)
@@ -111,7 +119,11 @@ class OperasiController extends Controller
                 return $data->paketOperasi->kelas;
             })
             ->editColumn('kamar', function ($data) {
-                return $data->paketOperasi->kelas;
+                if ($data->kamarInap == null) {
+                    return 'Belum Pulang';
+                } else {
+                    return $data->kamarInap->kd_kamar;
+                }
             })
             ->editColumn('dokter', function ($data) {
                 return $data->dokter->nm_dokter;

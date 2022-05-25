@@ -67,6 +67,7 @@
                                         <th>Nama Pasien</th>
                                         <th>Nama Operasi</th>
                                         <th>Kelas</th>
+                                        <th>Kamar</th>
                                         <th>Dokter Operator</th>
                                         <th>Dokter Anestesi</th>
                                         <th>Dokter Anak</th>
@@ -218,6 +219,7 @@ $(document).ready(function(){
                 { data: 'pasien', name: 'pasien',},
                 { data: 'nm_perawatan', name: 'nm_perawatan',},
                 { data: 'kelas', name: 'kelas',},
+                { data: 'kamar', name: 'kamar',},
                 { data: 'dokter', name: 'dokter',},
                 { data: 'dokterAnestesi', name: 'dokterAnestesi',},
                 { data: 'dokterAnak', name: 'dokterAnak',},
