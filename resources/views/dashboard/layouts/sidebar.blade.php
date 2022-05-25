@@ -192,6 +192,24 @@
           </li>
         </ul>
       </li>
+      <li class="nav-item has-treeview {{Request::is('tarif*') ? 'menu-is-opening menu-open' : '' }}">
+        <a href="#" class="nav-link {{Request::is('tarif*') ? 'active' : '' }}">
+          <i class="nav-icon fas fa-coins"></i>
+          <p>
+            Tarif Pelayanan
+            <i class="fas fa-angle-left right"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview ml-3">
+          <li class="nav-item">
+            <a href="{{'/dms/tarif/kamar'}}" class="nav-link">
+              <i
+                class="far fa-circle nav-icon {{Request::is('tarif/kamar') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+              <p>Tarif Kamar</p>
+            </a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </nav>
   <!-- /.sidebar-menu -->
