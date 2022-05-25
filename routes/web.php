@@ -22,6 +22,7 @@ use App\Http\Controllers\PasienBayiController;
 use App\Http\Controllers\PersalinanController;
 use App\Http\Controllers\DiagnosaPasienController;
 use App\Http\Controllers\DiagramOperasiController;
+use App\Http\Controllers\KamarController;
 use App\Http\Controllers\KunjunganRalanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
@@ -96,6 +97,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/transfusi/json', [RanapController::class, 'jsonTransfusi']);
     Route::get('/ranap/transfusi/rekap/json', [RanapController::class, 'jsonRekapTransfusi']);
 
+    Route::get('/tarif/kamar', [KamarController::class, 'getTarif']);
 
     Route::get('/persalinan', [PersalinanController::class, 'index']);
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);
