@@ -99,6 +99,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/tarif/kamar', [KamarController::class, 'index']);
     Route::get('/tarif/kamar/json', [KamarController::class, 'getTarif']);
+    Route::get('/tarif/kamar/{kd_bagsal?}', [KamarController::class, 'getTarifById']);
+    Route::post('/tarif/kamar/simpantarif', [KamarController::class, 'setTarifKamar']);
 
     Route::get('/persalinan', [PersalinanController::class, 'index']);
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);

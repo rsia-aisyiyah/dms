@@ -25,10 +25,10 @@
                             <label>Kelas : </label>
                             <select name="kelas" id="kelas" class="custom-select form-control-border">
                                 <option value="">Semua Kelas</option>
-                                <option value="kelas 1">KELAS 1</option>
-                                <option value="kelas 2">KELAS 2</option>
-                                <option valu e="kelas 3">KELAS 3</option>
-                                <option value="kelas utama">KELAS utama</option>
+                                <option value="Kelas 1">Kelas 1</option>
+                                <option value="Kelas 2">Kelas 2</option>
+                                <option valu e="Kelas 3">Kelas 3</option>
+                                <option value="Kelas utama">Kelas utama</option>
                                 <option value="VIP">VIP</option>
                                 <option value="VVIP">VVIP</option>
                             </select>
@@ -48,6 +48,7 @@
                                         <th>Kelas</th>
                                         <th>Tarif</th>
                                         <th>Status Kamar</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -57,27 +58,65 @@
             </div>
         </div>
     </div>
+    @include('dashboard.content.kamar._modalkamar')
     @endsection
 
     @push('scripts')
     <script>
         var tgl_pertama = '';
         var tgl_kedua = '';
+        var kd_bangsal;
+        var tarif;
 
-        $(document).ready(function () {
+        function ubahtarif(bangsal) {
+            $.ajax({
+                url: 'kamar/' + bangsal,
+                data: { "_token": "{{ csrf_token() }}" },
+                dataType: "json",
+                success: function (data) {
+                    $('#nm_kamar').val(data[0].bangsal.nm_bangsal);
+                    $('#tarif').val(data[0].trf_kamar);
+                    $('#kd_bangsal').val(data[0].kd_bangsal);
+                }
+            });
+        }
+
+
+
+        // $(document).ready(function () {
+
+        function simpantarif() {
+            kd_bangsal = $('#kd_bangsal').val();
+            tarif = $('#tarif').val();
+
+            $.ajax({
+                url: 'kamar/simpantarif',
+                type: 'post',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    kd_bangsal: kd_bangsal,
+                    tarif: tarif,
+                },
+                success: function (data) {
+                    toastr.info('Tarif kamar ' + kd_bangsal + ' berhasil diubah', 'Berhasil');
+                    $('#tabel-tarif-kamar').DataTable().destroy();
+                    load_data();
+                }
+            });
+        }
 
         load_data();
+
         var status = $('#status').val();
         var kelas = $('#kelas').val();
 
         function load_data(status = '', kelas = '') {
 
-
             $('#tabel-tarif-kamar').DataTable({
                 ajax: {
                     url: 'kamar/json',
                     data: {
-                        status:status,
+                        status: status,
                         kelas: kelas,
                     }
                 },
@@ -123,20 +162,22 @@
                         "next": "Selanjutnya",
                         "previous": "Sebelumnya"
                     },
+                    search: 'Cari Nama Kamar : '
                 },
 
                 buttons: [
-                    { extend: 'copy', text: '<i class="fas fa-copy"></i> Salin', className: 'btn btn-info', title: 'laporan-kunjungan-pasien-rawat-jalan{{date("dmy")}}' },
-                    { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-info', title: 'laporan-kunjungan-pasien-rawat-jalan{{date("dmy")}}' },
-                    { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-info', title: 'laporan-kunjungan-pasien-rawat-jalan{{date("dmy")}}' },
+                    { extend: 'copy', text: '<i class="fas fa-copy"></i> Salin', className: 'btn btn-info', title: 'tarif-kamar{{date("dmy")}}' },
+                    { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-info', title: 'tarif-kamar{{date("dmy")}}' },
+                    { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-info', title: 'tarif-kamar{{date("dmy")}}' },
                 ],
                 columns: [
                     { data: 'kd_kamar', name: 'kd_kamar', },
                     { data: 'kd_bangsal', name: 'kd_bangsal', },
                     { data: 'nm_bangsal', name: 'nm_bangsal', },
                     { data: 'kelas', name: 'kelas', },
-                    { data: 'trf_kamar', name: 'trf_kamar', },
+                    { data: 'trf_kamar', render: $.fn.dataTable.render.number('.', ',', 0, 'Rp. '), className: 'editable', name: 'trf_kamar', },
                     { data: 'status', name: 'status', },
+                    { data: 'action', name: 'action', },
                 ],
             });
         }
@@ -148,9 +189,9 @@
 
         $('#kelas').change(function () {
             $('#tabel-tarif-kamar').DataTable().destroy();
-            load_data(status,$(this).val());
+            load_data(status, $(this).val());
         });
 
-});
+        // });
     </script>
     @endpush

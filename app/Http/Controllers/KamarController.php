@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class KamarController extends Controller
 {
@@ -23,7 +24,7 @@ class KamarController extends Controller
                 $kamar->where('kelas', $kelas)->get();
             }
         }
-
+        
         return DataTables::of($kamar)
         ->filter(function ($query) use ($request) {
             if ($request->has('search') && $request->get('search')['value']) {
@@ -36,8 +37,13 @@ class KamarController extends Controller
             return $kamar->bangsal->nm_bangsal;
         })
         ->editColumn('trf_kamar', function($kamar){
-            return 'Rp. '.number_format($kamar->trf_kamar, 0, ',', '.');
+            return $kamar->trf_kamar;
         })
+        ->editColumn('action', function($kamar){
+            $kd_kamar = $kamar->kd_bangsal;
+            return '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" onclick='."ubahtarif('$kd_kamar')".'>Change</button>';
+        })
+        ->rawColumns(['action'])
         ->make(true);
     }
     public function index()
@@ -46,5 +52,24 @@ class KamarController extends Controller
             'title' => 'Tarif Kamar',
             'bigTitle' => 'Tarif Kamar'
         ]);
+    }
+    public function getTarifById($kd_bangsal)
+    {
+        $kamar = Kamar::where('kd_bangsal', $kd_bangsal)
+        ->where('statusdata', '1')
+        ->with('bangsal')->get();
+
+        return json_encode($kamar);
+    }
+    public function setTarifKamar(Request $request)
+    {
+        $kd_bangsal = $request->kd_bangsal;
+        $tarif = $request->tarif;
+        DB::table('kamar')->where('kd_bangsal', $kd_bangsal)->update(
+            [
+                'trf_kamar' => $tarif 
+            ]
+        );
+            
     }
 }
