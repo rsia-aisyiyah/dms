@@ -12,39 +12,39 @@ class KamarController extends Controller
     //
     public function getTarif(Request $request)
     {
-       $status = $request->status;
-       $kelas = $request->kelas;
+        $status = $request->status;
+        $kelas = $request->kelas;
         $kamar = Kamar::where('statusdata', '1');
 
-        if($request->ajax()){
-            if($status){
+        if ($request->ajax()) {
+            if ($status) {
                 $kamar->where('status', $status)->get();
             }
-            if($kelas){
+            if ($kelas) {
                 $kamar->where('kelas', $kelas)->get();
             }
         }
-        
+
         return DataTables::of($kamar)
-        ->filter(function ($query) use ($request) {
-            if ($request->has('search') && $request->get('search')['value']) {
-                return $query->whereHas('bangsal', function ($query) use ($request) {
-                    $query->where('nm_bangsal', 'like', '%' . $request->get('search')['value'] . '%');
-                });
-            }
-        })
-        ->editColumn('nm_bangsal', function($kamar){
-            return $kamar->bangsal->nm_bangsal;
-        })
-        ->editColumn('trf_kamar', function($kamar){
-            return $kamar->trf_kamar;
-        })
-        ->editColumn('action', function($kamar){
-            $kd_kamar = $kamar->kd_bangsal;
-            return '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" onclick='."ubahtarif('$kd_kamar')".'>Change</button>';
-        })
-        ->rawColumns(['action'])
-        ->make(true);
+            ->filter(function ($query) use ($request) {
+                if ($request->has('search') && $request->get('search')['value']) {
+                    return $query->whereHas('bangsal', function ($query) use ($request) {
+                        $query->where('nm_bangsal', 'like', '%' . $request->get('search')['value'] . '%');
+                    });
+                }
+            })
+            ->editColumn('nm_bangsal', function ($kamar) {
+                return $kamar->bangsal->nm_bangsal;
+            })
+            ->editColumn('trf_kamar', function ($kamar) {
+                return $kamar->trf_kamar;
+            })
+            ->editColumn('action', function ($kamar) {
+                $kd_kamar = $kamar->kd_bangsal;
+                return '<button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-default" onclick=' . "ubahtarif('$kd_kamar')" . '>Ubah Tarif</button>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
     public function index()
     {
@@ -56,8 +56,8 @@ class KamarController extends Controller
     public function getTarifById($kd_bangsal)
     {
         $kamar = Kamar::where('kd_bangsal', $kd_bangsal)
-        ->where('statusdata', '1')
-        ->with('bangsal')->get();
+            ->where('statusdata', '1')
+            ->with('bangsal')->get();
 
         return json_encode($kamar);
     }
@@ -67,9 +67,8 @@ class KamarController extends Controller
         $tarif = $request->tarif;
         DB::table('kamar')->where('kd_bangsal', $kd_bangsal)->update(
             [
-                'trf_kamar' => $tarif 
+                'trf_kamar' => $tarif
             ]
         );
-            
     }
 }
