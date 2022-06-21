@@ -9,8 +9,11 @@ use App\Models\RegPeriksa;
 use Illuminate\Support\Arr;
 use App\Models\DiagnosaPasien;
 use Yajra\DataTables\DataTables;
+use App\Models\KategoriPerawatan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SepController;
+use App\Http\Controllers\KamarController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RalanController;
 use App\Http\Controllers\RanapController;
@@ -20,13 +23,15 @@ use App\Http\Controllers\OperasiController;
 use App\Http\Controllers\LaporanIGDController;
 use App\Http\Controllers\PasienBayiController;
 use App\Http\Controllers\PersalinanController;
+use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\DiagnosaPasienController;
 use App\Http\Controllers\DiagramOperasiController;
-use App\Http\Controllers\KamarController;
 use App\Http\Controllers\KunjunganRalanController;
+use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
-use App\Http\Controllers\SepController;
+use App\Http\Controllers\PenjabController;
+use App\Http\Controllers\PoliklinikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,8 +107,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/tarif/kamar/{kd_bagsal?}', [KamarController::class, 'getTarifById']);
     Route::post('/tarif/kamar/simpantarif', [KamarController::class, 'setTarifKamar']);
 
+    Route::get('/tarif/kategori', [KategoriPerawatanController::class, 'getAllKategori']);
+    Route::get('/tarif/kategori/{kategori?}/{attr?}', [KategoriPerawatanController::class, 'getKategoryByName']);
+
+    Route::get('tarif/ralan', [TarifRalanController::class, 'index']);
+    Route::get('tarif/ralan/json', [TarifRalanController::class, 'getTarif']);
+    Route::get('tarif/ralan/{id?}', [TarifRalanController::class, 'getTarifById']);
+    Route::get('tarif/akhir', [TarifRalanController::class, 'getTarifAkhir']);
+    Route::post('tarif/ralan/simpantarif', [TarifRalanController::class, 'setTarifRalan']);
+    Route::post('tarif/ralan/tambahtarif', [TarifRalanController::class, 'addTarifRalan']);
+
     Route::get('/persalinan', [PersalinanController::class, 'index']);
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);
+    
+    Route::get('/poli', [PoliklinikController::class, 'getAllPoliklinik']);
+
+    Route::get('/penjab', [PenjabController::class, 'getAllPenjab']);
 
     Route::get('/poli/{kd_sps}', function ($kd_sps) {
         $dokter = Dokter::all()

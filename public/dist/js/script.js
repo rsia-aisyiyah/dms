@@ -69,3 +69,56 @@ function cekStatus() {
     }
     return status;
 }
+function loadPenjab() {
+    $.ajax({
+        url: '/dms/penjab',
+        type: "GET",
+        dataType: "json",
+        success:function(data)
+        {
+            $.each(data, function(_key, pembiayaan){
+                $('select[name="pembiayaan"]').append('<option value="'+ pembiayaan.kd_pj +'">' + pembiayaan.png_jawab+ '</option>');
+            });
+        }
+    })
+}
+function loadPoli(param) {
+    $.ajax({
+        url: '/dms/poli',
+        type: "GET",
+        dataType: "json",
+        success:function(data)
+        {
+            $.each(data, function(key, poli){
+                $('select[name="'+param+'"]').append('<option value="'+ poli.kd_poli +'">' + poli.nm_poli+ '</option>');
+            });
+        }
+    })
+}
+function kategoriPerawatan(param, param2, attr) {
+    $(param).keyup(function () {
+        var value = $(this).val();
+        if (value != '') {
+            $.ajax({
+                url: 'kategori/' + value + '/' + attr,
+                method: "GET",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (data) {
+                    $(param2).html(data);
+                    $(param2).fadeIn();
+                }
+            });
+        }
+    });
+    
+    
+    $(param).blur(function(){
+        if ($(param).val().length == 0) {
+            $(param).val(kategori);
+        }
+
+    })
+}
+

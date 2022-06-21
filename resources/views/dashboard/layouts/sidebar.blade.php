@@ -208,6 +208,13 @@
               <p>Tarif Kamar</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{'/dms/tarif/ralan'}}" class="nav-link">
+              <i
+                class="far fa-circle nav-icon {{Request::is('tarif/ralan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+              <p>Tarif Layanan Ralan</p>
+            </a>
+          </li>
         </ul>
       </li>
     </ul>

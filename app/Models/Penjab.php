@@ -14,4 +14,9 @@ class Penjab extends Model
     {
         return $this->hasMany(RegPeriksa::class, 'kd_pj', 'kd_pj');
     }
+    function jnsPerawatan()
+    {
+        return $this->hasMany(JnsPerawatan::class, 'kd_pj', 'kd_pj');
+    }
+
 }
