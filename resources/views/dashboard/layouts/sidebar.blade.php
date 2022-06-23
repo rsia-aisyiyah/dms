@@ -215,6 +215,13 @@
               <p>Tarif Layanan Ralan</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{'/dms/tarif/ranap'}}" class="nav-link">
+              <i
+                class="far fa-circle nav-icon {{Request::is('tarif/ranap') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+              <p>Tarif Layanan Ranap</p>
+            </a>
+          </li>
         </ul>
       </li>
     </ul>

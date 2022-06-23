@@ -18,20 +18,21 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RalanController;
 use App\Http\Controllers\RanapController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\PenjabController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\OperasiController;
 use App\Http\Controllers\LaporanIGDController;
 use App\Http\Controllers\PasienBayiController;
 use App\Http\Controllers\PersalinanController;
+use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\TarifRalanController;
+use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\DiagnosaPasienController;
 use App\Http\Controllers\DiagramOperasiController;
 use App\Http\Controllers\KunjunganRalanController;
 use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
-use App\Http\Controllers\PenjabController;
-use App\Http\Controllers\PoliklinikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +50,7 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [BerandaController::class, 'index']);
+    Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
     Route::get('/beranda/dokter/{tahun}/{bulan}', [BerandaController::class, 'jsonKunjunganDokter']);
     Route::get('/operasi', [OperasiController::class, 'index']);
@@ -116,6 +117,13 @@ Route::middleware('auth')->group(function () {
     Route::get('tarif/akhir', [TarifRalanController::class, 'getTarifAkhir']);
     Route::post('tarif/ralan/simpantarif', [TarifRalanController::class, 'setTarifRalan']);
     Route::post('tarif/ralan/tambahtarif', [TarifRalanController::class, 'addTarifRalan']);
+    
+    Route::get('tarif/ranap', [TarifRanapController::class, 'index']);
+    Route::get('tarif/ranap/json', [TarifRanapController::class, 'getTarif']);
+    Route::get('tarif/ranap/akhir', [TarifRanapController::class, 'getLastTarif']);
+    Route::get('tarif/ranap/{id?}', [TarifRanapController::class, 'getTarifById']);
+    Route::post('tarif/ranap/ubah', [TarifRanapController::class, 'setTarif']);
+    Route::post('tarif/ranap/tambah', [TarifRanapController::class, 'addTarif']);
 
     Route::get('/persalinan', [PersalinanController::class, 'index']);
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);

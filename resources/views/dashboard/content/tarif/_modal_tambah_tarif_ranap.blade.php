@@ -20,80 +20,98 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="nm_kategori">Kategori</label>
-                                <input type="search" value="" name="nm_kategori" id="nm_kategori" class="form-control"
+                                <label for="kategori">Kategori</label>
+                                <input type="search" value="" name="kategori" id="kategori" class="form-control"
                                     autocomplete="off" required>
-                                <div id="list_nm_kategori"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="form-group">
-                        <label for="nm_perawatan">Nama Tindakan / Perawatan</label>
-                        <input type="text" name="nm_perawatan" value="" id="nm_perawatan" class="form-control"
-                            autocomplete="off" autocapitalize="on">
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="poliklinik">Unit / Poli</label>
-                                <select class="custom-select form-control-border" id="poliklinik" name="poliklinik">
-                                    <option hidden value="">Pilih Unit / Poli</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="pembiayaan">Pembiayaan</label>
-                                <select class="custom-select form-control-border" id="pembiayaan" name="pembiayaan">
-                                    <option hidden value="">Pilih Pembiayaan</option>
-                                </select>
+                                <div id="listKategories"></div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Kamar :</label>
+                                <select name="kamar" id="kamar" class="custom-select form-control-border">
+                                    <option value="-">-</option>
+                                    <option value="B0115">Kelas 1</option>
+                                    <option value="B0116">Kelas 2</option>
+                                    <option value="B0117">Kelas 3</option>
+                                    <option value="B0114">VIP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Kelas :</label>
+                                <select name="kelas" id="kelas" class="custom-select form-control-border">
+                                    <option value="-">-</option>
+                                    <option value="Kelas 1">Kelas 1</option>
+                                    <option value="Kelas 2">Kelas 2</option>
+                                    <option value="Kelas 3">Kelas 3</option>
+                                    <option value="Kelas VIP">VIP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="pembiayaan">Pembiayaan</label>
+                                <select class="custom-select form-control-border" id="pembiayaan" name="pembiayaan">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div id="form-group">
+                                <label for="nm_perawatan">Nama Tindakan / Perawatan</label>
+                                <input type="text" value="" id="nm_perawatan" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
                             <div id="form-group">
                                 <label for="material">Jasa Rumah Sakit</label>
-                                <input type="text" value="" id="material" class="form-control hitung" onblur="hitung()"
-                                    onkeypress="return hanyaAngka(event)" onchange="cekKosong(this)" autocomplete="off">
+                                <input type="text" value="" id="material" class="form-control hitung"
+                                    onblur="hitungTarif()" onkeypress="return hanyaAngka(event)"
+                                    onchange="cekKosong(this)" autocomplete="off">
                             </div>
                         </div>
                         <div class=" col-sm-4">
                             <div id="form-group">
                                 <label for="tarif_tindakandr">Jasa Dokter</label>
                                 <input type="text" value="" id="tarif_tindakandr" class="form-control hitung"
-                                    onblur="hitung()" onkeypress="return hanyaAngka(event)" onchange="cekKosong(this)"
-                                    autocomplete="off">
+                                    onblur="hitungTarif()" onkeypress="return hanyaAngka(event)"
+                                    onchange="cekKosong(this)" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div id="form-group">
                                 <label for="tarif_tindakanpr">Jasa Perawat</label>
                                 <input type="text" value="" id="tarif_tindakanpr" class="form-control hitung"
-                                    onblur="hitung()" onkeypress="return hanyaAngka(event)" onchange="cekKosong(this)"
-                                    autocomplete="off">
+                                    onblur="hitungTarif()" onkeypress="return hanyaAngka(event)"
+                                    onchange="cekKosong(this)" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div id="form-group">
                                 <label for="bhp">BHP/Obat</label>
-                                <input type="text" value="" id="bhp" class="form-control hitung" onblur="hitung()"
+                                <input type="text" value="" id="bhp" class="form-control hitung" onblur="hitungTarif()"
                                     onkeypress="return hanyaAngka(event)" onchange="cekKosong(this)" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div id="form-group">
                                 <label for="kso">KSO</label>
-                                <input type="text" value="" id="kso" class="form-control hitung" onblur="hitung()"
+                                <input type="text" value="" id="kso" class="form-control hitung" onblur="hitungTarif()"
                                     onkeypress="return hanyaAngka(event)" onchange="cekKosong(this)" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div id="form-group">
                                 <label for="menejemen">Manajemen</label>
-                                <input type="text" value="" id="menejemen" class="form-control hitung" onblur="hitung()"
-                                    onkeypress="return hanyaAngka(event)" onchange="cekKosong(this)" autocomplete="off">
+                                <input type="text" value="" id="menejemen" class="form-control hitung"
+                                    onblur="hitungTarif()" onkeypress="return hanyaAngka(event)"
+                                    onchange="cekKosong(this)" autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -121,7 +139,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="tambahtarif()"
+                    <button type="button" class="btn btn-primary " onclick="tambahTarif()"
                         data-dismiss="modal">Simpan</button>
                 </div>
             </form>
@@ -131,32 +149,38 @@
 @push('scripts')
 <script>
     $('#modal-tambah').on('shown.bs.modal', function () {
-        kategoriPerawatan('#nm_kategori', '#list_nm_kategori', 'fix');
+        kategoriPerawatan('#kategori', '#listKategories', 'fix');
         loadPoli('poliklinik');
         loadPenjab();
         $('.hitung').val(0);
+
         $.ajax(
             {
-                url: 'akhir',
+                url: 'ranap/akhir',
                 success: function (data) {
+                    console.log(data)
                     $("input[name='kd_jenis_prw']").val(data);
                 }
             },
         );
 
-    })
-
-    $('#list_nm_kategori').on('click', 'li', function () {
-        $('#nm_kategori').val($(this).text());
-        $('#list_nm_kategori').fadeOut();
     });
 
+    $(document).click(function () {
+        $('#listKategories').fadeOut();
+    });
+
+    $('#listKategories').on('click', 'li', function () {
+        $('#kategori').val($(this).text());
+        $('#listKategories').fadeOut();
+    });
 
     $('#modal-tambah').on('hidden.bs.modal', function () {
         $('select[name="poliklinik"] option').detach();
         $('select[name="pembiayaan"] option').detach();
     });
-    function hitung() {
+
+    function hitungTarif() {
 
         material = parseInt($('#material').val());
         tarif_perawat = parseInt($('#tarif_tindakanpr').val());
@@ -182,12 +206,13 @@
         }
     }
 
-    function tambahtarif() {
+    function tambahTarif() {
         let kd_jenis_prw = $('#kd_jenis_prw').val();
         let nm_perawatan = $('#nm_perawatan').val();
-        let poli = $('#poliklinik').val();
+        let bangsal = $('#kamar').val();
+        let kelas = $('#kelas').val();
         let kd_pj = $('#pembiayaan').val();
-        let textKategori = $('#nm_kategori').val().split("-");
+        let textKategori = $('#kategori').val().split("-");
         let kategori = textKategori[0];
         let material = $('#material').val();
         let tarif_perawat = $('#tarif_tindakanpr').val();
@@ -200,7 +225,7 @@
         let total_byrdrpr = $('#total_byrdrpr').val();
 
         $.ajax({
-            url: 'ralan/tambahtarif',
+            url: 'ranap/tambah',
             type: 'post',
             data: {
                 _token: "{{ csrf_token() }}",
@@ -208,7 +233,8 @@
                 nm_perawatan: nm_perawatan,
                 kd_kategori: kategori,
                 kd_pj: kd_pj,
-                kd_poli: poli,
+                kd_bangsal: bangsal,
+                kelas: kelas,
                 material: material,
                 tarif_tindakanpr: tarif_perawat,
                 tarif_tindakandr: tarif_dokter,
@@ -221,7 +247,7 @@
             },
             success: function (data) {
                 toastr.info('Tarif ' + kd_jenis_prw + ' berhasil diubah', 'Berhasil');
-                $('#tabel-tarif-ralan').DataTable().destroy();
+                $('#tabel-tarif-ranap').DataTable().destroy();
                 load_data();
             }
         });

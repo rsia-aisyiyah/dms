@@ -34,7 +34,7 @@ class LoginController extends Controller
         if ($user) {
             Auth::login($user);
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            return redirect('/');
         } else {
 
             return back()->with('loginError', 'Login Gagal');
