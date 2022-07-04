@@ -15,4 +15,8 @@ class PaketOperasi extends Model
     {
         return $this->hasMany(Operasi::class, 'kd_paket', 'kd_paket');
     }
+    public function penjab()
+    {
+        return $this->belongsTo(Penjab::class, 'kd_pj', 'kd_pj');
+    }
 }

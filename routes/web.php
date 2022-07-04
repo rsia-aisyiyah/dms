@@ -1,38 +1,27 @@
 <?php
 
-use Carbon\Carbon;
-use App\Models\Dokter;
-use App\Models\Pasien;
-use App\Models\Operasi;
-use App\Models\Persalinan;
-use App\Models\RegPeriksa;
-use Illuminate\Support\Arr;
-use App\Models\DiagnosaPasien;
-use Yajra\DataTables\DataTables;
-use App\Models\KategoriPerawatan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SepController;
-use App\Http\Controllers\KamarController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RalanController;
-use App\Http\Controllers\RanapController;
-use App\Http\Controllers\DokterController;
-use App\Http\Controllers\PenjabController;
 use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\OperasiController;
-use App\Http\Controllers\LaporanIGDController;
-use App\Http\Controllers\PasienBayiController;
-use App\Http\Controllers\PersalinanController;
-use App\Http\Controllers\PoliklinikController;
-use App\Http\Controllers\TarifRalanController;
-use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\DiagnosaPasienController;
-use App\Http\Controllers\DiagramOperasiController;
-use App\Http\Controllers\KunjunganRalanController;
+use App\Http\Controllers\KamarController;
 use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
+use App\Http\Controllers\LaporanIGDController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OperasiController;
+use App\Http\Controllers\PaketOperasiController;
+use App\Http\Controllers\PasienBayiController;
+use App\Http\Controllers\PenjabController;
+use App\Http\Controllers\PersalinanController;
+use App\Http\Controllers\PoliklinikController;
+use App\Http\Controllers\RalanController;
+use App\Http\Controllers\RanapController;
+use App\Http\Controllers\SepController;
+use App\Http\Controllers\TarifLaboratorium;
+use App\Http\Controllers\TarifRalanController;
+use App\Http\Controllers\TarifRanapController;
+use App\Models\Dokter;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +32,7 @@ use App\Http\Controllers\LaporanDiagnosaPenyakitController;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
@@ -52,7 +41,9 @@ Route::get('/logout', [LoginController::class, 'logout']);
 Route::middleware('auth')->group(function () {
     Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
-    Route::get('/beranda/dokter/{tahun}/{bulan}', [BerandaController::class, 'jsonKunjunganDokter']);
+    Route::get('/beranda/kunjungan', [BerandaController::class, 'countTotal']);
+    Route::get('/beranda/pembiayaan/ralan', [BerandaController::class, 'countPembiyayaanRalan']);
+    Route::get('/beranda/dokter/{tahun?}/{bulan?}', [BerandaController::class, 'jsonKunjunganDokter']);
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);
     Route::get('/diagram/operasi/{tahun}', [OperasiController::class, 'diagram']);
@@ -71,10 +62,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/rekammedis/pasientb/json', [DiagnosaPasienController::class, 'jsonPasienTb']);
 
     Route::get('/igd', [LaporanIGDController::class, 'index']);
+    Route::get('/igd/hitung', [BerandaController::class, 'countIGD']);
     Route::get('/igd/json', [LaporanIGDController::class, 'json']);
     Route::get('/igd/pasien/json', [LaporanIGDController::class, 'jsonPasienIgd']);
 
     Route::get('/ralan', [RalanController::class, 'index']);
+    Route::get('/ralan/hitung', [BerandaController::class, 'countRalan']);
     Route::get('/ralan/json', [RalanController::class, 'json']);
     Route::get('/ralan/laporan', [RalanController::class, 'viewLaporanBpjs']);
     Route::get('/ralan/laporan/json', [RalanController::class, 'jsonLaporanBpjs']);
@@ -90,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ralan/sep/jumlah', [SepController::class, 'jumlahSepRalan']);
 
     Route::get('/ranap', [RanapController::class, 'index']);
+    Route::get('/ranap/hitung', [BerandaController::class, 'countRanap']);
     Route::get('/ranap/json', [RanapController::class, 'json']);
     Route::get('/ranap/laporan', [RanapController::class, 'laporanBpjs']);
     Route::get('/ranap/laporan/json', [RanapController::class, 'jsonRanap']);
@@ -117,7 +111,7 @@ Route::middleware('auth')->group(function () {
     Route::get('tarif/akhir', [TarifRalanController::class, 'getTarifAkhir']);
     Route::post('tarif/ralan/simpantarif', [TarifRalanController::class, 'setTarifRalan']);
     Route::post('tarif/ralan/tambahtarif', [TarifRalanController::class, 'addTarifRalan']);
-    
+
     Route::get('tarif/ranap', [TarifRanapController::class, 'index']);
     Route::get('tarif/ranap/json', [TarifRanapController::class, 'getTarif']);
     Route::get('tarif/ranap/akhir', [TarifRanapController::class, 'getLastTarif']);
@@ -125,29 +119,36 @@ Route::middleware('auth')->group(function () {
     Route::post('tarif/ranap/ubah', [TarifRanapController::class, 'setTarif']);
     Route::post('tarif/ranap/tambah', [TarifRanapController::class, 'addTarif']);
 
+    Route::get('tarif/lab', [TarifLaboratorium::class, 'index']);
+    Route::get('tarif/lab/akhir', [TarifLaboratorium::class, 'getLastTarif']);
+    Route::get('tarif/lab/json', [TarifLaboratorium::class, 'getTarif']);
+    Route::get('tarif/lab/{id?}', [TarifLaboratorium::class, 'getTarifById']);
+    Route::post('tarif/lab/ubah', [TarifLaboratorium::class, 'setTarif']);
+    Route::post('tarif/lab/tambah', [TarifLaboratorium::class, 'addTarif']);
+
+    Route::get('tarif/operasi', [PaketOperasiController::class, 'index']);
+    Route::get('tarif/operasi/akhir', [PaketOperasiController::class, 'getLastTarif']);
+    Route::get('tarif/operasi/json', [PaketOperasiController::class, 'getTarif']);
+    Route::get('tarif/operasi/{id?}', [PaketOperasiController::class, 'getTarifById']);
+    Route::post('tarif/operasi/tambah', [PaketOperasiController::class, 'addTarif']);
+    Route::post('tarif/operasi/ubah', [PaketOperasiController::class, 'setTarif']);
+
     Route::get('/persalinan', [PersalinanController::class, 'index']);
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);
-    
+
     Route::get('/poli', [PoliklinikController::class, 'getAllPoliklinik']);
 
     Route::get('/penjab', [PenjabController::class, 'getAllPenjab']);
 
     Route::get('/poli/{kd_sps}', function ($kd_sps) {
         $dokter = Dokter::all()
-            ->where('kd_sps',  $kd_sps)
+            ->where('kd_sps', $kd_sps)
             ->where('status', 1);
         return response()->json($dokter);
     });
 });
 
-
-
-
 Route::get('/test', [SepController::class, 'getSep']);
-
-
-
-
 
 // Route::get('/test/bayi', function () {
 //     $tanggal = new Carbon();
@@ -169,7 +170,6 @@ Route::get('/test', [SepController::class, 'getSep']);
 //         ->groupBy('reg_periksa.no_rawat')
 //         ->orderBy('tgl_registrasi', 'ASC')
 //         ->whereBetween('tgl_registrasi', [$tanggal->startOfMonth()->toDateString(), $tanggal->lastOfMonth()->toDateString()])->get();
-
 
 //     return DataTables::of($data)->make(true);
 // });

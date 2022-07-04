@@ -222,6 +222,20 @@
               <p>Tarif Layanan Ranap</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{'/dms/tarif/lab'}}" class="nav-link">
+              <i
+                class="far fa-circle nav-icon {{Request::is('tarif/lab') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+              <p>Tarif Layanan Lab</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{'/dms/tarif/operasi'}}" class="nav-link">
+              <i
+                class="far fa-circle nav-icon {{Request::is('tarif/operasi') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+              <p>Tarif Layanan OK/VK</p>
+            </a>
+          </li>
         </ul>
       </li>
     </ul>

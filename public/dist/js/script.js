@@ -1,4 +1,21 @@
 
+function hanyaAngka(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+
+        return false;
+    return true;
+}
+function removeZero(input) {
+    if (input.value == '0') {
+        $(input).val('');
+    }
+}
+function cekKosong(input) {
+    if (input.value == '') {
+        $(input).val(0);
+    }
+}
 
 $('#tanggalPembiayaan').daterangepicker({
     locale: {
@@ -74,10 +91,9 @@ function loadPenjab() {
         url: '/dms/penjab',
         type: "GET",
         dataType: "json",
-        success:function(data)
-        {
-            $.each(data, function(_key, pembiayaan){
-                $('select[name="pembiayaan"]').append('<option value="'+ pembiayaan.kd_pj +'">' + pembiayaan.png_jawab+ '</option>');
+        success: function (data) {
+            $.each(data, function (_key, pembiayaan) {
+                $('select[name="pembiayaan"]').append('<option value="' + pembiayaan.kd_pj + '">' + pembiayaan.png_jawab + '</option>');
             });
         }
     })
@@ -87,10 +103,9 @@ function loadPoli(param) {
         url: '/dms/poli',
         type: "GET",
         dataType: "json",
-        success:function(data)
-        {
-            $.each(data, function(key, poli){
-                $('select[name="'+param+'"]').append('<option value="'+ poli.kd_poli +'">' + poli.nm_poli+ '</option>');
+        success: function (data) {
+            $.each(data, function (key, poli) {
+                $('select[name="' + param + '"]').append('<option value="' + poli.kd_poli + '">' + poli.nm_poli + '</option>');
             });
         }
     })
@@ -112,9 +127,9 @@ function kategoriPerawatan(param, param2, attr) {
             });
         }
     });
-    
-    
-    $(param).blur(function(){
+
+
+    $(param).blur(function () {
         if ($(param).val().length == 0) {
             $(param).val(kategori);
         }

@@ -10,16 +10,27 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <div class="form-group">
-                                <label>Kamar :</label>
-                                <select name="filter_kamar" id="filter_kamar" class="custom-select form-control-border">
-                                    <option value="">Semua Kamar</option>
+                                <label>Pembiayaan :</label>
+                                <select name="filter_pembiayaan" id="filter_pembiayaan"
+                                    class="custom-select form-control-border">
+                                    <option value="">Semua Pembiayaan</option>
                                     <option value="-">-</option>
-                                    <option value="B0115">Kelas 1</option>
-                                    <option value="B0116">Kelas 2</option>
-                                    <option value="B0117">Kelas 3</option>
-                                    <option value="B0114">VIP</option>
+                                    <option value="umum">Umum</option>
+                                    <option value="bpjs">BPJS</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Kategori :</label>
+                                <select name="filter_kategori" id="filter_kategori"
+                                    class="custom-select form-control-border">
+                                    <option value="">Semua Kategori</option>
+                                    <option value="-">-</option>
+                                    <option value="PK">PK</option>
+                                    <option value="PR">PR</option>
                                 </select>
                             </div>
                         </div>
@@ -36,27 +47,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for="kategori">Kategori</label>
-                                <input type="search" value="" name="filter_kategori" id="filter_kategori"
-                                    class="form-control" autocomplete="off" placeholder="Cari Kategori">
-                                <div id="filter_listkategori" class=""></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Pembiayaan :</label>
-                                <select name="filter_pembiayaan" id="filter_pembiayaan"
-                                    class="custom-select form-control-border">
-                                    <option value="">Semua Pembiayaan</option>
-                                    <option value="-">-</option>
-                                    <option value="umum">Umum</option>
-                                    <option value="bpjs">BPJS</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label>Tambah Tarif : </label><br />
                                 <button type="button" class="btn btn-info" data-toggle="modal"
@@ -67,25 +58,23 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="table-responsive text-sm">
-                                <table id="tabel-tarif-ranap" class="table table-hover dataTable" width="100%"
+                                <table id="tabel-tarif-lab" class="table table-hover dataTable" width="100%"
                                     cellspacing="0">
                                     <thead>
                                         <tr role="row">
                                             <th>Kode Tindakan</th>
-                                            <th>Nama Tndk/Prw/Tagihan</th>
-                                            <th>Kategori</th>
+                                            <th>Nama Pemeriksaan</th>
                                             <th>Jasa RS</th>
+                                            <th>Jasa Medis Perujuk</th>
                                             <th>Jasa Medis Dokter</th>
                                             <th>Jasa Medis Perawat</th>
                                             <th>BHP/Obat</th>
                                             <th>KSO</th>
                                             <th>Manajemen</th>
-                                            <th>Biaya Dr</th>
-                                            <th>Biaya Pr</th>
-                                            <th>Total Biaya Dr+Pr</th>
+                                            <th>Total</th>
                                             <th>Jenis Bayar</th>
-                                            <th>Kamar</th>
                                             <th>Kelas</th>
+                                            <th>Kategori</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -96,95 +85,63 @@
             </div>
         </div>
         <div class="row">
-            @include('dashboard.content.tarif._modal_ubah_tarif_ranap')
-            @include('dashboard.content.tarif._modal_tambah_tarif_ranap')
+            @include('dashboard.content.tarif._modal_tambah_tarif_lab')
+            @include('dashboard.content.tarif._modal_ubah_tarif_lab')
         </div>
     @endsection
 
     @push('scripts')
         <script>
-            var tgl_pertama = '';
-            var tgl_kedua = '';
-            var material;
-            var tarif_perawat;
-            var tarif_dokter;
-            var kso;
-            var menejemen;
-            var bhp;
-            var total;
             var kategori = '',
-                bangsal = '',
                 pembiayaan = '',
                 kelas = '';
 
-            kategoriPerawatan('#filter_kategori', '#filter_listkategori', 'fix')
+            function hanyaAngka(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
 
+                    return false;
+                return true;
+            }
 
-
-            $('#filter_listkategori').on('click', 'li', function() {
-                $('#filter_kategori').val($(this).text());
-                $('#filter_listkategori').fadeOut();
-                $('#tabel-tarif-ranap').DataTable().destroy();
-                text = $(this).text().split('-');
-                kategori = text[0];
-                load_data(kategori, pembiayaan, bangsal, kelas);
-            });
-
-
-
-            $('#filter_kategori').on("search", function(evt) {
-                if ($(this).val().length == 0) {
-                    $('#filter_listkategori').fadeOut();
-                    $('#tabel-tarif-ranap').DataTable().destroy();
-                    kategori = '';
-                    load_data(kategori, pembiayaan, bangsal, kelas);
-                }
-            });
-
-
-            $('#pembiayaan').on('change', function() {
+            $('#filter_pembiayaan').on("change", function(evt) {
                 pembiayaan = $(this).val();
+                $('#tabel-tarif-lab').DataTable().destroy();
+                load_data(pembiayaan, kategori, kelas);
             });
+
+            $('#filter_kelas').on("change", function(evt) {
+                kelas = $(this).val();
+                $('#tabel-tarif-lab').DataTable().destroy();
+                load_data(pembiayaan, kategori, kelas);
+            });
+
+            $('#filter_kategori').on("change", function(evt) {
+                kategori = $(this).val();
+                $('#tabel-tarif-lab').DataTable().destroy();
+                load_data(pembiayaan, kategori, kelas);
+            });
+
+
 
             load_data();
-            loadPoli('filter_poliklinik');
 
-            $('#filter_pembiayaan').change(function() {
-                pembiayaan = $(this).val();
-                $('#tabel-tarif-ranap').DataTable().destroy();
-                load_data(kategori, pembiayaan)
-            });
-            $('#filter_kamar').change(function() {
-                $('#tabel-tarif-ranap').DataTable().destroy();
-                bangsal = $(this).val();
-                load_data(kategori, pembiayaan, bangsal, kelas);
-            });
-
-            $('#filter_kelas').change(function() {
-                $('#tabel-tarif-ranap').DataTable().destroy();
-                kelas = $(this).val()
-                load_data(kategori, pembiayaan, bangsal, kelas);
-            });
-
-            $('#tabel-tarif-ranap tbody').on('click', 'tr', function() {
-                var data = $('#tabel-tarif-ranap').DataTable().row(this).data();
+            $('#tabel-tarif-lab tbody').on('click', 'tr', function() {
+                var data = $('#tabel-tarif-lab').DataTable().row(this).data();
                 $('#modal-ubah').modal('show');
                 ambilTarif(data.kd_jenis_prw);
             });
-            $('#modal-default').on('hidden.bs.modal', function() {
-                $('select[name="poliklinik"] option').detach();
+            $('.modal').on('hidden.bs.modal', function() {
                 $('select[name="pembiayaan"] option').detach();
             });
 
-            function load_data(kategori = '', pembiayaan = '', bangsal = '', kelas = '') {
-
-                $('#tabel-tarif-ranap').DataTable({
+            function load_data(pembiayaan = '', kategori = '', kelas = '') {
+                $('#tabel-tarif-lab').DataTable({
                     ajax: {
-                        url: 'ranap/json',
+                        url: 'lab/json',
                         data: {
-                            kategori: kategori,
                             pembiayaan: pembiayaan,
-                            bangsal: bangsal,
+                            kategori: kategori,
                             kelas: kelas,
                         }
                     },
@@ -262,26 +219,28 @@
                             name: 'nm_perawatan',
                         },
                         {
-                            data: 'kd_kategori',
-                            name: 'kd_kategori',
-                        },
-                        {
-                            data: 'material',
+                            data: 'bagian_rs',
                             render: $.fn.dataTable.render.number('.', 0),
                             className: 'editable',
                             name: 'material'
                         },
                         {
-                            data: 'tarif_tindakandr',
+                            data: 'tarif_perujuk',
                             render: $.fn.dataTable.render.number('.', 0),
                             className: 'editable',
                             name: 'tarif_tindakandr'
                         },
                         {
-                            data: 'tarif_tindakanpr',
+                            data: 'tarif_tindakan_dokter',
                             render: $.fn.dataTable.render.number('.', 0),
                             className: 'editable',
-                            name: 'tarif_tindakanpr'
+                            name: 'tarif_tindakandr'
+                        },
+                        {
+                            data: 'tarif_tindakan_petugas',
+                            render: $.fn.dataTable.render.number('.', 0),
+                            className: 'editable',
+                            name: 'tarif_tindakandr'
                         },
                         {
                             data: 'bhp',
@@ -302,34 +261,22 @@
                             name: 'menejemen'
                         },
                         {
-                            data: 'total_byrdr',
+                            data: 'total_byr',
                             render: $.fn.dataTable.render.number('.', 0),
                             className: 'editable',
                             name: 'total_byrdr'
                         },
                         {
-                            data: 'total_byrpr',
-                            render: $.fn.dataTable.render.number('.', 0),
-                            className: 'editable',
-                            name: 'total_byrpr'
-                        },
-                        {
-                            data: 'total_byrdrpr',
-                            render: $.fn.dataTable.render.number('.', 0),
-                            className: 'editable',
-                            name: 'total_byrdrpr'
-                        },
-                        {
-                            data: 'kd_pj',
-                            name: 'kd_pj',
-                        },
-                        {
-                            data: 'kd_bangsal',
-                            name: 'kd_bangsal',
+                            data: 'penjab',
+                            name: 'penjab',
                         },
                         {
                             data: 'kelas',
                             name: 'kelas',
+                        },
+                        {
+                            data: 'kategori',
+                            name: 'kategori',
                         },
                     ],
                 });
