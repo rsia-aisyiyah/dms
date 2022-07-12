@@ -11,6 +11,15 @@ use Yajra\DataTables\DataTables;
 
 class LaporanIGDController extends Controller
 {
+
+    private $tanggal;
+    public function __construct()
+    {
+        // parent::__construct();
+        //Do your magic here
+        $this->tanggal = new Carbon('this month');
+    }
+
     public function index()
     {
         $tanggal = new Carbon('this month');
@@ -145,4 +154,6 @@ class LaporanIGDController extends Controller
             ->rawColumns(['bridging_sep'])
             ->make(true);
     }
+    // hitung kunjungan igd bulan ini
+
 }

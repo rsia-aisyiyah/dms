@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pasien;
-use Carbon\Carbon;
 use App\Models\RegPeriksa;
-use App\Models\RawatInapDr;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class RalanController extends Controller
 {
+    private $tanggal;
+
+    public function __construct()
+    {
+        // parent::__construct();
+        //Do your magic here
+        $this->tanggal = new Carbon('this month');
+    }
+
     public function index()
     {
         $tanggal = new Carbon('this month');
@@ -52,7 +60,7 @@ class RalanController extends Controller
                         $query->where('kd_dokter', 'like', '%' . $request->kd_dokter . '%');
                     });
             } else {
-                $data->whereBetween('tgl_registrasi',  [$tanggal->startOfMonth()->toDateString(), $tanggal->now()->toDateString()]);
+                $data->whereBetween('tgl_registrasi', [$tanggal->startOfMonth()->toDateString(), $tanggal->now()->toDateString()]);
             }
         }
 
@@ -78,9 +86,9 @@ class RalanController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                    . $data->pasien->kelurahan->nm_kel . ", "
-                    . $data->pasien->kecamatan->nm_kec . ", "
-                    . $data->pasien->kabupaten->nm_kab;
+                . $data->pasien->kelurahan->nm_kel . ", "
+                . $data->pasien->kecamatan->nm_kec . ", "
+                . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('stts_daftar', function ($data) {
                 if ($data->stts_daftar == 'Lama') {
@@ -101,7 +109,6 @@ class RalanController extends Controller
             ->rawColumns(['stts_daftar'])
             ->make(true);
     }
-
 
     public function viewLaporanBpjs()
     {
@@ -180,9 +187,9 @@ class RalanController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                    . $data->pasien->kelurahan->nm_kel . ", "
-                    . $data->pasien->kecamatan->nm_kec . ", "
-                    . $data->pasien->kabupaten->nm_kab;
+                . $data->pasien->kelurahan->nm_kel . ", "
+                . $data->pasien->kecamatan->nm_kec . ", "
+                . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_dokter', function ($data) {
                 return $data->dokter->nm_dokter;
@@ -213,7 +220,6 @@ class RalanController extends Controller
                     ->get()
                     ->pluck('jumlah');
 
-
                 $bpjsNonPBI = empty($query[0]) ? 0 : $query[0];
                 $bpjsPBI = empty($query[2]) ? 0 : $query[2];
                 $umum = empty($query[1]) ? 0 : $query[1];
@@ -222,7 +228,7 @@ class RalanController extends Controller
                 $jmlUmum = $umum;
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
 
-                $data["$indexBulan"] = (object)[
+                $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
                     'bpjs' => $jmlBpjs,
                     'umum' => $jmlUmum,
@@ -253,7 +259,7 @@ class RalanController extends Controller
                 $baru = empty($query[1]) ? 0 : $query[1];
 
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
-                $data["$indexBulan"] = (object)[
+                $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
                     'lama' => $lama,
                     'baru' => $baru,
@@ -297,7 +303,7 @@ class RalanController extends Controller
 
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
 
-                $data["$indexBulan"] = (object)[
+                $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
                     'obgyn' => $jmlObgyn,
                     'anak' => $jmlAnak,
@@ -326,7 +332,6 @@ class RalanController extends Controller
                     ->get()
                     ->pluck('jumlah');
 
-
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
 
                 $query[0] = empty($query[0]) ? 0 : $query[0];
@@ -335,7 +340,7 @@ class RalanController extends Controller
                 $jmlAnak1 = $query[0];
                 $jmlAnak2 = $query[1];
                 $total = $jmlAnak1 + $jmlAnak2;
-                $data["$indexBulan"] = (object)[
+                $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
                     'anak1' => $jmlAnak1,
                     'anak2' => $jmlAnak2,
@@ -366,7 +371,6 @@ class RalanController extends Controller
                     ->get()
                     ->pluck('jumlah');
 
-
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
 
                 $query[0] = empty($query[0]) ? 0 : $query[0];
@@ -375,7 +379,7 @@ class RalanController extends Controller
                 $jmlObgyn1 = $query[0];
                 $jmlObgyn2 = $query[1];
                 $total = $jmlObgyn1 + $jmlObgyn2;
-                $data["$indexBulan"] = (object)[
+                $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
                     'obgyn1' => $jmlObgyn1,
                     'obgyn2' => $jmlObgyn2,
@@ -385,19 +389,23 @@ class RalanController extends Controller
         }
         return DataTables::of($data)->make(true);
     }
-    public function diagramRalanPoli($tahun = '')
+    public function diagramRalanPoli(Request $request)
     {
-        $t = $tahun == '' ? date('Y') : $tahun;
+        if ($request->tahun) {
+            $tahun = $request->tahun;
+        } else {
+            $tahun = date('Y');
+        }
 
         for ($i = 1; $i <= 12; $i++) {
             $ralanAnakTahunan = RegPeriksa::select(DB::raw('count(*) as jumlah'))
-                ->ralanTahunan($t, $i)
+                ->ralanTahunan($tahun, $i)
                 ->whereHas('dokter', function ($q) {
                     $q->where('kd_sps', 'S0003');
                 })->count();
 
             $ralanObgynTahunan = RegPeriksa::select(DB::raw('count(*) as jumlah'))
-                ->ralanTahunan($t, $i)
+                ->ralanTahunan($tahun, $i)
                 ->whereHas('dokter', function ($q) {
                     $q->where('kd_sps', 'S0001');
                 })->count();
@@ -406,7 +414,7 @@ class RalanController extends Controller
         }
         return response()->json([
             'anak' => $anak,
-            'obgyn' => $obgyn
+            'obgyn' => $obgyn,
         ]);
     }
 
@@ -438,7 +446,6 @@ class RalanController extends Controller
         $dataRanap = RegPeriksa::getSepRanap();
         $row = [];
 
-
         if ($request->ajax()) {
 
             //filter tangal
@@ -460,7 +467,6 @@ class RalanController extends Controller
                     $query->where('nm_poli', 'like', '%' . $poli . '%');
                 });
             }
-
 
             if ($request->has('search') && $request->get('search')['value']) {
                 $data->whereHas('pasien', function ($query) use ($request) {
@@ -492,7 +498,7 @@ class RalanController extends Controller
 
             return DataTables::of($row)
                 ->editColumn('bridging_sep', function ($row) {
-                    if ($row['bridging_sep'] ==  "Belum Cetak") {
+                    if ($row['bridging_sep'] == "Belum Cetak") {
                         $class = "btn btn-danger";
                     } else {
                         $class = "btn btn-success";

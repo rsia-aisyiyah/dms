@@ -23,53 +23,73 @@
 
 @push('scripts')
 <script>
-
-    var anak = {!!json_encode($dataPoliAnak)!!};
-    var obgyn = {!!json_encode($dataPoliObgyn)!!};
     var diagramRalan;
     var tahun;
 
-    function loadDiagramRalan(anak, obgyn, tahun = '') {
+    function loadDiagramRalan(tahun = '') {
         var diagramRalanPoli = document.getElementById("diagramRalanPoli");
-        var propAnak = {
-            label: "Anak",
-            data: anak,
-            backgroundColor: '#C70039',
-            beginAtZero: true,
-        };
-        var propObgyn = {
-            label: "Kandungan",
-            data: obgyn,
-            backgroundColor: '#0047AB',
-            lineTension: 0.4,
-            beginAtZero: true,
-        };
 
-        var dataDiagram = {
-            labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
-            datasets: [propAnak, propObgyn]
-        };
-
-        var chartOptions = {
-            indexAxis: 'x',
-            responsive: true,
-            scales: {
-                x: {
+        $.ajax({
+            url: 'beranda/ralan',
+            type: "GET",
+            data: {
+                'tahun': tahun,
+            },
+            success: function (data) {
+                console.log(data);
+                anak = data.anak;
+                obgyn = data.obgyn;
+                var propAnak = {
+                    label: "Anak",
+                    data: anak,
+                    backgroundColor: '#C70039',
                     beginAtZero: true,
-                    grace: '5%',
-                    max: 2000
-                }
+                };
+                var propObgyn = {
+                    label: "Kandungan",
+                    data: obgyn,
+                    backgroundColor: '#0047AB',
+                    beginAtZero: true,
+                };
+                var dataDiagram = {
+                    labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September",
+                        "Oktober", "November", "Desember"
+                    ],
+                    datasets: [propAnak, propObgyn]
+                };
+                var chartOptions = {
+                    indexAxis: 'x',
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grace: '10%',
+                            max: 2000,
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            color: 'white',
+                            anchor: 'center',
+                            align: 'center',
+                            formatter: Math.round,
+                            font: {
+                                size: 12,
+                            }
+                        }
+                    }
+                };
+
+                diagramRalan = new Chart(diagramRalanPoli, {
+                    type: 'bar',
+                    data: dataDiagram,
+                    options: chartOptions,
+                });
             }
-        };
-
-        diagramRalan = new Chart(diagramRalanPoli, {
-            type: 'bar',
-            data: dataDiagram,
-            options: chartOptions
         });
-    }
 
-    loadDiagramRalan(anak, obgyn, '');
+
+    }
 
     $('#tahun-ralan-poli').datetimepicker({
         format: "YYYY",
@@ -79,18 +99,9 @@
 
     $('#tahun-ralan-poli').on('change.datetimepicker', function () {
         var tahun = $('#tahun-ralan-poli').val();
-        $.ajax({
-            url: 'ralan/diagram/poli/' + tahun,
-            type: "GET",
-            success: function (data) {
-                anak = data.anak;
-                obgyn = data.obgyn;
-                diagramRalan.destroy();
-                loadDiagramRalan(anak, obgyn, tahun);
-            }
-        });
+        diagramRalan.destroy();
+        loadDiagramRalan(tahun);
 
     });
-
 </script>
 @endpush

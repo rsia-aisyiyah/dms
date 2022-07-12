@@ -42,8 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
     Route::get('/beranda/kunjungan', [BerandaController::class, 'countTotal']);
-    Route::get('/beranda/pembiayaan/ralan', [BerandaController::class, 'countPembiyayaanRalan']);
+    Route::get('/beranda/pembiayaan', [BerandaController::class, 'pembiayaan']);
+    Route::get('/beranda/pembiayaan/ranap', [BerandaController::class, 'countPembiayaanRanap']);
+    Route::get('/beranda/pembiayaan/ralan', [BerandaController::class, 'countPembiayaanRalan']);
+    Route::get('/beranda/status', [BerandaController::class, 'statusPasien']);
     Route::get('/beranda/dokter/{tahun?}/{bulan?}', [BerandaController::class, 'jsonKunjunganDokter']);
+    Route::get('/beranda/ralan', [RalanController::class, 'diagramRalanPoli']);
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);
     Route::get('/diagram/operasi/{tahun}', [OperasiController::class, 'diagram']);
@@ -76,7 +80,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/ralan/poli/json', [RalanController::class, 'jsonPoli']);
     Route::get('/ralan/anak/json', [RalanController::class, 'jsonDokterAnak']);
     Route::get('/ralan/obgyn/json', [RalanController::class, 'jsonDokterObgyn']);
-    Route::get('/ralan/diagram/poli/{tahun?}', [RalanController::class, 'diagramRalanPoli']);
     Route::get('/ralan/test', [RalanController::class, 'jsonKunjunganKelurahan']);
     Route::get('/ralan/sep', [RalanController::class, 'sepRalan']);
     Route::get('/ralan/sep/json', [RalanController::class, 'jsonSepRalan']);
@@ -148,28 +151,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/test', [SepController::class, 'getSep']);
-
-// Route::get('/test/bayi', function () {
-//     $tanggal = new Carbon();
-//     $data = RegPeriksa::select('reg_periksa.no_rawat', 'tgl_registrasi', 'kd_dokter', 'no_rkm_medis', 'stts_daftar', 'kd_pj', 'bridging_sep.tglsep')
-//         ->leftJoin('bridging_sep', function ($join) {
-//             $join->on('reg_periksa.no_rawat', '=', 'bridging_sep.no_rawat')
-//                 ->whereNotNull('bridging_sep.no_rawat');
-//         })
-//         ->where('status_lanjut', 'Ranap')
-//         ->whereHas('kamarInap', function ($query) {
-//             $query->where('stts_pulang', '!=', 'Pindah Kamar');
-//         })
-//         ->whereHas('dokter.spesialis', function ($query) {
-//             $query->whereIn('kd_sps', ['S0001', 'S0003']);
-//         })
-//         ->whereHas('pasien', function ($query) {
-//             $query->where('nm_pasien', 'like', '%BY%');
-//         })
-//         ->groupBy('reg_periksa.no_rawat')
-//         ->orderBy('tgl_registrasi', 'ASC')
-//         ->whereBetween('tgl_registrasi', [$tanggal->startOfMonth()->toDateString(), $tanggal->lastOfMonth()->toDateString()])->get();
-
-//     return DataTables::of($data)->make(true);
-// });
+// Route::get('/test', [SepController::class, 'getSep']);
