@@ -42,12 +42,11 @@
         function kunjunganDokterRalan(tahun = '', bulan = '') {
             diagram = document.getElementById("diagramKunjunganDokter");
             $.ajax({
-                url: 'beranda/dokter/' + tahun + '/' + bulan,
+                url: 'beranda/dokter',
                 data: {
                     'tahun': tahun,
                     'bulan': bulan,
                 },
-                type: "GET",
                 success: function(data) {
                     dokter1 = data.dokter1;
                     dokter2 = data.dokter2;
