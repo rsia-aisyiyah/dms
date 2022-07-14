@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/beranda/status', [BerandaController::class, 'statusPasien']);
     Route::get('/beranda/dokter/{tahun?}/{bulan?}', [BerandaController::class, 'jsonKunjunganDokter']);
     Route::get('/beranda/registrasi', [RegPeriksaController::class, 'caraRegistrasi']);
+    Route::get('/beranda/dokter', [BerandaController::class, 'jsonKunjunganDokter']);
     Route::get('/beranda/ralan', [RalanController::class, 'diagramRalanPoli']);
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);

@@ -33,20 +33,23 @@ class BerandaController extends Controller
             ]
         );
     }
-    public function jsonKunjunganDokter(Request $request, $tahun = '', $bulan = '')
+    public function jsonKunjunganDokter(Request $request)
     {
+
         $awal = $this->tanggal->startOfMonth()->day;
         $akhir = $this->tanggal->lastOfMonth()->day;
 
-        // return $namaBulan = $this->tanggal->months(2);
+        $tahun = $request->tahun;
+        $bulan = $request->bulan;
+
         $jumlahHari = $this->tanggal->day(1)->month($bulan)->daysInMonth;
-        if (empty($tahun) && empty($bulan)) {
+        if ($tahun && $bulan) {
+            $namaBulan = $this->tanggal->month($bulan)->monthName;
+        } else {
             $tahun = date('Y');
             $bulan = $this->tanggal->now()->month;
             $namaBulan = $this->tanggal->now()->monthName;
             $jumlahHari = $this->tanggal->now()->day;
-        } else {
-            $namaBulan = $this->tanggal->month($bulan)->monthName;
         }
 
         foreach ($this->collectionDokter as $dokter) {
@@ -163,6 +166,7 @@ class BerandaController extends Controller
         $query = RegPeriksa::select(DB::raw('count(*) as jumlah'), 'kd_pj')
             ->whereIn('kd_poli', ['P001', 'P003', 'P007', 'P008', 'P009'])
             ->where('status_lanjut', 'Ralan')
+            ->with('penjab')
             ->where('stts', 'Sudah');
         // if ($request->ajax()) {
         if ($tgl_pertama && $tgl_kedua) {
@@ -173,12 +177,13 @@ class BerandaController extends Controller
                 ->whereMonth('tgl_registrasi', $this->tanggal->month);
 
         }
+        // return $dataRalan = $query->groupBy('kd_pj')->get();
         $dataRalan = $query->groupBy('kd_pj')->get()->pluck('jumlah');
         // }
         return $pembiayaanRalan = [
             'mandiri' => $dataRalan[0],
-            'pbi' => $dataRalan[1],
-            'umum' => $dataRalan[2],
+            'pbi' => $dataRalan[2],
+            'umum' => $dataRalan[1],
         ];
     }
     public function countPembiayaanRanap(Request $request)
@@ -200,8 +205,8 @@ class BerandaController extends Controller
         $dataRanap = $query->groupBy('kd_pj')->get()->pluck('jumlah');
         return $pembiayaanRanap = [
             'mandiri' => $dataRanap[0],
-            'pbi' => $dataRanap[1],
-            'umum' => $dataRanap[2],
+            'pbi' => $dataRanap[2],
+            'umum' => $dataRanap[1],
         ];
 
     }
