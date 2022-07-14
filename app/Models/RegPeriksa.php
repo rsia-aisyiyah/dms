@@ -2,22 +2,21 @@
 
 namespace App\Models;
 
-use App\Models\Dokter;
-use App\Models\Pasien;
-use App\Models\Penjab;
-use App\Models\KamarInap;
-use App\Models\Spesialis;
-use App\Models\Poliklinik;
 use App\Models\BridgingSep;
 use App\Models\DiagnosaPasien;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Dokter;
+use App\Models\KamarInap;
+use App\Models\Pasien;
+use App\Models\Penjab;
+use App\Models\Poliklinik;
+use App\Models\Spesialis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class RegPeriksa extends Model
 {
     use HasFactory;
     protected $table = "reg_periksa";
-
 
     public function bridgingSep()
     {
@@ -26,6 +25,10 @@ class RegPeriksa extends Model
     public function diagnosaPasien()
     {
         return $this->belongsTo(DiagnosaPasien::class, 'no_rawat', 'no_rawat');
+    }
+    public function bookingRegistrasi()
+    {
+        return $this->belongsTo(BookingRegistrasi::class, 'no_rkm_medis', 'no_rkm_medis');
     }
 
     public function dokter()
@@ -88,4 +91,5 @@ class RegPeriksa extends Model
             })
             ->groupBy('reg_periksa.no_rawat');
     }
+
 }

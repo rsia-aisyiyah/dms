@@ -16,6 +16,7 @@ use App\Http\Controllers\PersalinanController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RalanController;
 use App\Http\Controllers\RanapController;
+use App\Http\Controllers\RegPeriksaController;
 use App\Http\Controllers\SepController;
 use App\Http\Controllers\TarifLaboratorium;
 use App\Http\Controllers\TarifRalanController;
@@ -47,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/beranda/pembiayaan/ralan', [BerandaController::class, 'countPembiayaanRalan']);
     Route::get('/beranda/status', [BerandaController::class, 'statusPasien']);
     Route::get('/beranda/dokter/{tahun?}/{bulan?}', [BerandaController::class, 'jsonKunjunganDokter']);
+    Route::get('/beranda/registrasi', [RegPeriksaController::class, 'caraRegistrasi']);
     Route::get('/beranda/ralan', [RalanController::class, 'diagramRalanPoli']);
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);
@@ -151,4 +153,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Route::get('/test', [SepController::class, 'getSep']);
+// Route::get('/test', [RegPeriksaController::class, 'regLangsung']);
