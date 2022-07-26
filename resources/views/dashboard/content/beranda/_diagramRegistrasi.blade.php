@@ -38,7 +38,7 @@
         function registrasi(tahun = '', bulan = '') {
             diagramRegistrasi = document.getElementById("diagramRegistrasi");
             $.ajax({
-                url: 'beranda/registrasi/',
+                url: 'beranda/registrasi',
                 data: {
                     'tahun': tahun,
                     'bulan': bulan,
