@@ -38,103 +38,72 @@
         function registrasi(tahun = '', bulan = '') {
             diagramRegistrasi = document.getElementById("diagramRegistrasi");
             $.ajax({
-                        url: 'beranda/registrasi',
-                        data: {
-                            'tahun': tahun,
-                            'bulan': bulan,
+                url: 'beranda/registrasi/',
+                data: {
+                    'tahun': tahun,
+                    'bulan': bulan,
+                },
+                type: "GET",
+                success: function(data) {
+
+                    regLangsung = data.regLangsung;
+                    regBooking = data.regBooking;
+                    tanggal = data.tanggal;
+
+                    var propLangsung = {
+                        label: "Registrasi Langsung",
+                        data: regLangsung,
+                        backgroundColor: '#36A2EB',
+                        beginAtZero: true,
+                    };
+                    var propBooking = {
+                        label: "Registrasi Booking",
+                        data: regBooking,
+                        backgroundColor: '#FF6384',
+                        beginAtZero: true,
+                    };
+
+                    var dataRegistrasi = {
+                        labels: tanggal,
+                        datasets: [propLangsung, propBooking],
+                    };
+
+                    var chartOptions = {
+                        indexAxis: 'x',
+                        responsive: true,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grace: '5%',
+                                max: 2000,
+                                stacked: true
+                            },
+                            y: {
+
+                                stacked: true
+                            }
+
                         },
-                        type: "GET",
-                        success: function(data) {
-
-                                console.log(data)
-                                regLangsung = data.regLangsung;
-                                regBooking = data.regBooking;
-                                tanggal = data.tanggal; ===
-                                ===
-                                =
-
-                                $('#date-registrasi').on('change.datetimepicker', function() {
-                                    var date = $(this).val().split('-');
-                                    tahun = date[0];
-                                    bulan = date[1];
-                                    diagramRegistrasi.destroy();
-                                    registrasi(tahun, bulan);
-
-                                });
-
-                                function registrasi(tahun = '', bulan = '') {
-                                    diagramRegistrasi = document.getElementById("diagramRegistrasi");
-                                    $.ajax({
-                                        url: 'beranda/registrasi/',
-                                        data: {
-                                            'tahun': tahun,
-                                            'bulan': bulan,
-                                        },
-                                        type: "GET",
-                                        success: function(data) {
-                                            >>>
-                                            >>>
-                                            >
-                                            b941f65314daa5c9c16053eca6c5e0068d8a0357
-
-                                            regLangsung = data.regLangsung;
-                                            regBooking = data.regBooking;
-                                            tanggal = data.tanggal;
-
-                                            var propLangsung = {
-                                                label: "Registrasi Langsung",
-                                                data: regLangsung,
-                                                backgroundColor: '#36A2EB',
-                                                beginAtZero: true,
-                                            };
-                                            var propBooking = {
-                                                label: "Registrasi Booking",
-                                                data: regBooking,
-                                                backgroundColor: '#FF6384',
-                                                beginAtZero: true,
-                                            };
-
-                                            var dataRegistrasi = {
-                                                labels: tanggal,
-                                                datasets: [propLangsung, propBooking],
-                                            };
-
-                                            var chartOptions = {
-                                                indexAxis: 'x',
-                                                responsive: true,
-                                                scales: {
-                                                    x: {
-                                                        beginAtZero: true,
-                                                        grace: '5%',
-                                                        max: 2000,
-                                                        stacked: true
-                                                    },
-                                                    y: {
-
-                                                        stacked: true
-                                                    }
-
-                                                },
-                                                plugins: {
-                                                    datalabels: {
-                                                        color: 'white',
-                                                        anchor: 'center',
-                                                        align: 'center',
-                                                        formatter: Math.round,
-                                                        font: {
-                                                            size: 12,
-                                                        }
-                                                    }
-                                                }
-                                            };
-
-                                            diagramRegistrasi = new Chart(diagramRegistrasi, {
-                                                type: 'bar',
-                                                data: dataRegistrasi,
-                                                options: chartOptions
-                                            });
-                                        }
-                                    });
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                anchor: 'center',
+                                align: 'center',
+                                formatter: Math.round,
+                                font: {
+                                    size: 12,
                                 }
+                            }
+                        }
+                    };
+
+                    diagramRegistrasi = new Chart(diagramRegistrasi, {
+                        type: 'bar',
+                        data: dataRegistrasi,
+                        options: chartOptions
+                    });
+                }
+            });
+        }
     </script>
 @endpush
