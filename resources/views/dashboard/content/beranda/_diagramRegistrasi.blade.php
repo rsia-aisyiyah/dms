@@ -25,6 +25,7 @@
             format: "YYYY-MM",
             useCurrent: false,
         });
+<<<<<<< HEAD
 
         $('#date-registrasi').on('change.datetimepicker', function() {
             var date = $(this).val().split('-');
@@ -50,7 +51,32 @@
                     regLangsung = data.regLangsung;
                     regBooking = data.regBooking;
                     tanggal = data.tanggal;
+=======
 
+        $('#date-registrasi').on('change.datetimepicker', function() {
+            var date = $(this).val().split('-');
+            tahun = date[0];
+            bulan = date[1];
+            diagramRegistrasi.destroy();
+            registrasi(tahun, bulan);
+
+        });
+
+        function registrasi(tahun = '', bulan = '') {
+            diagramRegistrasi = document.getElementById("diagramRegistrasi");
+            $.ajax({
+                url: 'beranda/registrasi/',
+                data: {
+                    'tahun': tahun,
+                    'bulan': bulan,
+                },
+                type: "GET",
+                success: function(data) {
+>>>>>>> b941f65314daa5c9c16053eca6c5e0068d8a0357
+
+                    regLangsung = data.regLangsung;
+                    regBooking = data.regBooking;
+                    tanggal = data.tanggal;
 
                     var propLangsung = {
                         label: "Registrasi Langsung",

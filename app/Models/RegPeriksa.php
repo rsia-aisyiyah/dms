@@ -12,6 +12,7 @@ use App\Models\Poliklinik;
 use App\Models\Spesialis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class RegPeriksa extends Model
 {
@@ -28,7 +29,7 @@ class RegPeriksa extends Model
     }
     public function bookingRegistrasi()
     {
-        return $this->belongsTo(BookingRegistrasi::class, 'no_rkm_medis', 'no_rkm_medis');
+        return $this->hasOne(BookingRegistrasi::class, 'no_rkm_medis', 'no_rkm_medis');
     }
 
     public function dokter()
@@ -90,6 +91,24 @@ class RegPeriksa extends Model
                 $q->where('png_jawab', 'like', '%BPJS%');
             })
             ->groupBy('reg_periksa.no_rawat');
+    }
+
+    public function scopeRegLangsung($query)
+    {
+        $query->select(DB::raw('count(*) as jumlah'), 'tgl_registrasi')
+            ->whereIn('kd_poli', ['P001', 'P003', 'P005', 'P007', 'P008', 'P009'])
+            ->doesntHave('bookingRegistrasi')
+            ->where('status_lanjut', 'Ralan')
+            ->where('stts', 'Sudah');
+    }
+    public function scopeRegBooking($query)
+    {
+        $query->select(DB::raw('count(*) as jumlah'), 'tgl_registrasi')
+            ->whereIn('kd_poli', ['P001', 'P003', 'P005', 'P007', 'P008', 'P009'])
+            ->whereHas('bookingRegistrasi')
+            ->where('status_lanjut', 'Ralan')
+            ->where('stts', 'Sudah');
+
     }
 
 }
