@@ -20,92 +20,90 @@
 </div>
 
 @push('scripts')
-<script>
-    $('#date-registrasi').datetimepicker({
-        format: "YYYY-MM",
-        useCurrent: false,
-    });
+    <script>
+        $('#date-registrasi').datetimepicker({
+            format: "YYYY-MM",
+            useCurrent: false,
+        });
 
-    $('#date-registrasi').on('change.datetimepicker', function () {
-        var date = $(this).val().split('-');
-        tahun = date[0];
-        bulan = date[1];
-        diagramRegistrasi.destroy();
-        registrasi(tahun, bulan);
+        $('#date-registrasi').on('change.datetimepicker', function() {
+            var date = $(this).val().split('-');
+            tahun = date[0];
+            bulan = date[1];
+            diagramRegistrasi.destroy();
+            registrasi(tahun, bulan);
 
-    });
+        });
 
-    function registrasi(tahun = '', bulan = '') {
-        diagramRegistrasi = document.getElementById("diagramRegistrasi");
-        $.ajax({
-            url: 'beranda/registrasi/',
-            data: {
-                'tahun': tahun,
-                'bulan': bulan,
-            },
-            type: "GET",
-            success: function (data) {
+        function registrasi(tahun = '', bulan = '') {
+            diagramRegistrasi = document.getElementById("diagramRegistrasi");
+            $.ajax({
+                url: 'beranda/registrasi/',
+                data: {
+                    'tahun': tahun,
+                    'bulan': bulan,
+                },
+                type: "GET",
+                success: function(data) {
 
-                console.log(data)
-                regLangsung = data.regLangsung;
-                regBooking = data.regBooking;
-                tanggal = data.tanggal;
+                    regLangsung = data.regLangsung;
+                    regBooking = data.regBooking;
+                    tanggal = data.tanggal;
 
+                    var propLangsung = {
+                        label: "Registrasi Langsung",
+                        data: regLangsung,
+                        backgroundColor: '#36A2EB',
+                        beginAtZero: true,
+                    };
+                    var propBooking = {
+                        label: "Registrasi Booking",
+                        data: regBooking,
+                        backgroundColor: '#FF6384',
+                        beginAtZero: true,
+                    };
 
-                var propLangsung = {
-                    label: "Registrasi Langsung",
-                    data: regLangsung,
-                    backgroundColor: '#36A2EB',
-                    beginAtZero: true,
-                };
-                var propBooking = {
-                    label: "Registrasi Booking",
-                    data: regBooking,
-                    backgroundColor: '#FF6384',
-                    beginAtZero: true,
-                };
+                    var dataRegistrasi = {
+                        labels: tanggal,
+                        datasets: [propLangsung, propBooking],
+                    };
 
-                var dataRegistrasi = {
-                    labels: tanggal,
-                    datasets: [propLangsung, propBooking],
-                };
+                    var chartOptions = {
+                        indexAxis: 'x',
+                        responsive: true,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grace: '5%',
+                                max: 2000,
+                                stacked: true
+                            },
+                            y: {
 
-                var chartOptions = {
-                    indexAxis: 'x',
-                    responsive: true,
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grace: '5%',
-                            max: 2000,
-                            stacked: true
+                                stacked: true
+                            }
+
                         },
-                        y: {
-
-                            stacked: true
-                        }
-
-                    },
-                    plugins: {
-                        datalabels: {
-                            color: 'white',
-                            anchor: 'center',
-                            align: 'center',
-                            formatter: Math.round,
-                            font: {
-                                size: 12,
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                anchor: 'center',
+                                align: 'center',
+                                formatter: Math.round,
+                                font: {
+                                    size: 12,
+                                }
                             }
                         }
-                    }
-                };
+                    };
 
-                diagramRegistrasi = new Chart(diagramRegistrasi, {
-                    type: 'bar',
-                    data: dataRegistrasi,
-                    options: chartOptions
-                });
-            }
-        });
-    }
-</script>
+                    diagramRegistrasi = new Chart(diagramRegistrasi, {
+                        type: 'bar',
+                        data: dataRegistrasi,
+                        options: chartOptions
+                    });
+                }
+            });
+        }
+    </script>
 @endpush

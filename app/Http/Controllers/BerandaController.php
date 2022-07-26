@@ -168,23 +168,25 @@ class BerandaController extends Controller
             ->where('status_lanjut', 'Ralan')
             ->with('penjab')
             ->where('stts', 'Sudah');
-        // if ($request->ajax()) {
-        if ($tgl_pertama && $tgl_kedua) {
-            $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
+        if ($request->ajax()) {
+            if ($tgl_pertama && $tgl_kedua) {
+                $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
 
-        } else {
-            $query->whereYear('tgl_registrasi', date('Y'))
-                ->whereMonth('tgl_registrasi', $this->tanggal->month);
+            } else {
+                $query->whereYear('tgl_registrasi', date('Y'))
+                    ->whereMonth('tgl_registrasi', $this->tanggal->month);
 
+            }
+            $dataRalan = $query->groupBy('kd_pj')->get()->pluck('jumlah');
+            @$mandiri = $dataRalan[0] == 0 ? 0 : $dataRalan[0];
+            @$pbi = $dataRalan[2] == 0 ? 0 : $dataRalan[2];
+            @$umum = $dataRalan[1] == 0 ? 0 : $dataRalan[1];
+            return $pembiayaanRalan = [
+                'mandiri' => $mandiri,
+                'pbi' => $pbi,
+                'umum' => $umum,
+            ];
         }
-        // return $dataRalan = $query->groupBy('kd_pj')->get();
-        $dataRalan = $query->groupBy('kd_pj')->get()->pluck('jumlah');
-        // }
-        return $pembiayaanRalan = [
-            'mandiri' => $dataRalan[0],
-            'pbi' => $dataRalan[2],
-            'umum' => $dataRalan[1],
-        ];
     }
     public function countPembiayaanRanap(Request $request)
     {
@@ -195,19 +197,26 @@ class BerandaController extends Controller
             ->whereHas('kamarInap', function ($query) {
                 $query->where('stts_pulang', '!=', 'Pindah Kamar');
             });
-        if ($tgl_pertama && $tgl_kedua) {
-            $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
-        } else {
-            $query->whereYear('tgl_registrasi', date('Y'))
-                ->whereMonth('tgl_registrasi', $this->tanggal->month);
-        }
+        if ($request->ajax()) {
 
-        $dataRanap = $query->groupBy('kd_pj')->get()->pluck('jumlah');
-        return $pembiayaanRanap = [
-            'mandiri' => $dataRanap[0],
-            'pbi' => $dataRanap[2],
-            'umum' => $dataRanap[1],
-        ];
+            if ($tgl_pertama && $tgl_kedua) {
+                $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
+            } else {
+                $query->whereYear('tgl_registrasi', date('Y'))
+                    ->whereMonth('tgl_registrasi', $this->tanggal->month);
+            }
+
+            $dataRanap = $query->groupBy('kd_pj')->get()->pluck('jumlah');
+            @$mandiri = $dataRanap[0] == 0 ? 0 : $dataRanap[0];
+            @$pbi = $dataRanap[2] == 0 ? 0 : $dataRanap[2];
+            @$umum = $dataRanap[1] == 0 ? 0 : $dataRanap[1];
+
+            return $pembiayaanRanap = [
+                'mandiri' => $mandiri,
+                'pbi' => $pbi,
+                'umum' => $umum,
+            ];
+        }
 
     }
     public function pembiayaan(Request $request)
@@ -234,9 +243,12 @@ class BerandaController extends Controller
 
         $status = $query->groupBy('stts_daftar')
             ->get()->pluck('jumlah');
+        @$lama = $status[0] == 0 ? 0 : $status[0];
+        @$baru = $status[1] == 0 ? 0 : $status[1];
+
         return $status = [
-            'lama' => $status[0],
-            'baru' => $status[1],
+            'lama' => $lama,
+            'baru' => $baru,
         ];
 
     }

@@ -37,9 +37,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
-Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::middleware('auth')->group(function () {
+    Route::get('/logout', [LoginController::class, 'logout']);
     Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
     Route::get('/beranda/kunjungan', [BerandaController::class, 'countTotal']);
@@ -49,6 +49,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/beranda/status', [BerandaController::class, 'statusPasien']);
     Route::get('/beranda/dokter/{tahun?}/{bulan?}', [BerandaController::class, 'jsonKunjunganDokter']);
     Route::get('/beranda/registrasi', [RegPeriksaController::class, 'caraRegistrasi']);
+    Route::get('/beranda/periksa', [RegPeriksaController::class, 'statusRegistrasi']);
+    Route::get('/beranda/booking', [RegPeriksaController::class, 'caraBooking']);
     Route::get('/beranda/dokter', [BerandaController::class, 'jsonKunjunganDokter']);
     Route::get('/beranda/ralan', [RalanController::class, 'diagramRalanPoli']);
     Route::get('/operasi', [OperasiController::class, 'index']);
@@ -154,4 +156,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Route::get('/test', [RegPeriksaController::class, 'regLangsung']);
+Route::get('/test', [RegPeriksaController::class, 'statusRegistrasi']);

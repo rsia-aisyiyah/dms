@@ -71,6 +71,8 @@
     </div>
     <div class="row">
         @include('dashboard.content.beranda._diagramPembayaran')
+    </div>
+    <div class="row">
         <div class="col-sm-12 col-md-4">
             <div class="card">
                 <div class="card-header m-auto">
@@ -81,6 +83,8 @@
                 </div>
             </div>
         </div>
+        @include('dashboard.content.beranda._diagramBooking')
+        @include('dashboard.content.beranda._diagramStatusReg')
     </div>
     <div class="row">
         @include('dashboard.content.beranda._diagramRegistrasi')
@@ -229,15 +233,20 @@
 
             diagramBayar.destroy();
             donutChart.destroy();
+            booking.destroy();
+            statusPeriksa.destroy();
+            caraBooking(tgl_pertama, tgl_kedua);
             statusDaftar(tgl_pertama, tgl_kedua);
             pembiayaanPasien(tgl_pertama, tgl_kedua);
             jumlahIGD(tgl_pertama, tgl_kedua);
             jumlahRalan(tgl_pertama, tgl_kedua);
             jumlahRanap(tgl_pertama, tgl_kedua);
             totalKunjungan(tgl_pertama, tgl_kedua);
+            statusReg(tgl_pertama, tgl_kedua);
 
         });
         $(document).ready(function() {
+            statusReg();
             loadDiagramRalan();
             statusDaftar();
             pembiayaanPasien();
@@ -246,6 +255,7 @@
             jumlahRanap();
             totalKunjungan();
             registrasi();
+            caraBooking();
         });
     </script>
 @endpush
