@@ -24,10 +24,7 @@
         $('#date-registrasi').datetimepicker({
             format: "YYYY-MM",
             useCurrent: false,
-        }); <<
-        <<
-        <<
-        < HEAD
+        });
 
         $('#date-registrasi').on('change.datetimepicker', function() {
             var date = $(this).val().split('-');
