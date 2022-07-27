@@ -22,6 +22,7 @@ use App\Http\Controllers\TarifLaboratorium;
 use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
 use App\Models\Dokter;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,20 +57,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);
     Route::get('/diagram/operasi/{tahun}', [OperasiController::class, 'diagram']);
+    Route::middleware('rm')->group(function () {
+        Route::get('/rekammedis', [DiagnosaPasienController::class, 'index']);
+        Route::get('/rekammedis/json', [DiagnosaPasienController::class, 'json']);
 
-    Route::get('/rekammedis', [DiagnosaPasienController::class, 'index']);
-    Route::get('/rekammedis/json', [DiagnosaPasienController::class, 'json']);
+        Route::get('/rekammedis/dinkes', [LaporanDiagnosaDinkesController::class, 'index']);
+        Route::get('/rekammedis/dinkes/json', [LaporanDiagnosaDinkesController::class, 'json']);
 
-    Route::get('/rekammedis/dinkes', [LaporanDiagnosaDinkesController::class, 'index']);
-    Route::get('/rekammedis/dinkes/json', [LaporanDiagnosaDinkesController::class, 'json']);
+        Route::get('/rekammedis/penyakit', [LaporanDiagnosaPenyakitController::class, 'index']);
+        Route::get('/rekammedis/penyakit/json', [LaporanDiagnosaPenyakitController::class, 'json']);
+        Route::get('/rekammedis/cari', [LaporanDiagnosaPenyakitController::class, 'cariDiagnosa']);
 
-    Route::get('/rekammedis/penyakit', [LaporanDiagnosaPenyakitController::class, 'index']);
-    Route::get('/rekammedis/penyakit/json', [LaporanDiagnosaPenyakitController::class, 'json']);
-    Route::get('/rekammedis/cari', [LaporanDiagnosaPenyakitController::class, 'cariDiagnosa']);
+        Route::get('/rekammedis/pasientb', [DiagnosaPasienController::class, 'pasienTb']);
+        Route::get('/rekammedis/pasientb/json', [DiagnosaPasienController::class, 'jsonPasienTb']);
 
-    Route::get('/rekammedis/pasientb', [DiagnosaPasienController::class, 'pasienTb']);
-    Route::get('/rekammedis/pasientb/json', [DiagnosaPasienController::class, 'jsonPasienTb']);
-
+    });
+    
     Route::get('/igd', [LaporanIGDController::class, 'index']);
     Route::get('/igd/hitung', [BerandaController::class, 'countIGD']);
     Route::get('/igd/json', [LaporanIGDController::class, 'json']);
@@ -105,41 +108,44 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/transfusi/json', [RanapController::class, 'jsonTransfusi']);
     Route::get('/ranap/transfusi/rekap/json', [RanapController::class, 'jsonRekapTransfusi']);
 
-    Route::get('/tarif/kamar', [KamarController::class, 'index']);
-    Route::get('/tarif/kamar/json', [KamarController::class, 'getTarif']);
-    Route::get('/tarif/kamar/{kd_bagsal?}', [KamarController::class, 'getTarifById']);
-    Route::post('/tarif/kamar/simpantarif', [KamarController::class, 'setTarifKamar']);
+    Route::middleware('admin')->group(function () {
+        Route::get('/tarif/kamar', [KamarController::class, 'index']);
+        Route::get('/tarif/kamar/json', [KamarController::class, 'getTarif']);
+        Route::get('/tarif/kamar/{kd_bagsal?}', [KamarController::class, 'getTarifById']);
+        Route::post('/tarif/kamar/simpantarif', [KamarController::class, 'setTarifKamar']);
 
-    Route::get('/tarif/kategori', [KategoriPerawatanController::class, 'getAllKategori']);
-    Route::get('/tarif/kategori/{kategori?}/{attr?}', [KategoriPerawatanController::class, 'getKategoryByName']);
+        Route::get('/tarif/kategori', [KategoriPerawatanController::class, 'getAllKategori']);
+        Route::get('/tarif/kategori/{kategori?}/{attr?}', [KategoriPerawatanController::class, 'getKategoryByName']);
 
-    Route::get('tarif/ralan', [TarifRalanController::class, 'index']);
-    Route::get('tarif/ralan/json', [TarifRalanController::class, 'getTarif']);
-    Route::get('tarif/ralan/{id?}', [TarifRalanController::class, 'getTarifById']);
-    Route::get('tarif/akhir', [TarifRalanController::class, 'getTarifAkhir']);
-    Route::post('tarif/ralan/simpantarif', [TarifRalanController::class, 'setTarifRalan']);
-    Route::post('tarif/ralan/tambahtarif', [TarifRalanController::class, 'addTarifRalan']);
+        Route::get('tarif/ralan', [TarifRalanController::class, 'index']);
+        Route::get('tarif/ralan/json', [TarifRalanController::class, 'getTarif']);
+        Route::get('tarif/ralan/{id?}', [TarifRalanController::class, 'getTarifById']);
+        Route::get('tarif/akhir', [TarifRalanController::class, 'getTarifAkhir']);
+        Route::post('tarif/ralan/simpantarif', [TarifRalanController::class, 'setTarifRalan']);
+        Route::post('tarif/ralan/tambahtarif', [TarifRalanController::class, 'addTarifRalan']);
 
-    Route::get('tarif/ranap', [TarifRanapController::class, 'index']);
-    Route::get('tarif/ranap/json', [TarifRanapController::class, 'getTarif']);
-    Route::get('tarif/ranap/akhir', [TarifRanapController::class, 'getLastTarif']);
-    Route::get('tarif/ranap/{id?}', [TarifRanapController::class, 'getTarifById']);
-    Route::post('tarif/ranap/ubah', [TarifRanapController::class, 'setTarif']);
-    Route::post('tarif/ranap/tambah', [TarifRanapController::class, 'addTarif']);
+        Route::get('tarif/ranap', [TarifRanapController::class, 'index']);
+        Route::get('tarif/ranap/json', [TarifRanapController::class, 'getTarif']);
+        Route::get('tarif/ranap/akhir', [TarifRanapController::class, 'getLastTarif']);
+        Route::get('tarif/ranap/{id?}', [TarifRanapController::class, 'getTarifById']);
+        Route::post('tarif/ranap/ubah', [TarifRanapController::class, 'setTarif']);
+        Route::post('tarif/ranap/tambah', [TarifRanapController::class, 'addTarif']);
 
-    Route::get('tarif/lab', [TarifLaboratorium::class, 'index']);
-    Route::get('tarif/lab/akhir', [TarifLaboratorium::class, 'getLastTarif']);
-    Route::get('tarif/lab/json', [TarifLaboratorium::class, 'getTarif']);
-    Route::get('tarif/lab/{id?}', [TarifLaboratorium::class, 'getTarifById']);
-    Route::post('tarif/lab/ubah', [TarifLaboratorium::class, 'setTarif']);
-    Route::post('tarif/lab/tambah', [TarifLaboratorium::class, 'addTarif']);
+        Route::get('tarif/lab', [TarifLaboratorium::class, 'index']);
+        Route::get('tarif/lab/akhir', [TarifLaboratorium::class, 'getLastTarif']);
+        Route::get('tarif/lab/json', [TarifLaboratorium::class, 'getTarif']);
+        Route::get('tarif/lab/{id?}', [TarifLaboratorium::class, 'getTarifById']);
+        Route::post('tarif/lab/ubah', [TarifLaboratorium::class, 'setTarif']);
+        Route::post('tarif/lab/tambah', [TarifLaboratorium::class, 'addTarif']);
 
-    Route::get('tarif/operasi', [PaketOperasiController::class, 'index']);
-    Route::get('tarif/operasi/akhir', [PaketOperasiController::class, 'getLastTarif']);
-    Route::get('tarif/operasi/json', [PaketOperasiController::class, 'getTarif']);
-    Route::get('tarif/operasi/{id?}', [PaketOperasiController::class, 'getTarifById']);
-    Route::post('tarif/operasi/tambah', [PaketOperasiController::class, 'addTarif']);
-    Route::post('tarif/operasi/ubah', [PaketOperasiController::class, 'setTarif']);
+        Route::get('tarif/operasi', [PaketOperasiController::class, 'index']);
+        Route::get('tarif/operasi/akhir', [PaketOperasiController::class, 'getLastTarif']);
+        Route::get('tarif/operasi/json', [PaketOperasiController::class, 'getTarif']);
+        Route::get('tarif/operasi/{id?}', [PaketOperasiController::class, 'getTarifById']);
+        Route::post('tarif/operasi/tambah', [PaketOperasiController::class, 'addTarif']);
+        Route::post('tarif/operasi/ubah', [PaketOperasiController::class, 'setTarif']);
+
+    });
 
     Route::get('/persalinan', [PersalinanController::class, 'index']);
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);
@@ -156,4 +162,6 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/test', [RegPeriksaController::class, 'statusRegistrasi']);
+Route::get('/test', function () {
+    return User::all();
+});
