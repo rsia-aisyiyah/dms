@@ -11,6 +11,10 @@ class BookingRegistrasi extends Model
     protected $table = 'booking_registrasi';
     public function regPeriksa()
     {
-        return $this->hasMany(RegPeriksa::class, 'no_rkm_medis', 'no_rkm_medis');
+        return $this->belongsTo(RegPeriksa::class, 'no_rkm_medis', 'no_rkm_medis');
+    }
+    public function scopeGetBooking($query)
+    {
+
     }
 }

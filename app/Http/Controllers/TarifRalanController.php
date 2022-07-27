@@ -69,6 +69,7 @@ class TarifRalanController extends Controller
 
     public function index()
     {
+
         return view('dashboard.content.tarif.tarifralan', [
             'title' => 'Tarif Layanan Rawat Jalan',
             'bigTitle' => 'Tarif Layanan Rawat Jalan',

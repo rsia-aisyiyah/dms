@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 
 class LoginController extends Controller
 {
@@ -25,7 +23,7 @@ class LoginController extends Controller
 
         $request->validate([
             'id_user' => 'required',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         $user = User::where('username', $request->get('id_user'))
@@ -36,7 +34,6 @@ class LoginController extends Controller
             $request->session()->regenerate();
             return redirect('/');
         } else {
-
             return back()->with('loginError', 'Login Gagal');
         }
     }
