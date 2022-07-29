@@ -3,6 +3,7 @@
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\DiagnosaPasienController;
 use App\Http\Controllers\KamarController;
+use App\Http\Controllers\KamarInapController;
 use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
@@ -72,7 +73,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/rekammedis/pasientb/json', [DiagnosaPasienController::class, 'jsonPasienTb']);
 
     });
-    
+
     Route::get('/igd', [LaporanIGDController::class, 'index']);
     Route::get('/igd/hitung', [BerandaController::class, 'countIGD']);
     Route::get('/igd/json', [LaporanIGDController::class, 'json']);
@@ -107,6 +108,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/transfusi', [RanapController::class, 'viewTransfusi']);
     Route::get('/ranap/transfusi/json', [RanapController::class, 'jsonTransfusi']);
     Route::get('/ranap/transfusi/rekap/json', [RanapController::class, 'jsonRekapTransfusi']);
+
+    Route::get('/kamar', [KamarInapController::class, 'jumlahKamar']);
+    Route::get('/kamar/rekap', [KamarInapController::class, 'rekapKunjungan']);
 
     Route::middleware('admin')->group(function () {
         Route::get('/tarif/kamar', [KamarController::class, 'index']);
