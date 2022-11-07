@@ -21,7 +21,6 @@ class BerandaController extends Controller
 
         $dokter = app('App\Http\Controllers\DokterController')->getDokterSpesialis();
         $this->collectionDokter = collect($dokter);
-
     }
 
     public function index()
@@ -60,8 +59,7 @@ class BerandaController extends Controller
 
             for ($i = $awal; $i <= $jumlahHari; $i++) {
 
-                $query[] = RegPeriksa::
-                    where('status_lanjut', 'Ralan')
+                $query[] = RegPeriksa::where('status_lanjut', 'Ralan')
                     ->where('stts', 'Sudah')
                     ->whereYear('tgl_registrasi', $tahun)
                     ->whereMonth('tgl_registrasi', $bulan)
@@ -94,15 +92,18 @@ class BerandaController extends Controller
         $tgl_kedua = $request->tgl_kedua;
         if ($request->ajax()) {
             $sekarang = $this->tanggal;
-            $dataRanap = RegPeriksa::where('status_lanjut', 'Ranap')
-                ->whereHas('kamarInap', function ($query) {
-                    $query->where('stts_pulang', '!=', 'Pindah Kamar');
-                });
+            $dataRanap = RegPeriksa::where('status_lanjut', 'Ranap');
             if ($tgl_pertama && $tgl_kedua) {
-                $dataRanap->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
+                $dataRanap->whereHas('kamarInap', function ($query) use ($tgl_pertama, $tgl_kedua) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                        ->whereBetween('tgl_keluar', [$tgl_pertama, $tgl_kedua]);
+                });
             } else {
-                $dataRanap->whereYear('tgl_registrasi', date('Y'))
-                    ->whereMonth('tgl_registrasi', $sekarang->month);
+                $dataRanap->whereHas('kamarInap', function ($query) use ($sekarang) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                        ->whereYear('tgl_keluar', date('Y'))
+                        ->whereMonth('tgl_keluar', $sekarang->month);
+                });
             }
             return $dataRanap->get()->count();
         } else {
@@ -171,11 +172,9 @@ class BerandaController extends Controller
         if ($request->ajax()) {
             if ($tgl_pertama && $tgl_kedua) {
                 $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
-
             } else {
                 $query->whereYear('tgl_registrasi', date('Y'))
                     ->whereMonth('tgl_registrasi', $this->tanggal->month);
-
             }
             $dataRalan = $query->groupBy('kd_pj')->get()->pluck('jumlah');
             @$mandiri = $dataRalan[0] == 0 ? 0 : $dataRalan[0];
@@ -192,18 +191,22 @@ class BerandaController extends Controller
     {
         $tgl_pertama = $request->tgl_pertama;
         $tgl_kedua = $request->tgl_kedua;
+        $month = $this->tanggal->month;
         $query = RegPeriksa::select(DB::raw('count(*) as jumlah'), 'kd_pj')
-            ->where('status_lanjut', 'Ranap')
-            ->whereHas('kamarInap', function ($query) {
-                $query->where('stts_pulang', '!=', 'Pindah Kamar');
-            });
+            ->where('status_lanjut', 'Ranap');
         if ($request->ajax()) {
 
             if ($tgl_pertama && $tgl_kedua) {
-                $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
+                $query->whereHas('kamarInap', function ($query) use ($tgl_pertama, $tgl_kedua) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                        ->whereBetween('tgl_keluar', [$tgl_pertama, $tgl_kedua]);
+                });
             } else {
-                $query->whereYear('tgl_registrasi', date('Y'))
-                    ->whereMonth('tgl_registrasi', $this->tanggal->month);
+                $query->whereHas('kamarInap', function ($query) use ($month) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                        ->whereYear('tgl_keluar', date('Y'))
+                        ->whereMonth('tgl_keluar', $month);
+                });
             }
 
             $dataRanap = $query->groupBy('kd_pj')->get()->pluck('jumlah');
@@ -217,7 +220,6 @@ class BerandaController extends Controller
                 'umum' => $umum,
             ];
         }
-
     }
     public function pembiayaan(Request $request)
     {
@@ -250,7 +252,5 @@ class BerandaController extends Controller
             'lama' => $lama,
             'baru' => $baru,
         ];
-
     }
-
 }

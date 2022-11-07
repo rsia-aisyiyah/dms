@@ -73,7 +73,7 @@
                         beginAtZero: true,
                     };
                     var propDr4 = {
-                        label: data.nm_dokter[1],
+                        label: data.nm_dokter[3],
                         data: dokter4,
                         backgroundColor: 'indianred',
                         beginAtZero: true,

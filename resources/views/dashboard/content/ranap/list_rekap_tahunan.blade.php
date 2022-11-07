@@ -1,27 +1,21 @@
 <div class="col-12 col-sm-12 col-md-4">
     <div class="card card-teal">
         <div class="card-header">
-            <p class="card-title border-bottom-0">Rekap Kamar Tahunan</p>
+            <p class="card-title border-bottom-0">Rekap Kamar</p>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-12">
-                    <div class="row">
-                        <div class="col-6">
-                            <label>Tahun</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="tahun-addon"><i
-                                            class="fas fa-calendar"></i></span>
-                                </div>
-                                <input type="text" id="tahun-rekap" class="form-control datetimepicker-input"
-                                    data-toggle="datetimepicker" aria-describedby="tahun-addon"
-                                    data-target="#tahun-rekap" autocomplete="off" />
-                            </div>
+                    <label>Tanggal Pulang</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="tahun-addon"><i
+                                    class="fas fa-calendar"></i></span>
                         </div>
+                            <input type="text" class="form-control" id="tanggal-rekap" name="tanggal" autocomplete="off">
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-striped text-sm" id="tabel-rekap-tahunan" style="width: 100%"
+                        <table class="table table-striped text-sm" id="tabel-rekap-ranap" style="width: 100%"
                             cellspacing="0">
                             <thead>
                                 <tr>
@@ -41,17 +35,12 @@
     <script>
         $(document).ready(function() {
 
-
-            $('#tahun-rekap').datetimepicker({
-                format: "YYYY",
-                useCurrent: false,
-                viewMode: "years"
-            });
+            dateRange('#tanggal-rekap');
 
             load_data();
 
             function load_data(tahun) {
-                $('#tabel-rekap-tahunan').DataTable({
+                $('#tabel-rekap-ranap').DataTable({
                     ajax: {
                         url: 'kamar/rekap',
                         dataType: 'json',
@@ -121,9 +110,9 @@
                 });
             }
 
-            $('#tahun-rekap').on('change.datetimepicker', function() {
+            $('#tanggal-rekap').on('change.datetimepicker', function() {
                 var tahun = $(this).val();
-                $('#tabel-rekap-tahunan').DataTable().destroy();
+                $('#tabel-rekap-ranap').DataTable().destroy();
                 load_data(tahun);
             });
 

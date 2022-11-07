@@ -46,6 +46,23 @@ $('#tanggal').daterangepicker({
     showDropdowns: true,
     minYear: 2019,
 });
+
+function dateRange(id) {
+    $(id).daterangepicker({
+        locale: {
+            language: 'id',
+            applyLabel: 'Terapkan',
+            cancelLabel: 'Batal',
+            format: 'DD/MM/YYYY',
+            daysOfWeek: ['Ming', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+            monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+        },
+        startDate: moment().startOf('month'),
+        autoclose: true,
+        showDropdowns: true,
+        minYear: 2019,
+    });
+}
 function cekTanggal() {
     if (tgl_pertama == '' && tgl_kedua == '') {
 

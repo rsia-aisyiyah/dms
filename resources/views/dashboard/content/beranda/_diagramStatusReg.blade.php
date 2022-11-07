@@ -23,7 +23,6 @@
                     'tgl_kedua': tgl_kedua,
                 },
                 success: function(data) {
-                    console.log(data);
                     sudah = data.sudah;
                     batal = data.batal;
 

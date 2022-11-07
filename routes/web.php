@@ -23,7 +23,6 @@ use App\Http\Controllers\TarifLaboratorium;
 use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
 use App\Models\Dokter;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,7 +70,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/rekammedis/pasientb', [DiagnosaPasienController::class, 'pasienTb']);
         Route::get('/rekammedis/pasientb/json', [DiagnosaPasienController::class, 'jsonPasienTb']);
-
     });
 
     Route::get('/igd', [LaporanIGDController::class, 'index']);
@@ -148,7 +146,6 @@ Route::middleware('auth')->group(function () {
         Route::get('tarif/operasi/{id?}', [PaketOperasiController::class, 'getTarifById']);
         Route::post('tarif/operasi/tambah', [PaketOperasiController::class, 'addTarif']);
         Route::post('tarif/operasi/ubah', [PaketOperasiController::class, 'setTarif']);
-
     });
 
     Route::get('/persalinan', [PersalinanController::class, 'index']);
@@ -166,6 +163,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/test', function () {
-    return User::all();
-});
+Route::get('/test', [KamarInapController::class, 'kamarVK']);

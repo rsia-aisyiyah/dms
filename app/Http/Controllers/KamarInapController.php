@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Kamar;
 use App\Models\KamarInap;
+use App\Models\RegPeriksa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,9 +26,7 @@ class KamarInapController extends Controller
         $kelas = $this->kelas;
         $jumlahKelas = $this->jumlah;
         $tahun = $request->tahun ? $request->tahun : date('Y');
-        $i = 0;
-
-        foreach ($kelas as $k) {
+        foreach ($kelas as $i => $k) {
             $kamarInap = KamarInap::where('stts_pulang', '!=', 'Pindah Kamar')->whereYear('tgl_keluar', $tahun)->whereHas('kamar', function ($q) use ($k) {
                 $q->where('kelas', $k);
             })->get()->count();
@@ -40,16 +39,14 @@ class KamarInapController extends Controller
                 'jumlahKelas' => $jumlahKelas[$i],
                 'data' => $kamarInap,
             ];
-
-            $i++;
         }
+
         $hcu[] = [
             'kelas' => 'HCU',
             'jumlahKelas' => '2',
             'data' => $kamarHcu,
         ];
         $dataMerge = array_merge($data, $hcu);
-        // return $data;
         return DataTables::of($dataMerge)->make(true);
     }
     public function jumlahKamar()
@@ -64,8 +61,50 @@ class KamarInapController extends Controller
         $this->kelas = $data->pluck('kelas')->toArray();
         $this->jumlah = $data->pluck('jumlah')->toArray();
     }
-    public function rekapHcu()
+    public function rekapKamar(Request $request)
     {
-        # code...
+        $tgl_pertama = $request->tgl_pertama;
+        $tgl_kedua = $request->tgl_kedua;
+
+        $kamarHcu = RegPeriksa::where('status_lanjut', 'Ranap');
+        if ($tgl_pertama && $tgl_kedua) {
+            $kamarHcu->whereHas('kamarInap', function ($q) use ($tgl_pertama, $tgl_kedua) {
+                $q->whereBetween('tgl_keluar', [$tgl_pertama, $tgl_kedua]);
+            })->with('kamarInap');
+        } else {
+            $kamarHcu->whereHas('kamarInap', function ($q) {
+                $q->whereYear('tgl_keluar', date('Y'))
+                    ->whereMonth('tgl_keluar', date('m'));
+            })->with('kamarInap', function ($q) {
+                $q->with('kamar');
+            });
+        }
+
+        return $kamarHcu;
+
     }
+
+    public function kamarHCU(Request $request)
+    {
+        return $this->rekapKamar($request)
+            ->whereHas('kamarInap', function ($q) {
+                $q->where('stts_pulang', '!=', 'Pindah Kamar');
+                $q->whereHas('kamar', function ($q) {
+                    $q->where('kd_kamar', 'like', '%HCU%');
+                });
+            })->get();
+
+    }
+    public function kamarVK(Request $request)
+    {
+        return $this->rekapKamar($request)
+            ->whereHas('kamarInap', function ($q) {
+                $q->where('stts_pulang', '!=', 'Pindah Kamar')
+                    ->whereHas('kamar', function ($q) {
+                        $q->where('kd_kamar', 'like', '%VK%');
+                    });
+            })->get();
+
+    }
+
 }
