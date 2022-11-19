@@ -26,4 +26,9 @@ class Dokter extends Model
     {
         return $this->hasMany(RawatInapDr::class, 'kd_dokter', 'kd_dokter');
     }
+
+    public function pegawai()
+    {
+        return $this->hasOne(Pegawai::class, 'nik', 'kd_dokter');
+    }
 }

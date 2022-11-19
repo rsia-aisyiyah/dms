@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\DiagnosaPasienController;
+use App\Http\Controllers\DokterController;
 use App\Http\Controllers\KamarController;
 use App\Http\Controllers\KamarInapController;
 use App\Http\Controllers\KategoriPerawatanController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\SepController;
 use App\Http\Controllers\TarifLaboratorium;
 use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
+use App\Http\Controllers\TindakanController;
 use App\Models\Dokter;
 use Illuminate\Support\Facades\Route;
 
@@ -155,6 +157,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/penjab', [PenjabController::class, 'getAllPenjab']);
 
+
+    Route::get('/tindakan', [TindakanController::class, 'index']);
+    Route::get('/tindakan/json', [TindakanController::class, 'rekapTindakan']);
+
+    Route::get('/dokter', [DokterController::class, 'semuaDokter']);
+
     Route::get('/poli/{kd_sps}', function ($kd_sps) {
         $dokter = Dokter::all()
             ->where('kd_sps', $kd_sps)
@@ -163,4 +171,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/test', [KamarInapController::class, 'kamarVK']);
+Route::get('/test', [TindakanController::class, 'rawatInapDr']);
