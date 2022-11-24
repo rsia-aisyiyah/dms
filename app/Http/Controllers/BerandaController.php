@@ -92,18 +92,15 @@ class BerandaController extends Controller
         $tgl_kedua = $request->tgl_kedua;
         if ($request->ajax()) {
             $sekarang = $this->tanggal;
-            $dataRanap = RegPeriksa::where('status_lanjut', 'Ranap');
+            $dataRanap = RegPeriksa::where('status_lanjut', 'Ranap')
+                ->whereHas('kamarInap', function ($query) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar');
+                });
             if ($tgl_pertama && $tgl_kedua) {
-                $dataRanap->whereHas('kamarInap', function ($query) use ($tgl_pertama, $tgl_kedua) {
-                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
-                        ->whereBetween('tgl_keluar', [$tgl_pertama, $tgl_kedua]);
-                });
+                $dataRanap->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
             } else {
-                $dataRanap->whereHas('kamarInap', function ($query) use ($sekarang) {
-                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
-                        ->whereYear('tgl_keluar', date('Y'))
-                        ->whereMonth('tgl_keluar', $sekarang->month);
-                });
+                $dataRanap->whereYear('tgl_registrasi', date('Y'))
+                    ->whereMonth('tgl_registrasi', $sekarang->month);
             }
             return $dataRanap->get()->count();
         } else {
@@ -191,22 +188,18 @@ class BerandaController extends Controller
     {
         $tgl_pertama = $request->tgl_pertama;
         $tgl_kedua = $request->tgl_kedua;
-        $month = $this->tanggal->month;
         $query = RegPeriksa::select(DB::raw('count(*) as jumlah'), 'kd_pj')
-            ->where('status_lanjut', 'Ranap');
+            ->where('status_lanjut', 'Ranap')
+            ->whereHas('kamarInap', function ($query) {
+                $query->where('stts_pulang', '!=', 'Pindah Kamar');
+            });
         if ($request->ajax()) {
 
             if ($tgl_pertama && $tgl_kedua) {
-                $query->whereHas('kamarInap', function ($query) use ($tgl_pertama, $tgl_kedua) {
-                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
-                        ->whereBetween('tgl_keluar', [$tgl_pertama, $tgl_kedua]);
-                });
+                $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
             } else {
-                $query->whereHas('kamarInap', function ($query) use ($month) {
-                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
-                        ->whereYear('tgl_keluar', date('Y'))
-                        ->whereMonth('tgl_keluar', $month);
-                });
+                $query->whereYear('tgl_registrasi', date('Y'))
+                    ->whereMonth('tgl_registrasi', $this->tanggal->month);
             }
 
             $dataRanap = $query->groupBy('kd_pj')->get()->pluck('jumlah');
