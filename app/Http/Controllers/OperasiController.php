@@ -64,40 +64,42 @@ class OperasiController extends Controller
         $tanggal = new Carbon('this month');
         $sekarang = $tanggal->now();
         $awalBulan = $tanggal->startOfMonth();
-        if ($request->ajax()) {
-            if ($request->tgl_pertama || $request->tgl_kedua) {
-                $data = Operasi::whereBetween('tgl_operasi', [$request->tgl_pertama . ' 00:00:00', $request->tgl_kedua . ' 23:59:59'])
-                    ->whereHas('paketOperasi', function ($query) use ($request) {
-                        if ($request->operasi == 'sc') {
-                            $query->where('nm_perawatan', 'like', '%sc%');
-                            $query->orWhere('nm_perawatan', 'like', '%sectio%');
-                        } else if ($request->operasi == 'curetage') {
-                            $query->where('nm_perawatan', 'like', '%curetage%');
-                        } else if ($request->operasi == 'lain') {
-                            $query->where('nm_perawatan', 'not like', '%sc%');
-                            $query->where('nm_perawatan', 'not like', '%sectio%');
-                            $query->where('nm_perawatan', 'not like', '%curetage%');
-                        }
-                    })
-                    ->whereHas('dokter', function ($query) use ($request) {
-                        $query->where('nm_dokter', 'like', '%' . $request->dokter . '%');
-                    })
-                    ->whereHas('pembiayaan', function ($query) use ($request) {
-                        $query->where('png_jawab', 'like', '%' . $request->pembiayaan . '%');
-                    })
-                    ->with('kamarInap', function ($query) {
-                        $query->where('stts_pulang', '!=', 'Pindah Kamar')
-                            ->where('tgl_keluar', '!=', '0000-00-00');
-                    });
-            } else {
-                $data = Operasi::with('paketOperasi')
-                    ->whereBetween('tgl_operasi', [$awalBulan->toDateString() . ' 00:00:00', $sekarang->toDateString() . ' 23:59:59'])
-                    ->with('kamarInap', function ($query) {
-                        $query->where('stts_pulang', '!=', 'Pindah Kamar')
-                            ->where('tgl_keluar', '!=', '0000-00-00');
-                    });
-            }
+        // if ($request->ajax()) {
+        if ($request->tgl_pertama || $request->tgl_kedua) {
+            $data = Operasi::whereBetween('tgl_operasi', [$request->tgl_pertama . ' 00:00:00', $request->tgl_kedua . ' 23:59:59'])
+                ->whereHas('paketOperasi', function ($query) use ($request) {
+                    if ($request->operasi == 'sc') {
+                        $query->where('nm_perawatan', 'like', '%sc%');
+                        $query->orWhere('nm_perawatan', 'like', '%sectio%');
+                    } else if ($request->operasi == 'curetage') {
+                        $query->where('nm_perawatan', 'like', '%curetage%');
+                    } else if ($request->operasi == 'lain') {
+                        $query->where('nm_perawatan', 'not like', '%sc%');
+                        $query->where('nm_perawatan', 'not like', '%sectio%');
+                        $query->where('nm_perawatan', 'not like', '%curetage%');
+                    }
+                })
+                ->with('laporanOperasi')
+                ->whereHas('dokter', function ($query) use ($request) {
+                    $query->where('nm_dokter', 'like', '%' . $request->dokter . '%');
+                })
+                ->whereHas('pembiayaan', function ($query) use ($request) {
+                    $query->where('png_jawab', 'like', '%' . $request->pembiayaan . '%');
+                })
+                ->with('kamarInap', function ($query) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                        ->where('tgl_keluar', '!=', '0000-00-00');
+                });
+        } else {
+            $data = Operasi::with('paketOperasi')
+                ->whereBetween('tgl_operasi', [$awalBulan->toDateString() . ' 00:00:00', $sekarang->toDateString() . ' 23:59:59'])
+                ->with('laporanOperasi')
+                ->with('kamarInap', function ($query) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                        ->where('tgl_keluar', '!=', '0000-00-00');
+                });
         }
+        // }
         return DataTables::of($data)
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && $request->get('search')['value']) {
@@ -149,6 +151,35 @@ class OperasiController extends Controller
             ->editColumn('pembiayaan', function ($data) {
                 return $data->pembiayaan->png_jawab;
             })
+            ->editColumn('diagnosa', function ($data) {
+                if ($data->kamarInap == null) {
+                    return '-';
+                } else {
+                    $diagnosa = $data->kamarInap->diagnosa_akhir;
+                    $arrDiagnosa = explode(', ', $diagnosa);
+                    $arrFilter = array_filter($arrDiagnosa);
+                    $diagnosaAkhir = "<ul>";
+                    foreach ($arrFilter as $d) {
+                        $diagnosaAkhir .= "<li>" . $d . ",</li>";
+                    }
+                    $diagnosaAkhir .= "</ul>";
+
+                    return $diagnosaAkhir;
+                }
+
+                // if ($data->kamarInap->diagnosa_akhir != null) {
+                //     return $diagnosa = $data->kamarInap->diagnosa_akhir;
+                // }
+                // $arrDiagnosa = explode(',', $diagnosa);
+                // $diagnosaAkhir = "<ul>";
+                // foreach ($arrDiagnosa as $d) {
+                //     $diagnosaAkhir .= "<li>" . $d . "<li>";
+                // }
+                // $diagnosaAkhir .= "</ul>";
+
+                // return $diagnosaAkhir;
+            })
+            ->rawColumns(['diagnosa'])
             ->make(true);
     }
 

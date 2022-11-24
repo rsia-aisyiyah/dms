@@ -68,4 +68,8 @@ class Operasi extends Model
     {
         return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat');
     }
+    public function laporanOperasi()
+    {
+        return $this->hasOne(LaporanOperasi::class, 'no_rawat', 'no_rawat');
+    }
 }
