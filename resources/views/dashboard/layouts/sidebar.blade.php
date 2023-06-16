@@ -71,6 +71,7 @@
                             <p>Operasi</p>
                         </a>
                     </li>
+
                 </ul>
             </li>
             <li class="nav-item has-treeview {{ Request::is('persalinan*') ? 'menu-is-opening menu-open' : '' }}">
@@ -86,7 +87,14 @@
                         <a href="{{ '/dms/persalinan' }}" class="nav-link">
                             <i
                                 class="far fa-circle nav-icon {{ Request::is('persalinan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Laporan Tindakan Persalinan</p>
+                            <p>Partus</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ '/dms/operasi/sectio' }}" class="nav-link">
+                            <i
+                                class="far fa-circle nav-icon {{ Request::is('operasi/sectio') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Sectio</p>
                         </a>
                     </li>
                 </ul>
@@ -156,6 +164,13 @@
                             <i
                                 class="far fa-circle nav-icon {{ Request::is('ralan/laporan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
                             <p>Laporan BPJS</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ '/dms/ralan/kandungan' }}" class="nav-link">
+                            <i
+                                class="far fa-circle nav-icon {{ Request::is('ralan/kandungan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Periksa Kehamilan</p>
                         </a>
                     </li>
                 </ul>

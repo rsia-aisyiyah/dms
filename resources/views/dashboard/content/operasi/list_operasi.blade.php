@@ -66,10 +66,12 @@
                                         <tr role="row">
                                             <th>Tanggal Operasi</th>
                                             <th>Nomor Rawat</th>
+                                            <th>Nomor RM</th>
                                             <th>Nama Pasien</th>
                                             <th>Nama Operasi</th>
                                             <th>Kelas</th>
                                             <th>Kamar</th>
+                                            <th>Lama</th>
                                             <th>Dokter Operator</th>
                                             <th>Dokter Anestesi</th>
                                             <th>Dokter Anak</th>
@@ -241,6 +243,10 @@
                                 name: 'no_rawat',
                             },
                             {
+                                data: 'no_rkm_medis',
+                                name: 'no_rkm_medis',
+                            },
+                            {
                                 data: 'pasien',
                                 name: 'pasien',
                             },
@@ -255,6 +261,10 @@
                             {
                                 data: 'kamar',
                                 name: 'kamar',
+                            },
+                            {
+                                data: 'lama',
+                                name: 'lama',
                             },
                             {
                                 data: 'dokter',

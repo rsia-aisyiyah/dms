@@ -15,8 +15,6 @@ class RalanController extends Controller
 
     public function __construct()
     {
-        // parent::__construct();
-        //Do your magic here
         $this->tanggal = new Carbon('this month');
     }
 
@@ -25,6 +23,21 @@ class RalanController extends Controller
         $tanggal = new Carbon('this month');
         return view(
             'dashboard.content.ralan.list_status_pasien',
+            [
+                'title' => 'Kunjungan Rawat Jalan',
+                'bigTitle' => 'Kunjungan Rawat Jalan',
+                'month' => Carbon::now()->monthName,
+                'tanggal' => 'Per Tanggal : ' . $tanggal->now()->translatedFormat('d F Y'),
+                'tglAwal' => $tanggal->startOfMonth()->toDateString(),
+                'tglSekarang' => $tanggal->now()->toDateString(),
+            ]
+        );
+    }
+    public function ambilKandungan()
+    {
+        $tanggal = new Carbon('this month');
+        return view(
+            'dashboard.content.ralan.list_kandungan',
             [
                 'title' => 'Kunjungan Rawat Jalan',
                 'bigTitle' => 'Kunjungan Rawat Jalan',
@@ -60,7 +73,7 @@ class RalanController extends Controller
                         $query->where('kd_dokter', 'like', '%' . $request->kd_dokter . '%');
                     });
             } else {
-                $data->whereBetween('tgl_registrasi', [$tanggal->startOfMonth()->toDateString(), $tanggal->now()->toDateString()]);
+                $data->where('tgl_registrasi', $tanggal->now()->toDateString());
             }
         }
 
@@ -86,9 +99,9 @@ class RalanController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                . $data->pasien->kelurahan->nm_kel . ", "
-                . $data->pasien->kecamatan->nm_kec . ", "
-                . $data->pasien->kabupaten->nm_kab;
+                    . $data->pasien->kelurahan->nm_kel . ", "
+                    . $data->pasien->kecamatan->nm_kec . ", "
+                    . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('stts_daftar', function ($data) {
                 if ($data->stts_daftar == 'Lama') {
@@ -187,9 +200,9 @@ class RalanController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                . $data->pasien->kelurahan->nm_kel . ", "
-                . $data->pasien->kecamatan->nm_kec . ", "
-                . $data->pasien->kabupaten->nm_kab;
+                    . $data->pasien->kelurahan->nm_kel . ", "
+                    . $data->pasien->kecamatan->nm_kec . ", "
+                    . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_dokter', function ($data) {
                 return $data->dokter->nm_dokter;
@@ -387,6 +400,49 @@ class RalanController extends Controller
                 ];
             }
         }
+        return DataTables::of($data)->make(true);
+    }
+    public function jsonPoliJk(Request $request)
+    {
+        $tanggal = new Carbon('this month');
+        $tahun = $request->tahun ? $request->tahun : date('Y');
+
+        // if ($request->ajax()) {
+        for ($i = 1; $i <= 12; $i++) {
+            $laki = RegPeriksa::whereYear('tgl_registrasi', $tahun)
+                ->whereMonth('tgl_registrasi', $i)
+                ->whereHas('pasien', function ($q) {
+                    $q->where('jk', 'L');
+                })
+                ->where('status_lanjut', 'Ralan')
+                ->where('stts', '!=', 'Batal')
+                ->get()
+                ->count();
+            $perempuan = RegPeriksa::whereYear('tgl_registrasi', $tahun)
+                ->whereMonth('tgl_registrasi', $i)
+                ->whereHas('pasien', function ($q) {
+                    $q->where('jk', 'P');
+                })
+                ->where('status_lanjut', 'Ralan')
+                ->where('stts', '!=', 'Batal')
+                ->get()
+                ->count();
+
+            $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
+
+            $laki = empty($laki) ? 0 : $laki;
+            $perempuan = empty($laki) ? 0 : $perempuan;
+
+
+            $total = $laki + $perempuan;
+            $data["$indexBulan"] = (object) [
+                'bulan' => $indexBulan . " " . $tahun,
+                'laki' => $laki,
+                'perempuan' => $perempuan,
+                'total' => $total,
+            ];
+        }
+        // }
         return DataTables::of($data)->make(true);
     }
     public function diagramRalanPoli(Request $request)

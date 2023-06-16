@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\BridgingSep;
-use App\Models\DiagnosaPasien;
 use App\Models\Dokter;
-use App\Models\KamarInap;
 use App\Models\Pasien;
 use App\Models\Penjab;
-use App\Models\Poliklinik;
+use App\Models\KamarInap;
 use App\Models\Spesialis;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Poliklinik;
+use App\Models\BridgingSep;
+use App\Models\RanapGabung;
+use App\Models\AskepRanapBayi;
+use App\Models\DiagnosaPasien;
+use App\Models\BookingRegistrasi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RegPeriksa extends Model
 {
@@ -61,6 +64,15 @@ class RegPeriksa extends Model
     {
         return $this->belongsTo(KamarInap::class, 'no_rawat', 'no_rawat');
     }
+    public function ranapGabung()
+    {
+        return $this->hasMany(RanapGabung::class, 'no_rawat2', 'no_rawat');
+    }
+
+    public function askepBayi()
+    {
+        return $this->hasOne(AskepRanapBayi::class, 'no_rawat', 'no_rawat');
+    }
     public function scopeRalanTahunan($query, $tahun, $bulan)
     {
         $query->whereIn('kd_poli', ['P001', 'P003', 'P007', 'P008', 'P009'])
@@ -108,7 +120,5 @@ class RegPeriksa extends Model
             ->whereHas('bookingRegistrasi')
             ->where('status_lanjut', 'Ralan')
             ->where('stts', 'Sudah');
-
     }
-
 }

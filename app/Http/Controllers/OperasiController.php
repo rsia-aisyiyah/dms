@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Operasi;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\DataTables;
 
 class OperasiController extends Controller
 {
+
+    public $carbon;
+    public function __construct()
+    {
+        $this->carbon = new Carbon();
+    }
     public function index()
     {
 
@@ -57,6 +64,52 @@ class OperasiController extends Controller
             'dataCuretage' => $dataCuretage,
             'dataLain' => $dataLain,
         ]);
+    }
+
+    public function viewSectio()
+    {
+        return view('dashboard.content.operasi.list_sectio', [
+            'title' => 'Data Persalinan Sectio',
+            'bigTitle' => 'Operasi',
+            'month' => 'Jadwal Operasi : ' . $this->carbon->startOfMonth()->translatedFormat('d F Y') . ' s/d ' . $this->carbon->now()->translatedFormat('d F Y'),
+            'dateNow' => $this->carbon->now()->toDateString(),
+            'dateStart' => $this->carbon->startOfMonth()->toDateString(),
+
+        ]);
+    }
+    public function ambilSectio(Request $request)
+    {
+        $data = Operasi::with(['regPeriksa.pasien', 'regPeriksa.dokter', 'regPeriksa.penjab', 'ranapGabung.askepBayi', 'ranapGabung.rp.pasien', 'paketOperasi', 'askepRanapKebidanan'])->with('kamarInap', function ($query) {
+            $query->where('stts_pulang', '!=', 'Pindah Kamar')
+                ->where('tgl_keluar', '!=', '0000-00-00');
+        })->whereHas('paketOperasi', function ($query) {
+            $query->where('nm_perawatan', 'like', '%sc%');
+            $query->orWhere('nm_perawatan', 'like', '%sectio%');
+        });
+
+        if ($request->ajax()) {
+            if ($request->tgl_pertama && $request->tgl_kedua) {
+                $data->whereBetween('tgl_operasi', [$request->tgl_pertama . ' 00:00:00', $request->tgl_kedua . ' 00:00:00'])
+                    ->whereHas('regPeriksa', function ($query) use ($request) {
+                        $query->whereHas('penjab', function ($query) use ($request) {
+                            $query->where('png_jawab', 'like', '%' . $request->pembiayaan . '%');
+                        });
+                    })
+                    ->whereHas('dokter', function ($query) use ($request) {
+                        if ($request->dokter) {
+                            $query->where('kd_dokter', $request->dokter);
+                        }
+                    });
+            } else {
+                $data->whereMonth('tgl_operasi', date('m'))->whereYear('tgl_operasi', date('Y'));
+            }
+        }
+
+        return DataTables::of($data)->make(true);
+
+        // return response()->json($data);
+
+        // return $data;
     }
     public function json(Request $request)
     {
@@ -108,6 +161,9 @@ class OperasiController extends Controller
                     });
                 }
             })
+            ->editColumn('no_rkm_medis', function ($data) {
+                return $data->regPeriksa->no_rkm_medis;
+            })
             ->editColumn('pasien', function ($data) {
                 return $data->regPeriksa->pasien->nm_pasien;
             })
@@ -118,13 +174,24 @@ class OperasiController extends Controller
                 return $data->paketOperasi->nm_perawatan;
             })
             ->editColumn('kelas', function ($data) {
-                return $data->paketOperasi->kelas;
+                if ($data->bridgingSep) {
+                    return 'Kelas ' . $data->bridgingSep->klsrawat;
+                } else {
+                    return '- ';
+                }
             })
             ->editColumn('kamar', function ($data) {
                 if ($data->kamarInap == null) {
                     return 'Belum Pulang';
                 } else {
                     return $data->kamarInap->kd_kamar;
+                }
+            })
+            ->editColumn('lama', function ($data) {
+                if ($data->kamarInap) {
+                    return $data->kamarInap->lama . ' Hari';
+                } else {
+                    return '0 Hari';
                 }
             })
             ->editColumn('dokter', function ($data) {

@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="text-sm table-responsive">
-                                <table id="tabel-persalinan" class="table table-bordered dataTable" width="100%"
+                                <table id="table-sectio" class="table table-bordered dataTable" width="100%"
                                     cellspacing="0">
                                     <thead>
                                         <tr role="row">
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        @include('dashboard.content.persalinan.diagram_persalinan')
+        {{-- @include('dashboard.content.persalinan.diagram_persalinan') --}}
     @endsection
 
     @push('scripts')
@@ -120,7 +120,7 @@
                     tgl2 = hari2 + ' ' + bulan[bulan2] + ' ' + tahun2
 
                     $('#bulan').html('<strong>' + tgl1 + ' s/d ' + tgl2 + '</strong>');
-                    $('#tabel-persalinan').DataTable().destroy();
+                    $('#table-sectio').DataTable().destroy();
 
                     load_data(tgl_pertama, tgl_kedua);
                 });
@@ -133,13 +133,13 @@
                     var dokter = $('#dokter').val();
                     var pembiayaan = $('#pembiayaan').val();
 
-                    $('#tabel-persalinan').DataTable({
+                    $('#table-sectio').DataTable({
                         processing: true,
                         serverSide: true,
                         destroy: false,
                         searching: true,
                         ajax: {
-                            url: 'persalinan/json',
+                            url: '/dms/operasi/sectio/json',
                             data: {
                                 tgl_pertama: tgl_pertama,
                                 tgl_kedua: tgl_kedua,
@@ -147,7 +147,7 @@
                                 pembiayaan: pembiayaan,
                             }
                         },
-                        scrollY: "350px",
+                        scrollY: "500px",
                         scrollX: true,
                         scroller: {
                             loadingIndicator: true
@@ -210,54 +210,121 @@
                         ],
                         columns: [{
                                 data: 'no_rawat',
+                                render: function(data, type, row) {
+                                    return data;
+                                },
                                 name: 'no_rawat',
                             },
                             {
                                 data: 'pasien',
+                                render: function(data, type, row) {
+                                    return row.reg_periksa.pasien.nm_pasien;
+                                },
                                 name: 'pasien',
                             },
                             {
                                 data: 'tgl_lahir',
+                                render: function(data, type, row) {
+                                    tgl = row.reg_periksa.pasien.tgl_lahir
+                                    umur = row.reg_periksa.umurdaftar
+                                    return umur + ' Th. / ' + formatTanggal(tgl);
+                                },
                                 name: 'tgl_lahir',
                             },
                             {
                                 data: 'suami',
+                                render: function(data, type, row) {
+                                    return row.reg_periksa.p_jawab;
+                                },
                                 name: 'suami',
                             },
                             {
                                 data: 'alamat',
+                                render: function(data, type, row) {
+                                    return row.reg_periksa.pasien.alamat + ', ' +
+                                        row.reg_periksa.pasien.kelurahanpj + ', ' +
+                                        row.reg_periksa.pasien.kecamatanpj + ', ' +
+                                        row.reg_periksa.pasien.kabupatenpj;
+                                },
                                 name: 'alamat',
                             },
                             {
-                                data: 'tgl_perawatan',
-                                name: 'tgl_perawatan',
+                                data: 'tgl_operasi',
+                                render: function(data) {
+                                    dt = data.split(" ");
+                                    return formatTanggal(dt)
+                                },
+                                name: 'tgl_operasi',
                             },
                             {
                                 data: 'nm_perawatan',
+                                render: function(data, type, row) {
+                                    return row.paket_operasi.nm_perawatan;
+                                },
                                 name: 'nm_perawatan',
                             },
                             {
                                 data: 'status_hamil',
+                                render: function(data, type, row) {
+                                    if (row.askep_ranap_kebidanan) {
+                                        gpa = row.askep_ranap_kebidanan;
+                                        return 'G' + gpa.riwayat_persalinan_g + ' ' +
+                                            'P' + gpa.riwayat_persalinan_p + ' ' +
+                                            'A' + gpa.riwayat_persalinan_a;
+
+                                    } else {
+                                        return '-';
+                                    }
+                                },
                                 name: 'status_hamil',
                             },
                             {
                                 data: 'bayi',
+                                render: function(data, type, row) {
+                                    if (row.ranap_gabung) {
+                                        console.log(row)
+                                        return row.ranap_gabung.rp.pasien.jk
+                                    } else {
+                                        return '-'
+                                    }
+                                },
                                 name: 'bayi',
                             },
                             {
                                 data: 'bb',
+                                render: function(data, type, row) {
+                                    if (row.ranap_gabung && row.ranap_gabung.askep_bayi) {
+                                        return row.ranap_gabung.askep_bayi.pemeriksaan_bb
+                                    } else {
+                                        return '-'
+                                    }
+                                },
                                 name: 'bb',
                             },
                             {
                                 data: 'tb',
+                                render: function(data, type, row) {
+                                    if (row.ranap_gabung && row.ranap_gabung.askep_bayi) {
+                                        return row.ranap_gabung.askep_bayi.pemeriksaan_tb
+                                    } else {
+                                        return '-'
+                                    }
+                                },
                                 name: 'tb',
                             },
                             {
                                 data: 'dokter',
+                                render: function(data, type, row) {
+                                    // console.log(row)
+                                    return row.reg_periksa.dokter.nm_dokter
+                                },
                                 name: 'dokter',
                             },
                             {
                                 data: 'pembiayaan',
+                                render: function(data, type, row) {
+                                    return row.reg_periksa.penjab.png_jawab
+                                },
                                 name: 'pembiayaan',
                             },
                         ],
@@ -277,7 +344,7 @@
                         tgl_kedua = tahun + '-' + bulan + '-' + hari2;
 
                     }
-                    $('#tabel-persalinan').DataTable().destroy();
+                    $('#table-sectio').DataTable().destroy();
                     load_data(tgl_pertama, tgl_kedua, $(this).val());
                 });
 
@@ -294,7 +361,7 @@
                         tgl_kedua = tahun + '-' + bulan + '-' + hari2;
 
                     }
-                    $('#tabel-persalinan').DataTable().destroy();
+                    $('#table-sectio').DataTable().destroy();
                     load_data(tgl_pertama, tgl_kedua, dokter, $(this).val());
                 });
             });

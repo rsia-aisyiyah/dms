@@ -47,7 +47,6 @@ class RegPeriksaController extends Controller
             'offline' => @$booking[0],
             'online' => @$booking[1],
         ];
-
     }
     public function caraRegistrasi(Request $request)
     {
@@ -112,7 +111,5 @@ class RegPeriksaController extends Controller
             'sudah' => $sudah,
             'batal' => $batal,
         ];
-
     }
-
 }

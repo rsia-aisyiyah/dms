@@ -89,6 +89,7 @@
         </div>
         @include('dashboard.content.ranap.list_pembayaran_ranap')
         @include('dashboard.content.ranap.list_rekap_tahunan')
+        @include('dashboard.content.ranap.list_jk_ranap')
     </div>
 @endsection
 

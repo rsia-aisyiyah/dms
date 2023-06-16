@@ -6,8 +6,12 @@ use App\Models\Dokter;
 use App\Models\Penjab;
 use App\Models\Pegawai;
 use App\Models\Petugas;
+use App\Models\KamarInap;
 use App\Models\RegPeriksa;
+use App\Models\BridgingSep;
+use App\Models\RanapGabung;
 use App\Models\PaketOperasi;
+use App\Models\LaporanOperasi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -27,6 +31,10 @@ class Operasi extends Model
             'no_rawat',
             'kd_pj',
         );
+    }
+    public function bridgingSep()
+    {
+        return $this->hasOne(BridgingSep::class, 'no_rawat', 'no_rawat');
     }
     public function paketOperasi()
     {
@@ -71,5 +79,13 @@ class Operasi extends Model
     public function laporanOperasi()
     {
         return $this->hasOne(LaporanOperasi::class, 'no_rawat', 'no_rawat');
+    }
+    public function ranapGabung()
+    {
+        return $this->hasOne(RanapGabung::class, 'no_rawat', 'no_rawat');
+    }
+    public function askepRanapKebidanan()
+    {
+        return $this->hasOne(AskepRanapKebidanan::class, 'no_rawat', 'no_rawat');
     }
 }

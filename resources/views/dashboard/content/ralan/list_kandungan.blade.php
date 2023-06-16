@@ -21,16 +21,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>Status Daftar :</label>
-                                <select name="daftar" id="daftar" class="custom-select form-control-border">
-                                    <option value="">Baru & Lama</option>
-                                    <option value="baru">Baru</option>
-                                    <option value="lama">Lama</option>
-                                </select>
-                            </div>
-                        </div>
+
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label>Pembiayaan :</label>
@@ -41,24 +32,17 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <label>Poli :</label>
-                                <select class="custom-select form-control-border" id="poli" name="poli">
-                                    <option value="">Semua Poli</option>
-                                    <option value="S0003">Anak</option>
-                                    <option value="S0001">Kandungan dan Kebidanan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
+
+                        {{-- <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Dokter :</label>
                                 <select class="custom-select form-control-border" id="dokter" name="dokter">
                                     <option hidden value="">Dokter Spesialis</option>
+                                    <option value="1.101.1112">dr. Himawan Budityastomo, Sp.OG</option>
+                                    <option value="1.109.1119">dr. Siti PAttihatun Nasyiroh, Sp.OG</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -69,12 +53,12 @@
                                         <tr>
                                             <th>Tanggal Registrasi</th>
                                             <th>Nama Pasien</th>
-                                            <th>Tanggal Lahir</th>
+                                            <th>Umur / Tanggal Lahir</th>
+                                            <th>Suami</th>
                                             <th>Alamat</th>
-                                            <th>Status Daftar</th>
+                                            <th>GPA</th>
+                                            <th>Usia Hamil</th>
                                             <th>Pembiayaan</th>
-                                            <th>Penanggung Jawab</th>
-                                            <th>No. HP</th>
                                             <th>Dokter PJ</th>
                                         </tr>
                                     </thead>
@@ -84,22 +68,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        @include('dashboard.content.ralan.list_pembayaran_ralan')
-        @include('dashboard.content.ralan.list_status_daftar_ralan')
-        @include('dashboard.content.ralan.list_poli_ralan')
-    </div>
-    <div class="row">
-        <div class="col-12 col-sm-12 col-md-4">
-            @include('dashboard.content.ralan.list_dokter_obgyn_ralan')
-        </div>
-        <div class="col-12 col-sm-12 col-md-4">
-            @include('dashboard.content.ralan.list_dokter_anak_ralan')
-        </div>
-        <div class="col-12 col-sm-12 col-md-4">
-            @include('dashboard.content.ralan.list_jk_ralan')
         </div>
     </div>
 @endsection
@@ -149,7 +117,7 @@
 
                 $('#bulan').html('<strong>' + tgl1 + ' s/d ' + tgl2 + '</strong>');
                 $('#table-kunjungan').DataTable().destroy();
-                load_data(tgl_pertama, tgl_kedua, daftar, poli, kd_dokter, pembiayaan);
+                load_data(tgl_pertama, tgl_kedua, kd_dokter, pembiayaan);
             });
 
             $('#daftar').on('change', function() {
@@ -159,68 +127,30 @@
                 load_data(tgl_pertama, tgl_kedua, daftar);
             });
 
-            $('#poli').on('change', function() {
-                var poli = $(this).val();
-                cekTanggal();
-                daftar = $('#daftar').val();
-                $('#table-kunjungan').DataTable().destroy();
-                load_data(tgl_pertama, tgl_kedua, $('#daftar').val(), poli);
-
-                if (poli) {
-                    $.ajax({
-                        url: 'poli/' + poli,
-                        type: "GET",
-                        data: {
-                            "_token": "{{ csrf_token() }}"
-                        },
-                        dataType: "json",
-                        success: function(data) {
-                            if (data) {
-                                $('#dokter').empty();
-                                $('#dokter').append(
-                                    '<option hidden value="">Pilih Dokter</option>');
-                                $.each(data, function(key, dokter) {
-                                    $('select[name="dokter"]').append(
-                                        '<option value="' + dokter.kd_dokter +
-                                        '">' + dokter.nm_dokter + '</option>');
-                                });
-                            } else {
-                                $('#dokter').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $('#dokter').empty();
-                }
-
-            });
-
             $('#dokter').on('change', function() {
                 dokter = $(this).val();
                 cekTanggal();
                 $('#table-kunjungan').DataTable().destroy();
-                load_data(tgl_pertama, tgl_kedua, $('#daftar').val(), $('#poli').val(), dokter);
+                load_data(tgl_pertama, tgl_kedua, dokter);
             });
 
             $('#pembiayaan').on('change', function() {
                 cekTanggal();
                 $('#table-kunjungan').DataTable().destroy();
-                load_data(tgl_pertama, tgl_kedua, $('#daftar').val(), $('#poli').val(), $('#dokter').val(),
+                load_data(tgl_pertama, tgl_kedua, $('#dokter').val(),
                     $(this).val());
             });
 
             load_data();
 
-            function load_data(tgl_pertama, tgl_kedua, daftar, poli, kd_dokter, pembiyaan) {
+            function load_data(tgl_pertama, tgl_kedua, kd_dokter, pembiyaan) {
                 $('#table-kunjungan').DataTable({
                     ajax: {
-                        url: 'ralan/json',
+                        url: '/dms/ralan/kandungan/json',
                         dataType: 'json',
                         data: {
                             tgl_pertama: tgl_pertama,
                             tgl_kedua: tgl_kedua,
-                            daftar: daftar,
-                            poli: poli,
                             kd_dokter: kd_dokter,
                             pembiayaan: pembiyaan,
                         },
@@ -292,39 +222,46 @@
                         },
                     ],
                     columns: [{
-                            data: 'tgl_registrasi',
-                            name: 'tgl_registrasi'
+                            data: 'tanggal',
+                            name: 'tanggal'
                         },
                         {
-                            data: 'nm_pasien',
+                            data: 'reg_periksa.pasien.nm_pasien',
                             name: 'nm_pasien'
                         },
                         {
                             data: 'tgl_lahir',
+                            render: function(data, type, row) {
+                                return row.reg_periksa.umurdaftar + ' Th / ' + formatTanggal(row.reg_periksa.pasien.tgl_lahir);
+                            },
                             name: 'tgl_lahir'
                         },
                         {
-                            data: 'alamat',
-                            name: 'alamat'
-                        },
-                        {
-                            data: 'stts_daftar',
-                            name: 'stts_daftar'
-                        },
-                        {
-                            data: 'png_jawab',
-                            name: 'png_jawab'
-                        },
-                        {
-                            data: 'p_jawab',
+                            data: 'reg_periksa.p_jawab',
                             name: 'p_jawab'
                         },
                         {
-                            data: 'no_tlp',
-                            name: 'no_tlp'
+                            data: 'reg_periksa.almt_pj',
+                            name: 'reg_periksa.almt_pj'
                         },
                         {
-                            data: 'nm_dokter',
+                            data: 'gpa',
+                            render: function(data, type, row) {
+                                return 'G' + row.g + ' P' + row.p + ' A' + row.a;
+                            },
+                            name: 'gpa'
+                        },
+                        {
+                            data: 'usia_kehamilan',
+                            name: 'usia_kehamilan'
+                        },
+                        {
+                            data: 'reg_periksa.penjab.png_jawab',
+                            name: 'png_jawab'
+                        },
+
+                        {
+                            data: 'reg_periksa.dokter.nm_dokter',
                             name: 'nm_dokter'
                         },
                     ],

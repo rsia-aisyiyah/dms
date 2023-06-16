@@ -150,35 +150,36 @@ class RanapController extends Controller
     public function jsonRanap(Request $request)
     {
         $tanggal = new Carbon('this month');
-        $data = RegPeriksa::select('*')
-            ->where('status_lanjut', 'Ranap')
-            ->whereBetween('tgl_registrasi', [$tanggal->startOfMonth()->toDateString(), $tanggal->lastOfMonth()->toDateString()])
-            ->whereHas('penjab', function ($query) {
-                $query->where('png_jawab', 'like', '%bpjs%');
-            })
-            ->whereHas('diagnosaPasien', function ($query) {
-                $query->where('prioritas', 1);
-            })
-
-            ->whereHas('kamarInap', function ($query) {
-                $query->where('stts_pulang', '!=', 'Pindah Kamar');
-            })
-            ->whereHas('dokter.spesialis', function ($query) {
-                $query->whereIn('kd_sps', ['S0001', 'S0003']);
-            })
-            ->groupBy('no_rawat')
-            ->orderBy('tgl_registrasi', 'ASC');
 
         if ($request->ajax()) {
+            $data = RegPeriksa::select('*')
+                ->where('status_lanjut', 'Ranap')
+                ->whereHas('penjab', function ($query) {
+                    $query->where('png_jawab', 'like', '%bpjs%');
+                })
+                ->whereHas('diagnosaPasien', function ($query) {
+                    $query->where('prioritas', 1);
+                })
+                ->whereHas('kamarInap', function ($query) {
+                    $query->where('stts_pulang', '!=', 'Pindah Kamar');
+                })
+                ->whereHas('dokter.spesialis', function ($query) {
+                    $query->whereIn('kd_sps', ['S0001', 'S0003']);
+                })
+                ->groupBy('no_rawat')
+                ->orderBy('tgl_registrasi', 'ASC');
             if ($request->tgl_pertama && $request->tgl_kedua) {
-                $data->where('stts_daftar', 'like', '%' . $request->daftar . '%')
-                    ->whereBetween('tgl_registrasi', [$request->tgl_pertama, $request->tgl_kedua])
-                    ->whereHas('dokter.spesialis', function ($query) use ($request) {
-                        $query->where('kd_sps', 'like', '%' . $request->poli . '%');
-                    })->get();
+                $data->whereBetween('tgl_registrasi', [$request->tgl_pertama, $request->tgl_kedua]);
+            } else {
+                $data->whereBetween('tgl_registrasi', [$tanggal->startOfMonth()->toDateString(), $tanggal->lastOfMonth()->toDateString()])->get();
             }
-        }
 
+            // if ($request->spesialis) {
+            //     $data->where('dokter.spesialis', '%' . $request->spesialis . '%');
+            // } else {
+            //     $data->whereBetween('tgl_registrasi', [$tanggal->startOfMonth()->toDateString(), $tanggal->lastOfMonth()->toDateString()])->get();
+            // }
+        }
 
         return DataTables::of($data)
             ->editColumn('tgl_registrasi', function ($data) use ($tanggal) {
@@ -220,13 +221,20 @@ class RanapController extends Controller
             })
             ->editColumn('diagnosa', function ($data) {
                 if ($data->diagnosaPasien) {
-                    return $data->diagnosaPasien->kd_penyakit;
+                    return $data->diagnosaPasien->kd_penyakit . ' - ' . $data->diagnosaPasien->penyakit->nm_penyakit;
                 } else {
                     return '-';
                 }
             })
             ->editColumn('kamar', function ($data) {
                 return $data->kamarInap->kd_kamar;
+            })
+            ->editColumn('kelas', function ($data) {
+                if ($data->bridgingSep) {
+                    return 'Kelas ' . $data->bridgingSep->klsrawat;
+                } else {
+                    return '-';
+                }
             })
             ->rawColumns(['tgl_keluar'])
             ->make(true);
@@ -273,6 +281,48 @@ class RanapController extends Controller
                     'bulan' => $indexBulan . " " . $tahun,
                     'bpjs' => $jmlBpjs,
                     'umum' => $jmlUmum,
+                    'jumlah' => $jmlTotal,
+                ];
+            }
+            return DataTables::of($data)->make(true);
+        }
+    }
+    public function jsonGenderRanap(Request $request)
+    {
+
+        $tanggal = new Carbon('this month');
+        $tahun = $request->tahun ? $request->tahun : date('Y');
+        if ($request->ajax()) {
+            for ($i = 1; $i <= 12; $i++) {
+                $laki = RegPeriksa::whereYear('tgl_registrasi', $tahun)
+                    ->whereMonth('tgl_registrasi', $i)
+                    ->where('status_lanjut', 'Ranap')
+                    ->whereHas('kamarInap', function ($query) {
+                        $query->where('stts_pulang', '!=', 'Pindah Kamar');
+                    })
+                    ->where('stts', '!=', 'Batal')
+                    ->whereHas('pasien', function ($q) {
+                        $q->where('jk', 'L');
+                    })->count();
+                $perempuan = RegPeriksa::whereYear('tgl_registrasi', $tahun)
+                    ->whereMonth('tgl_registrasi', $i)
+                    ->where('status_lanjut', 'Ranap')
+                    ->whereHas('kamarInap', function ($query) {
+                        $query->where('stts_pulang', '!=', 'Pindah Kamar');
+                    })
+                    ->where('stts', '!=', 'Batal')
+                    ->whereHas('pasien', function ($q) {
+                        $q->where('jk', 'P');
+                    })->count();
+
+                $jmlTotal = $laki + $perempuan;
+
+                $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
+
+                $data["$indexBulan"] = (object)[
+                    'bulan' => $indexBulan . " " . $tahun,
+                    'laki' => $laki,
+                    'perempuan' => $perempuan,
                     'jumlah' => $jmlTotal,
                 ];
             }

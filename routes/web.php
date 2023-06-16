@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AskepKandunganRalanController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\DiagnosaPasienController;
 use App\Http\Controllers\DokterController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\TarifLaboratorium;
 use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\TindakanController;
+use App\Models\AskepKandunganRalan;
 use App\Models\Dokter;
 use Illuminate\Support\Facades\Route;
 
@@ -58,6 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/beranda/ralan', [RalanController::class, 'diagramRalanPoli']);
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);
+    Route::get('/operasi/sectio', [OperasiController::class, 'viewSectio']);
+    Route::get('/operasi/sectio/json', [OperasiController::class, 'ambilSectio']);
     Route::get('/diagram/operasi/{tahun}', [OperasiController::class, 'diagram']);
     Route::middleware('rm')->group(function () {
         Route::get('/rekammedis', [DiagnosaPasienController::class, 'index']);
@@ -89,10 +93,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/ralan/poli/json', [RalanController::class, 'jsonPoli']);
     Route::get('/ralan/anak/json', [RalanController::class, 'jsonDokterAnak']);
     Route::get('/ralan/obgyn/json', [RalanController::class, 'jsonDokterObgyn']);
+    Route::get('/ralan/jk/json', [RalanController::class, 'jsonPoliJk']);
     Route::get('/ralan/test', [RalanController::class, 'jsonKunjunganKelurahan']);
     Route::get('/ralan/sep', [RalanController::class, 'sepRalan']);
     Route::get('/ralan/sep/json', [RalanController::class, 'jsonSepRalan']);
     Route::get('/ralan/sep/jumlah', [SepController::class, 'jumlahSepRalan']);
+    Route::get('/ralan/kandungan', [RalanController::class, 'ambilKandungan']);
+
+    Route::get('/ralan/kandungan/json', [AskepKandunganRalanController::class, 'ambil']);
 
     Route::get('/ranap', [RanapController::class, 'index']);
     Route::get('/ranap/hitung', [BerandaController::class, 'countRanap']);
@@ -107,6 +115,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/bayar/json', [RanapController::class, 'jsonStatusBayar']);
     Route::get('/ranap/transfusi', [RanapController::class, 'viewTransfusi']);
     Route::get('/ranap/transfusi/json', [RanapController::class, 'jsonTransfusi']);
+    Route::get('/ranap/jk/json', [RanapController::class, 'jsonGenderRanap']);
     Route::get('/ranap/transfusi/rekap/json', [RanapController::class, 'jsonRekapTransfusi']);
 
     Route::get('/kamar', [KamarInapController::class, 'jumlahKamar']);

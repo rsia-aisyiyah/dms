@@ -2,8 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Dokter;
+use App\Models\Penjab;
+use App\Models\RawatInap;
+use App\Models\RegPeriksa;
+use App\Models\RanapGabung;
+use App\Models\AskepRanapKebidanan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Persalinan extends Model
 {
@@ -35,5 +41,14 @@ class Persalinan extends Model
             'no_rawat',
             'kd_pj',
         );
+    }
+    public function askepRanapBidan()
+    {
+        return $this->hasOne(AskepRanapKebidanan::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function ranapGabung()
+    {
+        return $this->hasOne(RanapGabung::class, 'no_rawat', 'no_rawat');
     }
 }
