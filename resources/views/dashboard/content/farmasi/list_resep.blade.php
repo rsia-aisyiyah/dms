@@ -226,7 +226,7 @@
                 columns: [{
                         data: 'no_rawat',
                         render: function(data, type, row) {
-                            // console.log(row);
+                            console.log(row);
                             return data;
                         },
                         name: 'no_rawat'
@@ -249,7 +249,7 @@
                             html = '';
                             if (data == 'LENGKAP') {
                                 html = '<button type="button" class="btn btn-sm btn-success" style="width:150px">' + data + '</button>'
-                            } else if (data == 'TIDAK ADA RESEP') {
+                            } else if (data == 'OBAT TANPA E-RESEP') {
                                 html = '<button type="button" class="btn btn-sm btn-primary" style="width:150px">' + data + '</button>'
                             } else if (data == 'TIDAK DIAMBIL') {
                                 html = '<button type="button" class="btn btn-sm btn-warning" style="width:150px">' + data + '</button>'

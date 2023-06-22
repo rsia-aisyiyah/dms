@@ -123,10 +123,11 @@ class RegPeriksaController extends Controller
         $tgl_kedua = $request->tgl_kedua;
 
         $regPeriksa = RegPeriksa::where('status_lanjut', 'Ralan')
-            ->where('stts', 'Sudah')->with(['pasien', 'resepObat.resepDokter', 'resepObat.resepDokterRacikan', 'pemberianObat', 'dokter', 'poli']);
+            ->where('stts', 'Sudah')
+            ->whereIn('kd_poli', ['P006', 'P001', 'P003', 'P004', 'P007', 'P008', 'P009'])
+            ->with(['pasien', 'resepObat.resepDokter', 'resepObat.resepDokterRacikan', 'pemberianObat', 'dokter', 'poli']);
 
         if ($tgl_pertama && $tgl_kedua) {
-
             $regPeriksa->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua])->whereHas('dokter.spesialis', function ($query) use ($request) {
                 $query->where('nm_sps', 'like', '%' . $request->poli . '%');
             })->get();
@@ -145,7 +146,10 @@ class RegPeriksaController extends Controller
                 return $data->pasien->nm_pasien;
             })
             ->editColumn('status', function ($data) {
+
                 return $this->statusResep($data->resepObat, $data->pemberianObat);
+                // return $data->resepObat->;
+                // return $data->resepObat->resepDokter;
             })
             ->editColumn('poliklinik', function ($data) {
                 return $data->poli->nm_poli;
@@ -158,17 +162,25 @@ class RegPeriksaController extends Controller
 
     public function statusResep($resep, $pemberian)
     {
-        $countResep = count($resep);
+
+        // return $resep;
         $countObat = count($pemberian);
 
-        $status = '';
-
-        if ($countResep > 0 && $countObat > 0) {
-            $status = 'LENGKAP';
-        } else if ($countResep == 0 && $countObat > 0) {
-            $status = 'TIDAK ADA RESEP';
-        } else if ($countResep > 0 && $countObat == 0) {
-            $status = 'TIDAK DIAMBIL';
+        // return $countObat;
+        if ($resep) {
+            $status = '';
+            $countResepDokter = count($resep->resepDokter);
+            $countResepRacikan = count($resep->resepDokterRacikan);
+            $isResep = $countResepDokter > 0 || $countResepRacikan > 0 ? true : false;
+            if ($isResep && $countObat > 0) {
+                $status = 'LENGKAP';
+            } else if (!$isResep && $countObat > 0) {
+                $status = 'OBAT TANPA E-RESEP';
+            } else if ($isResep && $countObat == 0) {
+                $status = 'TIDAK DIAMBIL';
+            } else {
+                $status =  '-';
+            }
         } else {
             $status =  '-';
         }
@@ -189,14 +201,13 @@ class RegPeriksaController extends Controller
             $status = $this->statusResep($val->resepObat, $val->pemberianObat);
             if ($status == 'LENGKAP') {
                 $lengkap += 1;
-            } else if ($status == 'TIDAK ADA RESEP') {
+            } else if ($status == 'OBAT TANPA E-RESEP') {
                 $tanpaResep += 1;
             } else if ($status == 'TIDAK DIAMBIL') {
                 $tidakAmbil += 1;
             } else if ($status == '-') {
                 $kosong += 1;
             }
-
             // print_r($status);
         }
 

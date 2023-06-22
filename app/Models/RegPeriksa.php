@@ -75,7 +75,7 @@ class RegPeriksa extends Model
     }
     public function resepObat()
     {
-        return $this->hasMany(ResepObat::class, 'no_rawat', 'no_rawat');
+        return $this->hasOne(ResepObat::class, 'no_rawat', 'no_rawat');
     }
     public function pemberianObat()
     {
