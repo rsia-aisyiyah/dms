@@ -73,6 +73,14 @@ class RegPeriksa extends Model
     {
         return $this->hasOne(AskepRanapBayi::class, 'no_rawat', 'no_rawat');
     }
+    public function resepObat()
+    {
+        return $this->hasMany(ResepObat::class, 'no_rawat', 'no_rawat');
+    }
+    public function pemberianObat()
+    {
+        return $this->hasMany(DetailPemberianObat::class, 'no_rawat', 'no_rawat');
+    }
     public function scopeRalanTahunan($query, $tahun, $bulan)
     {
         $query->whereIn('kd_poli', ['P001', 'P003', 'P007', 'P008', 'P009'])

@@ -1,33 +1,36 @@
 <?php
 
-use App\Http\Controllers\AskepKandunganRalanController;
-use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\DiagnosaPasienController;
-use App\Http\Controllers\DokterController;
+use App\Models\Dokter;
+use App\Models\ResepObat;
+use App\Models\AskepKandunganRalan;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SepController;
 use App\Http\Controllers\KamarController;
-use App\Http\Controllers\KamarInapController;
-use App\Http\Controllers\KategoriPerawatanController;
-use App\Http\Controllers\LaporanDiagnosaDinkesController;
-use App\Http\Controllers\LaporanDiagnosaPenyakitController;
-use App\Http\Controllers\LaporanIGDController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\OperasiController;
-use App\Http\Controllers\PaketOperasiController;
-use App\Http\Controllers\PasienBayiController;
-use App\Http\Controllers\PenjabController;
-use App\Http\Controllers\PersalinanController;
-use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RalanController;
 use App\Http\Controllers\RanapController;
-use App\Http\Controllers\RegPeriksaController;
-use App\Http\Controllers\SepController;
+use App\Http\Controllers\DokterController;
+use App\Http\Controllers\PenjabController;
+use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\OperasiController;
 use App\Http\Controllers\TarifLaboratorium;
+use App\Http\Controllers\TindakanController;
+use App\Http\Controllers\KamarInapController;
+use App\Http\Controllers\ResepObatController;
+use App\Http\Controllers\LaporanIGDController;
+use App\Http\Controllers\PasienBayiController;
+use App\Http\Controllers\PersalinanController;
+use App\Http\Controllers\PoliklinikController;
+use App\Http\Controllers\RegPeriksaController;
 use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
-use App\Http\Controllers\TindakanController;
-use App\Models\AskepKandunganRalan;
-use App\Models\Dokter;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaketOperasiController;
+use App\Http\Controllers\DiagnosaPasienController;
+use App\Http\Controllers\KategoriPerawatanController;
+use App\Http\Controllers\AskepKandunganRalanController;
+use App\Http\Controllers\LaporanDiagnosaDinkesController;
+use App\Http\Controllers\LaporanDiagnosaPenyakitController;
+use App\Models\RegPeriksa;
 
 /*
 |--------------------------------------------------------------------------
@@ -178,6 +181,10 @@ Route::middleware('auth')->group(function () {
             ->where('status', 1);
         return response()->json($dokter);
     });
+
+    Route::get('farmasi/resep', [ResepObatController::class, 'index']);
+    Route::get('farmasi/resep/ambil', [RegPeriksaController::class, 'ambilResepTabel']);
+    Route::get('farmasi/resep/hitung', [RegPeriksaController::class, 'hitungStatusResep']);
 });
 
 Route::get('/test', [TindakanController::class, 'rawatInapDr']);

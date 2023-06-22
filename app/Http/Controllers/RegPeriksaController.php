@@ -7,6 +7,10 @@ use App\Models\RegPeriksa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Contracts\DataTable;
+use Yajra\DataTables\DataTables;
+
+use function PHPSTORM_META\map;
 
 class RegPeriksaController extends Controller
 {
@@ -111,5 +115,114 @@ class RegPeriksaController extends Controller
             'sudah' => $sudah,
             'batal' => $batal,
         ];
+    }
+
+    public function ambilResep(Request $request)
+    {
+        $tgl_pertama = $request->tgl_pertama;
+        $tgl_kedua = $request->tgl_kedua;
+
+        $regPeriksa = RegPeriksa::where('status_lanjut', 'Ralan')
+            ->where('stts', 'Sudah')->with(['pasien', 'resepObat.resepDokter', 'resepObat.resepDokterRacikan', 'pemberianObat', 'dokter', 'poli']);
+
+        if ($tgl_pertama && $tgl_kedua) {
+
+            $regPeriksa->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua])->whereHas('dokter.spesialis', function ($query) use ($request) {
+                $query->where('nm_sps', 'like', '%' . $request->poli . '%');
+            })->get();
+        } else {
+            $regPeriksa->whereMonth('tgl_registrasi', date('m'))
+                ->whereYear('tgl_registrasi', date('Y'))->get();
+        }
+
+        return $regPeriksa;
+    }
+
+    public function ambilResepTabel(Request $request)
+    {
+        return DataTables::of($this->ambilResep($request))
+            ->editColumn('nm_pasien', function ($data) {
+                return $data->pasien->nm_pasien;
+            })
+            ->editColumn('status', function ($data) {
+                return $this->statusResep($data->resepObat, $data->pemberianObat);
+            })
+            ->editColumn('poliklinik', function ($data) {
+                return $data->poli->nm_poli;
+            })
+            ->editColumn('dokter', function ($data) {
+                return $data->dokter->nm_dokter;
+            })
+            ->make(true);
+    }
+
+    public function statusResep($resep, $pemberian)
+    {
+        $countResep = count($resep);
+        $countObat = count($pemberian);
+
+        $status = '';
+
+        if ($countResep > 0 && $countObat > 0) {
+            $status = 'LENGKAP';
+        } else if ($countResep == 0 && $countObat > 0) {
+            $status = 'TIDAK ADA RESEP';
+        } else if ($countResep > 0 && $countObat == 0) {
+            $status = 'TIDAK DIAMBIL';
+        } else {
+            $status =  '-';
+        }
+
+        return $status;
+    }
+
+    public function hitungStatusResep(Request $request)
+    {
+        $resep =  $this->ambilResep($request)->get();
+        $total =  $this->ambilResep($request)->count();
+        $lengkap = 0;
+        $tanpaResep = 0;
+        $tidakAmbil = 0;
+        $kosong = 0;
+
+        foreach ($resep as $val) {
+            $status = $this->statusResep($val->resepObat, $val->pemberianObat);
+            if ($status == 'LENGKAP') {
+                $lengkap += 1;
+            } else if ($status == 'TIDAK ADA RESEP') {
+                $tanpaResep += 1;
+            } else if ($status == 'TIDAK DIAMBIL') {
+                $tidakAmbil += 1;
+            } else if ($status == '-') {
+                $kosong += 1;
+            }
+
+            // print_r($status);
+        }
+
+        return response()->json([
+            'total' => $total,
+            'lengkap' => $lengkap,
+            'tanpaResep' => $tanpaResep,
+            'tidakAmbil' => $tidakAmbil,
+            'kosong' => $kosong,
+            // 'resep' => $resep,
+
+        ]);
+        // return $resep->map(function ($result) use ($lengkap) {
+        //     if ($status == 'LENGKAP') {
+        //         $lengkap += 1;
+        //     }
+        //     return [
+        //         'lengkap' => $lengkap
+        //     ];
+        //     // return $this->statusResep($result->resepObat, $result->pemberianObat);
+        //     // return $result->resepObat;
+        // });
+        // return [
+        //     'pasien' => $resep->count(),
+        //     'resep' => $resep->get(),
+        //     // 'obat' => count($pemberian),
+        // ];
     }
 }
