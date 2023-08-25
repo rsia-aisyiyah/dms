@@ -183,6 +183,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('farmasi/resep', [ResepObatController::class, 'index']);
+    Route::get('farmasi/resep/waktu', [ResepObatController::class, 'waktu']);
+    Route::get('farmasi/resep/waktu/json', [ResepObatController::class, 'ambilTabel']);
     Route::get('farmasi/resep/ambil', [RegPeriksaController::class, 'ambilResepTabel']);
     Route::get('farmasi/resep/hitung', [RegPeriksaController::class, 'hitungStatusResep']);
 });

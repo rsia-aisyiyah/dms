@@ -238,6 +238,13 @@
                             <p>Persentasi E-Resep</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ '/dms/farmasi/resep/waktu' }}" class="nav-link">
+                            <i
+                                class="far fa-circle nav-icon {{ Request::is('farmasi/resep/waktu') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Waktu Tunggu Resep</p>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @can('admin')
