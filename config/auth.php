@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'token' => [
+            'driver' => 'users_token',
+            'provider' => 'users_token',
+        ]
     ],
 
     /*
@@ -63,6 +68,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'users_token' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\RsiaUsersToken::class,
         ],
 
         // 'users' => [
