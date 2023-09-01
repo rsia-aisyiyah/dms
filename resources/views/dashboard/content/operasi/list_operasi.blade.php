@@ -87,7 +87,8 @@
                 </div>
             </div>
         </div>
-        @include('dashboard.content.operasi.diagram_operasi')
+    </div>
+    @include('dashboard.content.operasi.diagram_operasi')
     @endsection
 
     @push('scripts')

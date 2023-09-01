@@ -9,8 +9,20 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
 
+    protected $client;
+    protected $usersToken;
+
     public function __construct()
     {
+        $this->usersToken = new \App\Models\RsiaUsersToken();
+        $this->client = new \GuzzleHttp\Client([
+            'base_uri' => 'http://localhost/rsiapi/api/',
+            'timeout' => 2.0,
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ],
+        ]);
     }
 
     public function index()
@@ -20,19 +32,35 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-
         $request->validate([
             'id_user' => 'required',
             'password' => 'required',
         ]);
 
-        $user = User::where('username', $request->get('id_user'))
-            ->where('password', md5($request->get('password')))->first();
 
-        if ($user) {
-            Auth::login($user);
-            $request->session()->regenerate();
-            return redirect('/');
+        // try to /api/auth/room/login
+        try {
+            $response = $this->client->request('POST', 'auth/room/login', [
+                'json' => [
+                    'username' => $request->get('id_user'),
+                    'password' => $request->get('password'),
+                ]
+            ]);
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            $response = $e->getResponse();
+        }
+
+        $responseBodyAsString = $response->getBody()->getContents();
+        $responseBodyAsObject = json_decode($responseBodyAsString);
+
+        if ($responseBodyAsObject->success) {
+            // pass token to request 
+            
+            // set auth
+            session()->put('token', $responseBodyAsObject->access_token);
+            session()->put('username', $request->get('id_user'));
+            
+            return redirect()->route('index'); 
         } else {
             return back()->with('loginError', 'Login Gagal');
         }

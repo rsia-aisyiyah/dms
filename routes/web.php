@@ -2,6 +2,7 @@
 
 use App\Models\Dokter;
 use App\Models\ResepObat;
+use App\Models\RegPeriksa;
 use App\Models\AskepKandunganRalan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SepController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\PasienBayiController;
 use App\Http\Controllers\PersalinanController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RegPeriksaController;
+use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\PaketOperasiController;
@@ -30,7 +32,6 @@ use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\AskepKandunganRalanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
-use App\Models\RegPeriksa;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,7 +47,7 @@ use App\Models\RegPeriksa;
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
 
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => ['auth:token']], function () {
     Route::get('/logout', [LoginController::class, 'logout']);
     Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
@@ -66,6 +67,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/operasi/sectio', [OperasiController::class, 'viewSectio']);
     Route::get('/operasi/sectio/json', [OperasiController::class, 'ambilSectio']);
     Route::get('/diagram/operasi/{tahun}', [OperasiController::class, 'diagram']);
+
+    // monitoring rekam medis
+    Route::get('/monitoring/rm/ugd', [RekamMedisController::class, 'monitoringUgd']);
+    Route::get('/monitoring/rm/ranap', [RekamMedisController::class, 'monitoringRanap']);
+
     Route::middleware('rm')->group(function () {
         Route::get('/rekammedis', [DiagnosaPasienController::class, 'index']);
         Route::get('/rekammedis/json', [DiagnosaPasienController::class, 'json']);
