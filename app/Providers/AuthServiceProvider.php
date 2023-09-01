@@ -32,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
             $username = $request->session()->get('username');
             if ($token &&  $username) {
                 $client = new \GuzzleHttp\Client([
-                    'base_uri' => 'http://localhost/rsiapi/api/',
+                    'base_uri' => env('API_URL'),
                     'timeout' => 2.0,
                     'headers' => [
                         'Accept' => 'application/json',

@@ -10,18 +10,19 @@ class LoginController extends Controller
 {
 
     protected $client;
-    protected $usersToken;
+    protected $headers;
 
     public function __construct()
     {
-        $this->usersToken = new \App\Models\RsiaUsersToken();
+        $this->headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ];
+
         $this->client = new \GuzzleHttp\Client([
-            'base_uri' => 'http://localhost/rsiapi/api/',
+            'base_uri' => ENV('API_URL'),
             'timeout' => 2.0,
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ],
+            'headers' => $this->headers,
         ]);
     }
 
@@ -67,7 +68,27 @@ class LoginController extends Controller
     }
     public function logout(Request $request)
     {
-        Auth::logout();
+        if ($request->session()->has('token')) {
+            $this->headers['Authorization'] = 'Bearer ' . $request->session()->get('token');
+            
+            try {
+                $response = $this->client->request('POST', 'auth/room/logout', [
+                    'headers' => $this->headers,
+                ]);
+            } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+                $response = $e->getResponse();
+            }
+
+            $responseBodyAsString = $response->getBody()->getContents();
+            $responseBodyAsObject = json_decode($responseBodyAsString);
+
+            if ($responseBodyAsObject->success) {
+                session()->forget('token');
+                session()->forget('username');
+            }
+        }
+    
+        Auth::guard('web')->logout();
         $request->session()->regenerateToken();
         return redirect('/login');
     }
