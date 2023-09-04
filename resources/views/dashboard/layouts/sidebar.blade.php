@@ -55,8 +55,8 @@
             </li>
             @endcan
 
-            <li class="nav-item has-treeview {{ Request::is('monitoring*') ? 'menu-is-opening menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Request::is('monitoring*') ? 'active' : '' }}">
+            <li class="nav-item has-treeview {{ Request::is('monitoring/rm*') ? 'menu-is-opening menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Request::is('monitoring/rm*') ? 'active' : '' }}">
                     {{-- <i class="nav-icon fas fa-procedures"></i> --}}
                     <i class="nav-icon fas fa-file-medical-alt"></i>
                     <p>
@@ -79,6 +79,16 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            
+            <li class="nav-item has-treeview {{ Request::is('monitoring/shk*') ? 'menu-is-opening menu-open' : '' }}">
+                <a href="{{ '/dms/monitoring/shk' }}" class="nav-link {{ Request::is('monitoring/shk*') ? 'active' : '' }}">
+                    {{-- <i class="nav-icon fas fa-procedures"></i> --}}
+                    <i class="nav-icon fas fa-file-medical-alt"></i>
+                    <p>
+                        Monitoring SHK Pasien
+                    </p>
+                </a>
             </li>
 
             <li class="nav-item has-treeview {{ Request::is('operasi*') ? 'menu-is-opening menu-open' : '' }}">

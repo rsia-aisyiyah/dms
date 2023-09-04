@@ -32,6 +32,7 @@ use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\AskepKandunganRalanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
+use App\Http\Controllers\ResumePasienRanap;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,9 @@ Route::group(['middleware' => ['auth:token']], function () {
     // monitoring rekam medis
     Route::get('/monitoring/rm/ugd', [RekamMedisController::class, 'monitoringUgd']);
     Route::get('/monitoring/rm/ranap', [RekamMedisController::class, 'monitoringRanap']);
+
+    // SHK
+    Route::get('/monitoring/shk', [ResumePasienRanap::class, 'shk']);
 
     Route::middleware('rm')->group(function () {
         Route::get('/rekammedis', [DiagnosaPasienController::class, 'index']);

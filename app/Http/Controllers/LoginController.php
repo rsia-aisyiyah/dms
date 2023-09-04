@@ -21,7 +21,7 @@ class LoginController extends Controller
 
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => ENV('API_URL'),
-            'timeout' => 2.0,
+            'timeout' => 120,
             'headers' => $this->headers,
         ]);
     }
@@ -45,7 +45,7 @@ class LoginController extends Controller
                 'json' => [
                     'username' => $request->get('id_user'),
                     'password' => $request->get('password'),
-                ]
+                ],
             ]);
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             $response = $e->getResponse();
@@ -53,9 +53,11 @@ class LoginController extends Controller
 
         $responseBodyAsString = $response->getBody()->getContents();
         $responseBodyAsObject = json_decode($responseBodyAsString);
+        $code = $response->getStatusCode();
 
-        if ($responseBodyAsObject->success) {
+        if ($code == 200) {
             // pass token to request 
+            $this->headers['Authorization'] = 'Bearer ' . $responseBodyAsObject->access_token;
             
             // set auth
             session()->put('token', $responseBodyAsObject->access_token);

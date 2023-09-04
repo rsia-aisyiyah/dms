@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($token &&  $username) {
                 $client = new \GuzzleHttp\Client([
                     'base_uri' => env('API_URL'),
-                    'timeout' => 2.0,
+                    'timeout' => 120,
                     'headers' => [
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
@@ -46,17 +46,27 @@ class AuthServiceProvider extends ServiceProvider
                 } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                     $resp = $e->getResponse();
                 }
-
+;
                 $respBodyAsString = $resp->getBody()->getContents();
                 $respBodyAsObject = json_decode($respBodyAsString);
 
-                if ($respBodyAsObject->success) {
+                $code = $resp->getStatusCode();
+
+                if ($code == 200) {
                     $user = User::where('username', $username)->first();
                     
                     Auth::setUser($user);
                     $request->session()->regenerate();
 
                     return $user;
+                } else {
+                    Auth::logout(); 
+
+                    // logout
+                    $request->session()->flush();
+                    $request->session()->regenerate();
+
+                    return null;
                 }
             }
         });
