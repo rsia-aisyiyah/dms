@@ -84,7 +84,7 @@
             <li class="nav-item has-treeview {{ Request::is('monitoring/shk*') ? 'menu-is-opening menu-open' : '' }}">
                 <a href="{{ '/dms/monitoring/shk' }}" class="nav-link {{ Request::is('monitoring/shk*') ? 'active' : '' }}">
                     {{-- <i class="nav-icon fas fa-procedures"></i> --}}
-                    <i class="nav-icon fas fa-file-medical-alt"></i>
+                    <i class="nav-icon fas fa-baby-carriage"></i>
                     <p>
                         Monitoring SHK Pasien
                     </p>

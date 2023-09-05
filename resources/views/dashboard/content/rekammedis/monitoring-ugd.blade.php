@@ -115,7 +115,9 @@
             lengthChange: true,
             ordering: false,
             scrollX: true,
-            dom: 'Blfrtip',
+            dom: "<'d-flex align-items-center justify-content-between'<'text-center'l><'text-center'f><'text-center'B>>" +
+                "<'row'<'col-sm-12 col-md-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
             // scrollY: 300,
             // deferRender: true,
             // scroller: {
@@ -147,19 +149,19 @@
             buttons: [{
                     extend: 'copy',
                     text: '<i class="mr-1 fas fa-copy"></i> Salin',
-                    className: 'btn btn-info',
+                    className: 'btn btn-info mb-3',
                     title : 'data-monitoring-ugd-{{ date('dmy') }}'
                 },
                 {
                     extend: 'csv',
                     text: '<i class="mr-1 fas fa-file-csv"></i> CSV',
-                    className: 'btn btn-info',
+                    className: 'btn btn-info mb-3',
                     title : 'data-monitoring-ugd-{{ date('dmy') }}'
                 },
                 {
                     extend: 'excel',
                     text: '<i class="mr-1 fas fa-file-excel"></i> Excel',
-                    className: 'btn btn-info',
+                    className: 'btn btn-info mb-3',
                     title : 'data-monitoring-ugd-{{ date('dmy') }}'
                 },
             ],
