@@ -53,6 +53,7 @@
                                 <thead>
                                     <tr role="row">
                                         <th>NAMA PASIEN</th>
+                                        <th>PENANGGUNG JAWAB</th>
                                         <th>DOKTER</th>
                                         <th>KONTROL</th>
                                         <th>SHK</th>
@@ -124,7 +125,6 @@
                             const penjab = row.reg_periksa.penjab.png_jawab;
                             const pjb = penjab.includes('BPJS') ? 'BPJS' : "UMUM";
                             const pjbClass = penjab.includes('BPJS') ? 'badge badge-success' : "badge badge-warning";
-                            console.log(row);
 
                             return `<div>
                                 <b>${row.reg_periksa.pasien.nm_pasien}</b><br />
@@ -135,6 +135,7 @@
                             </div>`;
                         }
                     },
+                    { data: 'reg_periksa.p_jawab', name: 'reg_periksa.p_jawab' },
                     { data: 'dokter.nm_dokter', name: 'dokter.nm_dokter' },
                     { data: 'kontrol', name: 'kontrol' },
                     { 
@@ -149,7 +150,7 @@
                     { data: 'shk_keterangan', name: 'shk_keterangan' },
                 ],
                 columnDefs: [
-                    { className: 'text-center', targets: [2, 3] },
+                    { className: 'text-center', targets: [3, 4] },
                 ],
                 paging: true,
                 searching: true,
