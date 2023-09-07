@@ -214,6 +214,7 @@
                 {
                     name: 'pemeriksaan_ranap',
                     render: function (data, type, row) {
+                        console.log(row.pemeriksaan_ranap != null);
                         return row.pemeriksaan_ranap != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
                     }
                 },
@@ -236,9 +237,9 @@
                     }
                 },
                 {
-                    name: 'rsia_grafik_harian',
+                    name: 'grafik_harian',
                     render: function (data, type, row) {
-                        return row.rsia_grafik_harian != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
+                        return row.grafik_harian != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
                     }
                 },
                 {
@@ -248,9 +249,9 @@
                     }
                 },
                 {
-                    name: 'rsia_skrining_gizi',
+                    name: 'skrining_gizi',
                     render: function (data, type, row) {
-                        return row.rsia_skrining_gizi != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
+                        return row.skrining_gizi != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
                     }
                 },
             ],
