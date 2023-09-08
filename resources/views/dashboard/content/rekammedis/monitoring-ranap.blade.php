@@ -1,6 +1,11 @@
 @extends('dashboard.layouts.main')
 
 @section('content')
+<style>
+    .container-fluid h1 {
+        display: none;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card card-teal">
@@ -57,6 +62,8 @@
                                         <th class="sr-only">NO RAWAT</th>
                                         <th class="sr-only">PENJAB</th>
                                         <th>GENERAL CONSENT</th>
+                                        <th>ASMED ANAK</th>
+                                        <th>ASMED KANDUNGAN</th>
                                         <th>TRANSFER PASIEN</th>
                                         <th>SOAP</th>
                                         <th>TULBAKON</th>
@@ -106,8 +113,10 @@
 
     function loadData(tgl_pertama = null, tgl_kedua = null, pembiayaan = null, status = null) {
         $('#table-monitoring-ugd').DataTable({
+            fixedHeader: true,
             pageLength: 10,
             lengthMenu: [10, 25, 50, 75, 100],
+            scrollY: 300,
             processing: true,
             serverSide: true,
             ajax : {
@@ -206,6 +215,24 @@
                     }
                 },
                 {
+                    render: function (data, type, row) {
+                        if (row.penilaian_medis_ralan_anak != null){
+                            return '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>';
+                        } else {
+                            return '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
+                        }
+                    }
+                },
+                {
+                    render: function (data, type, row) {
+                        if (row.penilaian_medis_ralan_kandungan != null){
+                            return '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>';
+                        } else {
+                            return '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
+                        }
+                    }
+                },
+                {
                     name: 'transfer_pasien_antar_ruang',
                     render: function (data, type, row) {
                         return row.transfer_pasien_antar_ruang != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
@@ -214,7 +241,6 @@
                 {
                     name: 'pemeriksaan_ranap',
                     render: function (data, type, row) {
-                        console.log(row.pemeriksaan_ranap != null);
                         return row.pemeriksaan_ranap != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
                     }
                 },
