@@ -5,6 +5,9 @@
     .container-fluid h1 {
         display: none;
     }
+    .content-header {
+        padding : 0px;
+    }
 </style>
 <div class="row">
     <div class="col-12">
@@ -62,8 +65,7 @@
                                         <th class="sr-only">NO RAWAT</th>
                                         <th class="sr-only">PENJAB</th>
                                         <th>GENERAL CONSENT</th>
-                                        <th>ASMED ANAK</th>
-                                        <th>ASMED KANDUNGAN</th>
+                                        <th>ASMED ANAK / KANDUNGAN</th>
                                         <th>TRANSFER PASIEN</th>
                                         <th>SOAP</th>
                                         <th>TULBAKON</th>
@@ -216,16 +218,7 @@
                 },
                 {
                     render: function (data, type, row) {
-                        if (row.penilaian_medis_ralan_anak != null){
-                            return '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>';
-                        } else {
-                            return '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
-                        }
-                    }
-                },
-                {
-                    render: function (data, type, row) {
-                        if (row.penilaian_medis_ralan_kandungan != null){
+                        if (row.penilaian_medis_ralan_anak != null || row.penilaian_medis_ralan_kandungan != null){
                             return '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>';
                         } else {
                             return '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
