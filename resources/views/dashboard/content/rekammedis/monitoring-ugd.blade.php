@@ -1,6 +1,14 @@
 @extends('dashboard.layouts.main')
 
 @section('content')
+<style>
+    .container-fluid h1 {
+        display: none;
+    }
+    .content-header {
+        padding : 0px;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card card-teal">
