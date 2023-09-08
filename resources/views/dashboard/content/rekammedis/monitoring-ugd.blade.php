@@ -101,6 +101,9 @@
 
     function loadData(tgl_pertama = null, tgl_kedua = null, pembiayaan = null) {
         $('#table-monitoring-ugd').DataTable({
+            fixedHeader: true,
+            lengthMenu: [10, 25, 50, 75, 100],
+            scrollY: 300,
             processing: true,
             serverSide: true,
             pageLength: 10,
