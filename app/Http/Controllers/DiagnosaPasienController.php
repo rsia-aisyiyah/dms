@@ -121,6 +121,12 @@ class DiagnosaPasienController extends Controller
             ->editColumn('nm_pasien', function ($data) {
                 return $data->pasien->nm_pasien;
             })
+            ->editColumn('tgl_lahir', function ($data) {
+                return $data->pasien->tgl_lahir;
+            })
+            ->editColumn('no_ktp', function ($data) {
+                return $data->pasien->no_ktp;
+            })
             ->editColumn('umurdaftar', function ($data) {
                 return $data->umurdaftar . ' ' . $data->sttsumur;
             })

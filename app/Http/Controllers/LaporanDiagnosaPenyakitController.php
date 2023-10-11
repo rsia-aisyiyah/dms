@@ -88,6 +88,12 @@ class LaporanDiagnosaPenyakitController extends Controller
                 $jk = $data->regPeriksa->pasien->jk;
                 return $jk == "L" ? "Laki-Laki" : "Perempuan";
             })
+            ->editColumn('tgl_lahir', function ($data) {
+                return $data->regPeriksa->pasien->tgl_lahir;
+            })
+            ->editColumn('no_ktp', function ($data) {
+                return $data->regPeriksa->pasien->no_ktp;
+            })
             ->editColumn('umur', function ($data) {
                 return $data->regPeriksa->umurdaftar . ' ' . $data->regPeriksa->sttsumur;
             })

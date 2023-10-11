@@ -70,7 +70,9 @@
                                         <th>No RM</th>
                                         <th>No Registrasi</th>
                                         <th>Nama Pasien</th>
+                                        <th>Tgl Lahir</th>
                                         <th>Umur</th>
+                                        <th>NIK</th>
                                         <th>Jenis Kelamin</th>
                                         <th>Alamat</th>
                                         <th>Status Daftar</th>
@@ -195,7 +197,9 @@
                 { data: 'no_rkm_medis', name: 'no_rkm_medis' },
                 { data: 'no_rawat', name: 'no_rawat' },
                 { data: 'nm_pasien', name: 'nm_pasien' },
+                { data: 'tgl_lahir', name: 'tgl_lahir' },
                 { data: 'umur', name: 'umur' },
+                { data: 'no_ktp', name: 'no_ktp' },
                 { data: 'jk', name: 'jk' },
                 { data: 'alamat', name: 'alamat' },
                 { data: 'status_daftar', name: 'status_daftar' },
