@@ -31,7 +31,9 @@
                                             <th>No. Rawat</th>
                                             <th>No. RM</th>
                                             <th>Nama Pasien</th>
+                                            <th>Tgl Lahir</th>
                                             <th>Umur</th>
+                                            <th>NIK</th>
                                             <th>Jenis Kelamin</th>
                                             <th>Alamat</th>
                                             <th>Kode Penyakit</th>
@@ -171,7 +173,9 @@
                 {data:'no_rawat', name:'no_rawat'},
                 {data:'no_rkm_medis', name:'no_rkm_medis'},
                 {data:'nm_pasien', name:'nm_pasien'},
+                {data:'tgl_lahir', name:'tgl_lahir'},
                 {data:'umurdaftar', name:'umurdaftar'},
+                {data:'no_ktp', name:'no_ktp'},
                 {data:'jk', name:'jk'},
                 {data:'alamat', name:'alamat'},
                 {data:'kd_penyakit', name:'kd_penyakit'},

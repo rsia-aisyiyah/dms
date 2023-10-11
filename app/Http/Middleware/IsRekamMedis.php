@@ -21,7 +21,7 @@ class IsRekamMedis
             && auth()->user()->username != 'casemix'
             && auth()->user()->username != 'admin_casemix'
             && auth()->user()->username != 'direksi'
-
+            && auth()->user()->username != 'ipcn'
         ) {
             return redirect('/');
         }

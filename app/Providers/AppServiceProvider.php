@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
             || $user->username === 'direksi'
             || $user->username === 'rm'
             || $user->username === 'casemix'
+            || $user->username === 'ipcn'
             || $user->username === 'admin_casemix';
         });
     }
