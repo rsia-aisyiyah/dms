@@ -57,15 +57,17 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive text-sm">
-                            <table id="table-monitoring-ugd" class="table table-bordered dataTable" width="100%"
+                            <table id="table-monitoring-ranap" class="table table-bordered dataTable" width="100%"
                                 cellspacing="0">
                                 <thead>
                                     <tr role="row">
                                         <th>NAMA PASIEN</th>
+                                        <th class="sr-only">NAMA PASIEN</th>
                                         <th class="sr-only">NO RAWAT</th>
                                         <th class="sr-only">PENJAB</th>
                                         <th>GENERAL CONSENT</th>
-                                        <th>ASMED ANAK / KANDUNGAN</th>
+                                        <th style="min-width:90px !important;">ASKEP ANAK / KANDUNGAN</th>
+                                        <th style="min-width:90px !important;">ASMED ANAK / KANDUNGAN</th>
                                         <th>TRANSFER PASIEN</th>
                                         <th>SOAP</th>
                                         <th>TULBAKON</th>
@@ -114,11 +116,9 @@
     });
 
     function loadData(tgl_pertama = null, tgl_kedua = null, pembiayaan = null, status = null) {
-        $('#table-monitoring-ugd').DataTable({
-            fixedHeader: true,
+        $('#table-monitoring-ranap').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 75, 100],
-            scrollY: 300,
             processing: true,
             serverSide: true,
             ajax : {
@@ -139,7 +139,10 @@
             searching: true,
             lengthChange: true,
             ordering: false,
+            fixedHeader: true,
+            scrollCollapse: true,
             scrollX: true,
+            scrollY: 300,
             // dom: 'Blfrtip',
             dom: "<'d-flex align-items-center justify-content-between'<'text-center'l><'text-center'f><'text-center'B>>" +
                 "<'row'<'col-sm-12 col-md-12'tr>>" +
@@ -201,6 +204,11 @@
                     }
                 },
                 {
+                    name: 'pasien.nm_pasien',
+                    visible: false,
+                    data: 'pasien.nm_pasien',
+                },
+                {
                     name: 'no_rawat',
                     visible: false,
                     data: 'no_rawat',
@@ -214,6 +222,15 @@
                     name: 'rsia_general_consent',
                     render: function (data, type, row) {
                         return row.rsia_general_consent != null ? '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>' : '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
+                    }
+                },
+                {
+                    render: function (data, type, row) {
+                        if (row.penilaian_awal_keperawatan_ranap != null || row.penilaian_awal_keperawatan_ranap_anak != null || row.penilaian_awal_keperawatan_ranap_neonatus != null){
+                            return '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>';
+                        } else {
+                            return '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
+                        }
                     }
                 },
                 {
@@ -309,13 +326,13 @@
         tgl2 = hari2 + ' ' + bulan[bulan2] + ' ' + tahun2
 
         $('#bulan').html('<strong>' + tgl1 + ' s/d ' + tgl2 + '</strong>');
-        $('#table-monitoring-ugd').DataTable().destroy();
+        $('#table-monitoring-ranap').DataTable().destroy();
 
         loadData(tgl_pertama, tgl_kedua);
     });
 
     $('#pembiayaan').change(function() {
-        $('#table-monitoring-ugd').DataTable().destroy();
+        $('#table-monitoring-ranap').DataTable().destroy();
         if ($(this).val() == 'all') {
             pembiayaan = null;
         } else {
@@ -326,7 +343,7 @@
     });
 
     $('#status').change(function() {
-        $('#table-monitoring-ugd').DataTable().destroy();
+        $('#table-monitoring-ranap').DataTable().destroy();
         if ($(this).val() == 'all') {
             status = null;
         } else {
