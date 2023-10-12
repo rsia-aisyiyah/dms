@@ -218,7 +218,7 @@
                 },
                 {
                     render: function (data, type, row) {
-                        if (row.penilaian_medis_ralan_anak != null || row.penilaian_medis_ralan_kandungan != null){
+                        if (row.penilaian_medis_ranap != null || row.penilaian_medis_ranap_kandungan != null){
                             return '<span class="sr-only">sudah</span><i class="fas fa-check text-success"></i>';
                         } else {
                             return '<span class="sr-only">belum</span><i class="fas fa-times text-danger"></i>';
