@@ -13,6 +13,33 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
+             {{-- <li class="nav-item has-treeview {{ Request::is('report/erm*') ? 'menu-is-opening menu-open' : '' }}">
+                <a href="{{ '/dms/report/erm' }}" class="nav-link {{ Request::is('report/erm*') ? 'active' : '' }}">
+                    <i class="nav-icon far fa-chart-bar"></i>
+                    <p>
+                        Raport Pengisian ERM Dokter
+                    </p>
+                </a>
+            </li> --}}
+
+            <li class="nav-item has-treeview {{ Request::is('report/erm*') ? 'menu-is-opening menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Request::is('report/erm*') ? 'active' : '' }}">
+                    <i class="nav-icon far fa-chart-bar"></i>
+                    <p>
+                        Raport Pengisian ERM
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview ml-3">
+                    <li class="nav-item">
+                        <a href="{{ '/dms/report/erm' }}" class="nav-link">
+                            <i class="nav-icon {{ Request::is('report/erm') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Dokter Spesialis</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             @can('rm')
             <li class="nav-item has-treeview {{ Request::is('rekammedis*') ? 'menu-is-opening menu-open' : '' }}">
                 <a href="#" class="nav-link {{ Request::is('rekammedis*') ? 'active' : '' }}">

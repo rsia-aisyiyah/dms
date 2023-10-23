@@ -19,4 +19,10 @@ class RekamMedisController extends Controller
             'bigTitle' => 'Monitoring Berkas RM Rawat Inap',
         ]);
     }
+
+    public function pengisianErm() {
+        return view('dashboard.content.monitoring.pengisian-erm', [
+            'bigTitle' => 'Pengisian ERM Dokter Spesialis',
+        ]);
+    }
 }

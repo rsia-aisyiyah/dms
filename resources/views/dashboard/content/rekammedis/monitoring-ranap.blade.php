@@ -118,7 +118,7 @@
     function loadData(tgl_pertama = null, tgl_kedua = null, pembiayaan = null, status = null) {
         $('#table-monitoring-ranap').DataTable({
             pageLength: 10,
-            lengthMenu: [10, 25, 50, 75, 100],
+            lengthMenu: [-1, 10, 25, 50, 75, 100],
             processing: true,
             serverSide: true,
             ajax : {
