@@ -76,6 +76,11 @@ Route::group(['middleware' => ['auth:token']], function () {
     // SHK
     Route::get('/monitoring/shk', [ResumePasienRanap::class, 'shk']);
 
+    // Report Pengisian ERM
+    Route::prefix('report')->group(function($route) {
+        $route->get('erm', [RekamMedisController::class, 'pengisianErm']);
+    });
+
     Route::middleware('rm')->group(function () {
         Route::get('/rekammedis', [DiagnosaPasienController::class, 'index']);
         Route::get('/rekammedis/json', [DiagnosaPasienController::class, 'json']);
