@@ -76,19 +76,38 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <span><a href="#topObat" style=" color:black!important">Top 10 Obat bulan - <span class="fw-bold" id="bulan-title"></span></a> </span>
+                <span><a href="#topObat" style=" color:black!important">Top Obat bulan <strong><span class="fw-bold" id="bulan-title"></span></strong></a> </span>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table id="topObat" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nama Obat</th>
-                                <th>Jumlah</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Top Teratas</h4>
+                        <div class="table-responsive">
+                            <table id="topObat" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Obat</th>
+                                        <th>Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Top Terbawah</h4>
+                        <div class="table-responsive">
+                            <table id="bottomObat" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Obat</th>
+                                        <th>Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -192,6 +211,46 @@
             order: [[ 1, "desc" ]],
             searching: false,
             paging: false,
+        });
+    }   
+
+    function getBottomObat(bulan = '', tahun = '') {
+        // datatable topObat ajax
+        $('#bottomObat').DataTable({
+            processing: true,
+            serverSide: true,
+            destroy: true,
+            ajax: {
+                url: apiUrl + 'farmasi/gudang/metrics/bottom/obat?datatables=1',
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    'tgl_perawatan' : {
+                        'bulan': bulan,
+                        'tahun': tahun,
+                    }
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
+                }
+            },
+            lengChange: false,
+            order: [[ 1, "asc" ]],
+            searching: false,
+            paging: true,
+            columns: [
+                { data: 'nama_obat', name: 'nama_obat' },
+                { data: 'total', name: 'total', className: 'text-center' },
+            ],
+            // dom make info and pagination in one line
+            dom: 't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            pagingType: 'simple',
+            language: {
+                paginate: {
+                    previous: "<i class='fas fa-chevron-left'></i>",
+                    next: "<i class='fas fa-chevron-right'></i>"
+                }
+            }
         });
     }   
 
@@ -318,19 +377,21 @@
             await fetchData(bulan, tahun);
             await fetchMetricsDetail(bulan, tahun);
             await getTopObat(bulan, tahun);
+            await getBottomObat(bulan, tahun);
 
-            $('#bulan-title').html(moment().month(bulan - 1).format('MMMM YYYY'));
+            $('#bulan-title').html(formatBulanTahun(moment(tahun + '-' + bulan + '-01').format('MMMM YYYY')));
         });
         
         
         // set default value to current month
         var currentMonth = moment().format('YYYY-MM');
         $('#date-registrasi').val(currentMonth);
-        $('#bulan-title').html(moment().format('MMMM YYYY'));
+        $('#bulan-title').html(formatBulanTahun(moment(currentMonth + '-01').format('MMMM YYYY')));
         
         await fetchData(moment().format('MM'), moment().format('YYYY'));
         await fetchMetricsDetail(moment().format('MM'), moment().format('YYYY'));
         await getTopObat(moment().format('MM'), moment().format('YYYY'));
+        await getBottomObat(moment().format('MM'), moment().format('YYYY'));
     });
 </script>
 @endpush
