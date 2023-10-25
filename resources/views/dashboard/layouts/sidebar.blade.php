@@ -284,8 +284,32 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item has-treeview {{ Request::is('farmasi*') ? 'menu-is-opening menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Request::is('farmasi*') ? 'active' : '' }}">
+            <li class="nav-item has-treeview {{ Request::is('farmasi/dashboard*') ? 'menu-is-opening menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Request::is('farmasi/dashboard*') ? 'active' : '' }}">
+                    {{-- <i class="nav-icon fas fa-procedures"></i> --}}
+                    <i class="nav-icon fas fa-journal-whills text-primary"></i>
+                    <p>
+                        Dashboard Farmasi
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview ml-3">
+                    <li class="nav-item">
+                        <a href="{{ '/dms/farmasi/dashboard' }}" class="nav-link">
+                            <i class="far fa-circle nav-icon {{ Request::is('farmasi/dashboard') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Dashboard Umum</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ '/dms/farmasi/dashboard/persediaan' }}" class="nav-link">
+                            <i class="far fa-circle nav-icon {{ Request::is('farmasi/dashboard/persediaan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Dashboard Persediaan</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item has-treeview {{ Request::is('farmasi/resep*') ? 'menu-is-opening menu-open' : '' }}">
+                <a href="#" class="nav-link {{ Request::is('farmasi/resep*') ? 'active' : '' }}">
                     {{-- <i class="nav-icon fas fa-procedures"></i> --}}
                     <i class="nav-icon fas fa-pills"></i>
                     <p>

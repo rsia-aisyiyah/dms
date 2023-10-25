@@ -30,6 +30,7 @@ use App\Http\Controllers\PaketOperasiController;
 use App\Http\Controllers\DiagnosaPasienController;
 use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\AskepKandunganRalanController;
+use App\Http\Controllers\FarmasiController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
 use App\Http\Controllers\ResumePasienRanap;
@@ -202,6 +203,10 @@ Route::group(['middleware' => ['auth:token']], function () {
     Route::get('farmasi/resep/waktu/json', [ResepObatController::class, 'ambilTabel']);
     Route::get('farmasi/resep/ambil', [RegPeriksaController::class, 'ambilResepTabel']);
     Route::get('farmasi/resep/hitung', [RegPeriksaController::class, 'hitungStatusResep']);
+    
+    
+    Route::get('farmasi/dashboard', [FarmasiController::class, 'umum']);
+    Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
 });
 
 Route::get('/test', [TindakanController::class, 'rawatInapDr']);
