@@ -300,6 +300,12 @@
                             <p>Dashboard Umum</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ '/dms/farmasi/dashboard/persediaan' }}" class="nav-link">
+                            <i class="far fa-circle nav-icon {{ Request::is('farmasi/dashboard/persediaan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Dashboard Persediaan</p>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item has-treeview {{ Request::is('farmasi/resep*') ? 'menu-is-opening menu-open' : '' }}">

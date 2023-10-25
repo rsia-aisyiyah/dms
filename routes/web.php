@@ -206,6 +206,7 @@ Route::group(['middleware' => ['auth:token']], function () {
     
     
     Route::get('farmasi/dashboard', [FarmasiController::class, 'umum']);
+    Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
 });
 
 Route::get('/test', [TindakanController::class, 'rawatInapDr']);

@@ -12,3 +12,11 @@ class FarmasiController extends Controller
             'bigTitle' => 'Dashboard Farmasi',
         ]);
     }
+
+    public function persediaan()
+    {
+        return view('dashboard.content.farmasi.dashboard-persediaan', [
+            'bigTitle' => 'Persediaan Obat',
+        ]);
+    }
+}
