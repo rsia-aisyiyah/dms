@@ -24,7 +24,6 @@ class IsRekamMedis
             && auth()->user()->username != 'direksi'
             && auth()->user()->username != 'ipcn'
             && auth()->user()->username != 'poli'
-            && auth()->user()->dep_id != 'DM6'
         ) {
             return redirect('/');
         }
