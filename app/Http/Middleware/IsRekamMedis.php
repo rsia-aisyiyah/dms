@@ -16,12 +16,15 @@ class IsRekamMedis
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->guest() || auth()->user()->username != 'admin' &&
+        if (
+            auth()->guest() || auth()->user()->username != 'admin' &&
             auth()->user()->username != 'rm'
             && auth()->user()->username != 'casemix'
             && auth()->user()->username != 'admin_casemix'
             && auth()->user()->username != 'direksi'
             && auth()->user()->username != 'ipcn'
+            && auth()->user()->username != 'poli'
+            && auth()->user()->dep_id != 'DM6'
         ) {
             return redirect('/');
         }
