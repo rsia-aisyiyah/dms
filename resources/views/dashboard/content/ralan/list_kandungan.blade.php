@@ -53,9 +53,11 @@
                                         <tr>
                                             <th>Tanggal Registrasi</th>
                                             <th>Nama Pasien</th>
+                                            <th>NIK</th>
                                             <th>Umur / Tanggal Lahir</th>
                                             <th>Suami</th>
                                             <th>Alamat</th>
+                                            <th>Kecamatan</th>
                                             <th>GPA</th>
                                             <th>Diagnosa</th>
                                             <th>Usia Hamil</th>
@@ -231,6 +233,10 @@
                             name: 'nm_pasien'
                         },
                         {
+                            data: 'reg_periksa.pasien.no_ktp',
+                            name: 'nik'
+                        },
+                        {
                             data: 'tgl_lahir',
                             render: function(data, type, row) {
                                 return row.reg_periksa.umurdaftar + ' Th / ' + formatTanggal(row.reg_periksa.pasien.tgl_lahir);
@@ -244,6 +250,10 @@
                         {
                             data: 'reg_periksa.almt_pj',
                             name: 'reg_periksa.almt_pj'
+                        },
+                        {
+                            data: 'reg_periksa.pasien.kecamatanpj',
+                            name: 'kecamatan'
                         },
                         {
                             data: 'gpa',
