@@ -18,7 +18,9 @@ class AskepKandunganRalanController extends Controller
     }
     public function ambil(Request $request)
     {
-        $askep = $this->askep->with('regPeriksa.pasien', 'regPeriksa.dokter', 'regPeriksa.penjab', 'regPeriksa.poli')->whereHas('regPeriksa', function ($query) {
+        $askep = $this->askep->with(['regPeriksa' => function ($query) {
+            return $query->with(['pasien', 'dokter', 'penjab', 'poli', 'diagnosaPasien.penyakit']);
+        }])->whereHas('regPeriksa', function ($query) {
             $query->where('status_lanjut', 'ralan');
         });
 

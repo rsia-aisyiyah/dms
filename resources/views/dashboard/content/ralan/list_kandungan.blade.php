@@ -57,6 +57,7 @@
                                             <th>Suami</th>
                                             <th>Alamat</th>
                                             <th>GPA</th>
+                                            <th>Diagnosa</th>
                                             <th>Usia Hamil</th>
                                             <th>Pembiayaan</th>
                                             <th>Dokter PJ</th>
@@ -250,6 +251,13 @@
                                 return 'G' + row.g + ' P' + row.p + ' A' + row.a;
                             },
                             name: 'gpa'
+                        },
+                        {
+                            data: 'reg_periksa.diagnosa_pasien',
+                            render: (data, type, row) => {
+                                return `${data ? `${data.kd_penyakit} - ${data.penyakit.nm_penyakit}` : '-'}`
+                            },
+                            name: 'diagnosa'
                         },
                         {
                             data: 'usia_kehamilan',
