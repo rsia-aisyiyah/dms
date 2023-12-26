@@ -59,12 +59,14 @@
                                             <th>Umur/Tanggal Lahir</th>
                                             <th>Suami</th>
                                             <th>Alamat</th>
+                                            <th>Kecamatan</th>
                                             <th>Tanggal Persalinan</th>
                                             <th>Jenis Persalinan</th>
                                             <th>Riwayat Hamil</th>
                                             <th>JK</th>
                                             <th>BB</th>
                                             <th>TB</th>
+                                            <th>Diagnosa</th>
                                             <th>Dokter</th>
                                             <th>Pembiayaan</th>
                                         </tr>
@@ -218,7 +220,7 @@
                             {
                                 data: 'pasien',
                                 render: function(data, type, row) {
-                                    return row.reg_periksa.pasien.nm_pasien;
+                                    return pasien;
                                 },
                                 name: 'pasien',
                             },
@@ -247,6 +249,13 @@
                                         row.reg_periksa.pasien.kabupatenpj;
                                 },
                                 name: 'alamat',
+                            },
+                            {
+                                data: '',
+                                render: function(data, type, row) {
+                                    return row.reg_periksa.pasien.kecamatanpj
+                                },
+                                name: 'kecamatan',
                             },
                             {
                                 data: 'tgl_operasi',
@@ -311,6 +320,13 @@
                                     }
                                 },
                                 name: 'tb',
+                            },
+                            {
+                                data: '',
+                                render: function(data, type, row) {
+                                    return `${row.reg_periksa.diagnosa_pasien?.kd_penyakit} - ${row.reg_periksa.diagnosa_pasien?.penyakit.nm_penyakit}`
+                                },
+                                name: 'diagnosa',
                             },
                             {
                                 data: 'dokter',

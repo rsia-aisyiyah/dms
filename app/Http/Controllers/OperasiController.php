@@ -79,12 +79,14 @@ class OperasiController extends Controller
     }
     public function ambilSectio(Request $request)
     {
-        $data = Operasi::with(['regPeriksa.pasien', 'regPeriksa.dokter', 'regPeriksa.penjab', 'ranapGabung.askepBayi', 'ranapGabung.rp.pasien', 'paketOperasi', 'askepRanapKebidanan'])->with('kamarInap', function ($query) {
+        $data = Operasi::with(['regPeriksa.pasien', 'regPeriksa.dokter', 'regPeriksa.penjab',  'ranapGabung.askepBayi', 'ranapGabung.rp.pasien', 'paketOperasi', 'askepRanapKebidanan'])->with('kamarInap', function ($query) {
             $query->where('stts_pulang', '!=', 'Pindah Kamar')
                 ->where('tgl_keluar', '!=', '0000-00-00');
         })->whereHas('paketOperasi', function ($query) {
             $query->where('nm_perawatan', 'like', '%sc%');
             $query->orWhere('nm_perawatan', 'like', '%sectio%');
+        })->with('regPeriksa.diagnosaPasien', function ($query) {
+            return $query->where('prioritas', 1)->with('penyakit');
         });
 
         if ($request->ajax()) {

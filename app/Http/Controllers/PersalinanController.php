@@ -30,7 +30,9 @@ class PersalinanController extends Controller
 
         $data = Persalinan::whereHas('rawatInap', function ($query) {
             $query->where('nm_perawatan', 'like', '%Partus%');
-        })->orderBy('tgl_perawatan', 'ASC');
+        })->orderBy('tgl_perawatan', 'ASC')->with('regPeriksa.diagnosaPasien', function ($query) {
+            return $query->where('prioritas', 1)->with('penyakit');
+        })->with('regPeriksa.pasien');
 
         if ($request->ajax()) {
             if ($request->tgl_pertama && $request->tgl_kedua) {

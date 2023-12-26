@@ -59,8 +59,10 @@
                                             <th>Umur/Tanggal Lahir</th>
                                             <th>Suami</th>
                                             <th>Alamat</th>
+                                            <th>Kecamatan</th>
                                             <th>Tanggal Persalinan</th>
                                             <th>Jenis Persalinan</th>
+                                            <th>Diagnosa</th>
                                             <th>Riwayat Hamil</th>
                                             <th>JK</th>
                                             <th>BB</th>
@@ -210,10 +212,17 @@
                         ],
                         columns: [{
                                 data: 'no_rawat',
+                                render: (data, meta, row, x) => {
+                                    return row.no_rawat;
+                                },
                                 name: 'no_rawat',
                             },
                             {
-                                data: 'pasien',
+                                data: '',
+                                render: (data, meta, row, x) => {
+                                    console.log('ROW===', row.reg_periksa.pasien);
+                                    return row.no_rawat;
+                                },
                                 name: 'pasien',
                             },
                             {
@@ -229,12 +238,31 @@
                                 name: 'alamat',
                             },
                             {
+                                data: '',
+                                name: 'kecamatan',
+                                render: (data, type, row, meta) => {
+                                    // render row.reg_periksa.pasien.
+                                    return row.reg_periksa.pasien.kecamatanpj
+                                }
+                            },
+                            {
                                 data: 'tgl_perawatan',
                                 name: 'tgl_perawatan',
                             },
                             {
                                 data: 'nm_perawatan',
                                 name: 'nm_perawatan',
+                            },
+                            {
+                                data: '',
+                                name: 'diagnosa',
+                                render: (data, type, row, meta) => {
+                                    const diagnosa = row.reg_periksa.diagnosa_pasien;
+                                    if (diagnosa)
+                                        return `${row.reg_periksa.diagnosa_pasien.kd_penyakit} - ${row.reg_periksa.diagnosa_pasien.penyakit.nm_penyakit}`
+                                    else
+                                        return `-`
+                                }
                             },
                             {
                                 data: 'status_hamil',
