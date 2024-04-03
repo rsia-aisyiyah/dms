@@ -336,38 +336,44 @@ class RanapController extends Controller
         $tahun = $request->tahun;
         $tahun = $request->tahun ? $request->tahun : date('Y');
 
-        if ($request->ajax()) {
-            for ($j = 1; $j <= 12; $j++) {
-                $indexBulan = $tanggal->month($j)->translatedFormat('F');
+        // if ($request->ajax()) {
+        for ($j = 1; $j <= 12; $j++) {
+            $indexBulan = $tanggal->month($j)->translatedFormat('F');
 
-                $query = RawatInapDr::select(DB::raw('count(*) as jumlah'))
-                    ->whereYear('tgl_perawatan', $tahun)
-                    ->whereMonth('tgl_perawatan', $j)
-                    ->whereHas('jnsPerawatanInap', function ($query) {
-                        $query->where('nm_perawatan', 'like', '%visite%');
-                    })
-                    ->whereHas('dokter', function ($query) {
-                        $query->whereIn('kd_sps', ['S0001', 'S0003']);
-                    })
-                    ->groupBy('kd_dokter')
-                    ->get()
-                    ->pluck('jumlah');
+            $query = RawatInapDr::select(DB::raw('count(*) as jumlah'))
+                ->whereYear('tgl_perawatan', $tahun)
+                ->whereMonth('tgl_perawatan', $j)
+                ->whereHas('jnsPerawatanInap', function ($query) {
+                    $query->where('nm_perawatan', 'like', '%visite%');
+                })
+                ->whereHas('dokter', function ($query) {
+                    $query->whereIn('kd_sps', ['S0001', 'S0003']);
+                })
+                ->with(['dokter' => function ($query) {
+                    return $query->select(['kd_dokter', 'nm_dokter']);
+                }])
+                ->groupBy('kd_dokter')
+                ->get()
+                ->pluck('jumlah');
 
-                $jumlah1 = empty($query[0]) ? 0 : $query[0];
-                $jumlah2 = empty($query[1]) ? 0 : $query[1];
-                $jumlah3 = empty($query[2]) ? 0 : $query[2];
-                $jumlah4 = empty($query[3]) ? 0 : $query[3];
+            $jumlah1 = empty($query[0]) ? 0 : $query[0];
+            $jumlah2 = empty($query[1]) ? 0 : $query[1];
+            $jumlah3 = empty($query[2]) ? 0 : $query[2];
+            $jumlah4 = empty($query[3]) ? 0 : $query[3];
+            $jumlah5 = empty($query[4]) ? 0 : $query[4];
+            $jumlah6 = empty($query[5]) ? 0 : $query[5];
 
-                $data["$indexBulan"] = (object)[
-                    'bulan' => $indexBulan . ' ' . $tahun,
-                    'dokter1' => $jumlah1,
-                    'dokter2' => $jumlah2,
-                    'dokter3' => $jumlah3,
-                    'dokter4' => $jumlah4
-                ];
-            }
+
+            $data["$indexBulan"] = (object)[
+                'bulan' => $indexBulan . ' ' . $tahun,
+                'dokter1' => $jumlah1,
+                'dokter2' => $jumlah2,
+                'dokter3' => $jumlah3,
+                'dokter4' => $jumlah4,
+                'dokter5' => $jumlah5,
+                'dokter6' => $jumlah6,
+            ];
         }
-
         return DataTables::of($data)->make(true);
     }
     public function viewVisitDokter()

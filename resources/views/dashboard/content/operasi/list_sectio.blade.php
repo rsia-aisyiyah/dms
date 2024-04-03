@@ -220,6 +220,7 @@
                             {
                                 data: 'pasien',
                                 render: function(data, type, row) {
+                                    pasien = row.reg_periksa.pasien.nm_pasien
                                     return pasien;
                                 },
                                 name: 'pasien',
@@ -291,7 +292,6 @@
                                 data: 'bayi',
                                 render: function(data, type, row) {
                                     if (row.ranap_gabung) {
-                                        console.log(row)
                                         return row.ranap_gabung.rp.pasien.jk
                                     } else {
                                         return '-'
