@@ -32,32 +32,30 @@ class DiagnosaPasienController extends Controller
         $data = '';
         $start = new Carbon('this month');
         if ($request->ajax()) {
+            $data = DiagnosaPasien::select('*', DB::raw('count(kd_penyakit) as jumlah'))
+                ->where('prioritas', 1)
+                ->where('status', 'like', '%' . $request->status . '%')
+                ->where('kd_penyakit', 'not like', 'r%')
+                ->where('kd_penyakit', 'not like', 'z%')
+                ->whereNotIn('kd_penyakit', ['O80', 'O82'])
+                ->groupBy('kd_penyakit')
+                ->orderBy('jumlah', 'desc')
+                ->limit(10);
             if ($request->tgl_pertama || $request->tgl_kedua) {
-                $data = DiagnosaPasien::select('*', DB::raw('count(kd_penyakit) as jumlah'))
-                    ->where('prioritas', 1)
-                    ->where('status', 'like', '%' . $request->status . '%')
-                    ->whereHas('regPeriksa', function ($query) use ($request) {
-                        $query->whereBetween('tgl_registrasi', [$request->tgl_pertama, $request->tgl_kedua]);
-                    })
+                $data = $data->whereHas('regPeriksa', function ($query) use ($request) {
+                    $query->whereBetween('tgl_registrasi', [$request->tgl_pertama, $request->tgl_kedua]);
+                })
                     ->whereHas('regPeriksa.dokter.spesialis', function ($query) use ($request) {
                         $query->where('nm_sps', 'like', '%' . $request->spesialis . '%');
                     })
                     ->whereHas('regPeriksa.penjab', function ($query) use ($request) {
                         $query->where('png_jawab', 'like', '%' . $request->pembiayaan . '%');
-                    })
-                    ->groupBy('kd_penyakit')
-                    ->orderBy('jumlah', 'desc')
-                    ->limit(10)
-                    ->get();
+                    })->get();
             } else {
-                $data = DiagnosaPasien::select('*', DB::raw('count(kd_penyakit) as jumlah'))
-                    ->where('prioritas', 1)
+                $data = $data
                     ->whereHas('regPeriksa', function ($query) use ($start) {
                         $query->whereBetween('tgl_registrasi', [$start->startOfMonth()->toDateString(), $start->now()->toDateString()]);
                     })
-                    ->groupBy('kd_penyakit')
-                    ->orderBy('jumlah', 'desc')
-                    ->limit(10)
                     ->get();
             }
         }

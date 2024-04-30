@@ -30,6 +30,8 @@
     <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    {{-- select2 --}}
+    <link rel="stylesheet" href="{{ asset('dist/css/select2.css') }}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <!-- Daterange picker -->
@@ -39,6 +41,7 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     {{-- datatable-plugin --}}
+
 
     <style>
         .table tr td {
@@ -182,6 +185,7 @@
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('dist/js/script.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script>
         function formatTanggal(oldTgl) {
             let t = new Date(oldTgl);
@@ -228,7 +232,7 @@
             }
             return tanggal = t.getDate() + ' ' + bulan + ' ' + t.getFullYear();
         }
-        
+
         function formatBulanTahun(oldTgl) {
             let t = new Date(oldTgl);
             let bulan = '';
@@ -274,6 +278,7 @@
             }
             return tanggal = bulan + ' ' + t.getFullYear();
         }
+        $('.form-select-2').select2();
     </script>
     @stack('scripts')
 </body>

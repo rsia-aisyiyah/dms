@@ -138,7 +138,15 @@ class LaporanDiagnosaPenyakitController extends Controller
         }
     }
 
-    public function ambilDiagnosa(Request $request)
+    public function get(Request $request)
     {
+        // if ($request->get('query')) {
+        $query = $request->get('query');
+        $data = Penyakit::where('nm_penyakit', 'LIKE', '%' . $query . '%')
+            ->orWhere('kd_penyakit', 'LIKE', '%' . $query . '%')
+            ->limit(10)
+            ->get();
+        return response()->json($data);
+        // }
     }
 }
