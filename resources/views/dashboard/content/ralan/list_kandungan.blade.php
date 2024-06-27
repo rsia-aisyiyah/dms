@@ -53,10 +53,13 @@
                                         <tr>
                                             <th>Tanggal Registrasi</th>
                                             <th>Nama Pasien</th>
+                                            <th>NIK</th>
                                             <th>Umur / Tanggal Lahir</th>
                                             <th>Suami</th>
                                             <th>Alamat</th>
+                                            <th>Kecamatan</th>
                                             <th>GPA</th>
+                                            <th>Diagnosa</th>
                                             <th>Usia Hamil</th>
                                             <th>Pembiayaan</th>
                                             <th>Dokter PJ</th>
@@ -230,6 +233,10 @@
                             name: 'nm_pasien'
                         },
                         {
+                            data: 'reg_periksa.pasien.no_ktp',
+                            name: 'nik'
+                        },
+                        {
                             data: 'tgl_lahir',
                             render: function(data, type, row) {
                                 return row.reg_periksa.umurdaftar + ' Th / ' + formatTanggal(row.reg_periksa.pasien.tgl_lahir);
@@ -245,11 +252,22 @@
                             name: 'reg_periksa.almt_pj'
                         },
                         {
+                            data: 'reg_periksa.pasien.kecamatanpj',
+                            name: 'kecamatan'
+                        },
+                        {
                             data: 'gpa',
                             render: function(data, type, row) {
                                 return 'G' + row.g + ' P' + row.p + ' A' + row.a;
                             },
                             name: 'gpa'
+                        },
+                        {
+                            data: 'reg_periksa.diagnosa_pasien',
+                            render: (data, type, row) => {
+                                return `${data ? `${data.kd_penyakit} - ${data.penyakit.nm_penyakit}` : '-'}`
+                            },
+                            name: 'diagnosa'
                         },
                         {
                             data: 'usia_kehamilan',

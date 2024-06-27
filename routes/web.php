@@ -78,7 +78,7 @@ Route::group(['middleware' => ['auth:token']], function () {
     Route::get('/monitoring/shk', [ResumePasienRanap::class, 'shk']);
 
     // Report Pengisian ERM
-    Route::prefix('report')->group(function($route) {
+    Route::prefix('report')->group(function ($route) {
         $route->get('erm', [RekamMedisController::class, 'pengisianErm']);
     });
 
@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth:token']], function () {
         Route::get('/rekammedis/penyakit', [LaporanDiagnosaPenyakitController::class, 'index']);
         Route::get('/rekammedis/penyakit/json', [LaporanDiagnosaPenyakitController::class, 'json']);
         Route::get('/rekammedis/cari', [LaporanDiagnosaPenyakitController::class, 'cariDiagnosa']);
+        Route::get('/penyakit/cari', [LaporanDiagnosaPenyakitController::class, 'get']);
 
         Route::get('/rekammedis/pasientb', [DiagnosaPasienController::class, 'pasienTb']);
         Route::get('/rekammedis/pasientb/json', [DiagnosaPasienController::class, 'jsonPasienTb']);
@@ -203,8 +204,8 @@ Route::group(['middleware' => ['auth:token']], function () {
     Route::get('farmasi/resep/waktu/json', [ResepObatController::class, 'ambilTabel']);
     Route::get('farmasi/resep/ambil', [RegPeriksaController::class, 'ambilResepTabel']);
     Route::get('farmasi/resep/hitung', [RegPeriksaController::class, 'hitungStatusResep']);
-    
-    
+
+
     Route::get('farmasi/dashboard', [FarmasiController::class, 'umum']);
     Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
 });

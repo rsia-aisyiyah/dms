@@ -95,7 +95,6 @@
         if (typeof angka === 'number') {
             angka = angka.toString();
         }
-
         
         var number_string = angka.replace(/[^,\d]/g, ',').toString(),
         

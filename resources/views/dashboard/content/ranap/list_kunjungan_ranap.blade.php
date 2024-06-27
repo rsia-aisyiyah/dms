@@ -67,13 +67,21 @@
                                     cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>No Rawat</th>
                                             <th>Tanggal Registrasi</th>
-                                            <th>Nama Pasien</th>
+                                            <th>No. RM</th>
+                                            <th>Nama</th>
+                                            <th>JK</th>
+                                            <th>Umur</th>
+                                            <th>Tgl. Lahir</th>
                                             <th>Alamat</th>
                                             <th>No. HP</th>
                                             <th>Status Daftar</th>
-                                            <th>Dokter PJ</th>
+                                            <th>DPJP</th>
                                             <th>Spesialis</th>
+                                            <th>Kamar</th>
+                                            <th>Dx. Masuk</th>
+                                            <th>Dx. AKhir</th>
                                             <th>Pembiayaan</th>
                                             <th>Tanggal Masuk</th>
                                             <th>Tanggal Keluar</th>
@@ -282,12 +290,32 @@
                         },
                     ],
                     columns: [{
+                            data: 'no_rawat',
+                            name: 'no_rawat'
+                        },
+                        {
                             data: 'tgl_registrasi',
                             name: 'tgl_registrasi'
                         },
                         {
+                            data: 'no_rkm_medis',
+                            name: 'no_rkm_medis'
+                        },
+                        {
                             data: 'nm_pasien',
                             name: 'nm_pasien'
+                        },
+                        {
+                            data: 'jk',
+                            name: 'jk',
+                        },
+                        {
+                            data: 'umurdaftar',
+                            name: 'umurdaftar',
+                        },
+                        {
+                            data: 'tgl_lahir',
+                            name: 'tgl_lahir'
                         },
                         {
                             data: 'alamat',
@@ -308,6 +336,18 @@
                         {
                             data: 'nm_sps',
                             name: 'nm_sps'
+                        },
+                        {
+                            data: 'nm_bangsal',
+                            name: 'nm_bangsal',
+                        },
+                        {
+                            data: 'diagnosa_awal',
+                            name: 'diagnosa_awal'
+                        },
+                        {
+                            data: 'diagnosa_akhir',
+                            name: 'diagnosa_akhir'
                         },
                         {
                             data: 'pembiayaan',
