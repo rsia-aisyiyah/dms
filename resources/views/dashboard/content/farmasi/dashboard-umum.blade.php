@@ -196,13 +196,23 @@
                     }
                 }
             },
+            lengChange: false,
+            order: [[ 1, "desc" ]],
+            searching: false,
+            paging: true,
             columns: [
                 { data: 'nama_obat', name: 'nama_obat' },
                 { data: 'total', name: 'total', className: 'text-center' },
             ],
-            order: [[ 1, "desc" ]],
-            searching: false,
-            paging: false,
+            // dom make info and pagination in one line
+            dom: 't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            pagingType: 'simple',
+            language: {
+                paginate: {
+                    previous: "<i class='fas fa-chevron-left'></i>",
+                    next: "<i class='fas fa-chevron-right'></i>"
+                }
+            }
         });
     }   
 

@@ -74,7 +74,7 @@ class FarmasiController extends Controller
             $data = $data->whereMonth('tgl_perawatan', date('m'))->whereYear('tgl_perawatan', date('Y'));
         }
 
-        $data = $data->groupBy('kode_brng')->orderBy('total', 'DESC')->limit(10)->get();
+        $data = $data->groupBy('kode_brng')->orderBy('total', 'DESC')->get();
 
         if ($request->datatables) {
             if ($request->datatables == 1 || $request->datatables == true || $request->datatables == 'true') {
@@ -118,7 +118,7 @@ class FarmasiController extends Controller
             $data = $data->whereMonth('tgl_perawatan', date('m'))->whereYear('tgl_perawatan', date('Y'));
         }
 
-        $data = $data->groupBy('kode_brng')->orderBy('total', 'ASC')->limit(50)->get();
+        $data = $data->groupBy('kode_brng')->orderBy('total', 'ASC')->get();
 
         if ($request->datatables) {
             if ($request->datatables == 1 || $request->datatables == true || $request->datatables == 'true') {
