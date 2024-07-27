@@ -103,7 +103,6 @@
     var pembiayaan = null;
     var status = null;
     const token = '{{ Session::get('token') }}';
-    const apiUrl = "{{ env('API_URL') }}";
 
     $('.card-ranap #tanggal').daterangepicker({
         locale: {
@@ -151,7 +150,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: apiUrl + 'monitor/pengisian-erm/spesialis/ranap?datatables=1',
+                url: `{{ env('APP_URL') }}/api/monitor/pengisian-erm/spesialis/ranap?datatables=1`,
                 type: 'GET',
                 data: {
                     tgl_registrasi: {
@@ -240,7 +239,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: apiUrl + 'monitor/pengisian-erm/spesialis/ralan?datatables=1',
+                url: `{{ env('APP_URL') }}/api/monitor/pengisian-erm/spesialis/ralan?datatables=1`,
                 type: 'GET',
                 data: {
                     tgl_registrasi: {

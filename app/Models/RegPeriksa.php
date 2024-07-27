@@ -2,17 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Dokter;
-use App\Models\Pasien;
-use App\Models\Penjab;
-use App\Models\KamarInap;
-use App\Models\Spesialis;
-use App\Models\Poliklinik;
-use App\Models\BridgingSep;
-use App\Models\RanapGabung;
-use App\Models\AskepRanapBayi;
-use App\Models\DiagnosaPasien;
-use App\Models\BookingRegistrasi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +10,17 @@ class RegPeriksa extends Model
 {
     use HasFactory;
     protected $table = "reg_periksa";
+
+    public function poliklinik()
+    {
+        return $this->belongsTo(Poliklinik::class, 'kd_poli', 'kd_poli');
+    }
+
+    // data_triase_igd
+    public function dataTriaseIgd()
+    {
+        return $this->hasOne(DataTriaseIgd::class, 'no_rawat', 'no_rawat');
+    }
 
     public function bridgingSep()
     {
@@ -132,5 +132,123 @@ class RegPeriksa extends Model
             ->whereHas('bookingRegistrasi')
             ->where('status_lanjut', 'Ralan')
             ->where('stts', 'Sudah');
+    }
+
+    // rsia_general_consent
+    public function rsiaGeneralConsent()
+    {
+        return $this->hasOne(RsiaGeneralConsent::class, 'no_rawat', 'no_rawat');
+    }
+
+    // RsiaVerifPemeriksaanRanap
+    public function rsiaVerifPemeriksaanRanap()
+    {
+        return $this->hasOne(RsiaVerifPemeriksaanRanap::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function resumePasienRanap()
+    {
+        return $this->hasOne(ResumePasienRanap::class, 'no_rawat', 'no_rawat');
+    }
+
+    // penilaian medis ranap
+    public function penilaianMedisRanap()
+    {
+        return $this->hasOne(PenilaianMedisRanap::class, 'no_rawat', 'no_rawat');
+    }
+
+    // penilaian medis ranap kandungan
+    public function penilaianMedisRanapKandungan()
+    {
+        return $this->hasOne(PenilaianMedisRanapKandungan::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function ranapDokter()
+    {
+        return $this->hasOne(RawatInapDr::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function ranapGabungan()
+    {
+        return $this->hasOne(RawatInapDrPr::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function ralanDokter()
+    {
+        return $this->hasOne(RawatJalanDr::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function ralanGabungan()
+    {
+        return $this->hasOne(RawatJalanDrPr::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function transferPasienAntarRuang()
+    {
+        return $this->hasOne(TransferPasienAntarRuang::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function pemeriksaanRanap()
+    {
+        return $this->hasMany(PemeriksaanRanap::class, 'no_rawat', 'no_rawat');
+    }
+
+    // no_rawat
+    public function grafikHarian()
+    {
+        return $this->hasMany(RsiaGrafikHarian::class, 'no_rawat', 'no_rawat');
+    }
+
+    // rekonsiliasiObat
+    public function rekonsiliasiObat()
+    {
+        return $this->hasOne(RekonsiliasiObat::class, 'no_rawat', 'no_rawat');
+    }
+
+    // skriningGizi
+    public function skriningGizi()
+    {
+        return $this->hasOne(RsiaSkriningGizi::class, 'no_rawat', 'no_rawat');
+    }
+
+    // penilaianAwalKeperawatanIgd
+    public function penilaianAwalKeperawatanIgd()
+    {
+        return $this->hasOne(PenilaianAwalKeperawatanIgd::class, 'no_rawat', 'no_rawat');
+    }
+
+    // PenilaianAwalKeperawatanKebidanan
+    public function penilaianAwalKeperawatanKebidanan()
+    {
+        return $this->hasOne(PenilaianAwalKeperawatanKebidanan::class, 'no_rawat', 'no_rawat');
+    }
+
+    // penilaian awal keperawatan ranap
+    public function penilaianAwalKeperawatanRanap()
+    {
+        return $this->hasOne(PenilaianAwalKeperawatanRanap::class, 'no_rawat', 'no_rawat');
+    }
+
+    // penilaian awal keperawatan ranap anak
+    public function penilaianAwalKeperawatanRanapAnak()
+    {
+        return $this->hasOne(PenilaianAwalKeperawatanRanapAnak::class, 'no_rawat', 'no_rawat');
+    }
+
+    // penilaian awal keperawatan ranap neonatus
+    public function penilaianAwalKeperawatanRanapNeonatus()
+    {
+        return $this->hasOne(PenilaianAwalKeperawatanRanapNeonatus::class, 'no_rawat', 'no_rawat');
+    }
+
+    // PenilaianMedisIgd
+    public function penilaianMedisIgd()
+    {
+        return $this->hasOne(PenilaianMedisIgd::class, 'no_rawat', 'no_rawat');
+    }
+
+    public function pemeriksaanRalan()
+    {
+        return $this->hasOne(PemeriksaanRalan::class, 'no_rawat', 'no_rawat');
     }
 }

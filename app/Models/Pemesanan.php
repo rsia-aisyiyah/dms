@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DetailPemberianObat extends Model
+class Pemesanan extends Model
 {
     use HasFactory;
 
-    protected $table = 'detail_pemberian_obat';
-
+    protected $table = 'pemesanan';
     public $timestamps = false;
 
-    public function obat()
+    public function bangsal()
     {
-        return $this->belongsTo(DataBarang::class, 'kode_brng', 'kode_brng');  
+        return $this->hasOne(Bangsal::class, 'kd_bangsal', 'kd_bangsal');
     }
 }
