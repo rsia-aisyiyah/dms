@@ -41,10 +41,10 @@ return [
             'provider' => 'users',
         ],
 
-        'token' => [
-            'driver' => 'users_token',
-            'provider' => 'users_token',
-        ]
+        // 'token' => [
+        //     'driver' => 'users_token',
+        //     'provider' => 'users_token',
+        // ]
     ],
 
     /*
@@ -70,10 +70,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'users_token' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\RsiaUsersToken::class,
-        ],
+        // 'users_token' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\RsiaUsersToken::class,
+        // ],
 
         // 'users' => [
         //     'driver' => 'database',

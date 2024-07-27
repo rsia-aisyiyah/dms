@@ -120,9 +120,6 @@
                             end: tgl_kedua,
                         },
                     },
-                    beforeSend: function (request) {
-                        request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
-                    },
                 },
                 columns: [
                     { 

@@ -102,7 +102,6 @@
     var tgl_pertama = null;
     var pembiayaan = null;
     var status = null;
-    const token = '{{ Session::get('token') }}';
 
     $('.card-ranap #tanggal').daterangepicker({
         locale: {
@@ -158,12 +157,8 @@
                         end: tgl_kedua,
                     }
                 },
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 beforeSend: function(req) {
                     req.setRequestHeader("Accept", "application/json");
-                    req.setRequestHeader("Authorization", "Bearer " + token);
                 },
             },
             searching: false,
@@ -247,12 +242,8 @@
                         end: tgl_kedua,
                     }
                 },
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 beforeSend: function(req) {
                     req.setRequestHeader("Accept", "application/json");
-                    req.setRequestHeader("Authorization", "Bearer " + token);
                 },
             },
             searching: false,

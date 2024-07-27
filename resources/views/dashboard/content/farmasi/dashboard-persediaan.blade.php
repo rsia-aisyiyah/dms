@@ -123,9 +123,6 @@
                     "type" : jenis
                 },
             },
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
-            },
             success: function (response) {
                 if (response.success) {
                     var rdata = response.data;

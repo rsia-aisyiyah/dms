@@ -78,7 +78,6 @@
 <script>
     var tgl_kedua = '';
     var tgl_pertama = '';
-    const token = '{{ Session::get('token') }}';
 
     $('#tanggal').daterangepicker({
         locale: {
@@ -115,9 +114,6 @@
                         end: tgl_kedua,
                     },
                     pembiayaan: pembiayaan,
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + token);
                 },
             },
             responsive: true,

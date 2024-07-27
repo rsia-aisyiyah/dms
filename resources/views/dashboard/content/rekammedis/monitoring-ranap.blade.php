@@ -94,7 +94,6 @@
     var tgl_pertama = null;
     var pembiayaan = null;
     var status = null;
-    const token = '{{ Session::get('token') }}';
 
     $('#tanggal').daterangepicker({
         locale: {
@@ -130,9 +129,6 @@
                         start: tgl_pertama,
                         end: tgl_kedua,
                     },
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + token);
                 },
             },
             searching: true,

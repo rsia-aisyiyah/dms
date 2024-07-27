@@ -49,7 +49,7 @@ use App\Http\Controllers\ResumePasienRanap;
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
 
-Route::group(['middleware' => ['auth:token']], function () {
+Route::middleware('auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout']);
     Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);

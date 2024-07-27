@@ -151,10 +151,6 @@
                     'tahun': tahun,
                 }
             },
-
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
-            },
             
             success: function (data) {
                 if (data.success) {
@@ -198,9 +194,6 @@
                         'bulan': bulan,
                         'tahun': tahun,
                     }
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
                 }
             },
             columns: [
@@ -228,9 +221,6 @@
                         'bulan': bulan,
                         'tahun': tahun,
                     }
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
                 }
             },
             lengChange: false,
@@ -267,10 +257,6 @@
                     'bulan': bulan,
                     'tahun': tahun,
                 }
-            },
-
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
             },
             
             success: function(data) {
