@@ -26,8 +26,8 @@
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <!-- Toast -->
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
-{{--    <!-- JQVMap -->--}}
-{{--    <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">--}}
+    {{--    <!-- JQVMap --> --}}
+    {{--    <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}"> --}}
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
     {{-- select2 --}}
@@ -177,6 +177,8 @@
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script>
+        const url = "{{ url('') }}";
+
         function formatTanggal(oldTgl) {
             let t = new Date(oldTgl);
             let bulan = '';

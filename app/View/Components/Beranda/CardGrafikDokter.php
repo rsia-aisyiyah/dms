@@ -22,8 +22,8 @@ class CardGrafikDokter extends Component
 	 */
 	public function __construct()
 	{
-		$this->dokterCollection = new DokterCollection(new DokterController());
-		$this->regPeriksaCollection = new RegPeriksaCollection(new RegPeriksaController());
+		$this->dokterCollection = new DokterCollection();
+		$this->regPeriksaCollection = new RegPeriksaCollection();
 	}
 
 	/**
@@ -34,11 +34,9 @@ class CardGrafikDokter extends Component
 	public function render()
 	{
 		$dokter = $this->dokterCollection->getDokter()->getContent();
-		$dataGrafikCollection = new KunjunganPoliklinikDokterCollection($this->dokterCollection, $this->regPeriksaCollection);
-		$dataGrafik = json_decode($dataGrafikCollection->getDokterData(new \Illuminate\Http\Request())->getContent(), true);
+		$dataGrafikCollection = new KunjunganPoliklinikDokterCollection();
+		$dataGrafik = $dataGrafikCollection->get(new \Illuminate\Http\Request());
 		$jsonDokter = json_decode($dokter, true);
-		return view('components.beranda.card-grafik-dokter', ['dokter' => $jsonDokter, 'dataGrafik' =>$dataGrafik]);
+		return view('components.beranda.card-grafik-dokter', ['dokter' => $jsonDokter, 'dataGrafik' => $dataGrafik]);
 	}
-
-
 }

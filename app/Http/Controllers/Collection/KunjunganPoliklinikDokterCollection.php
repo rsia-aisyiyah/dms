@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
+
 class KunjunganPoliklinikDokterCollection extends Controller
 {
 
@@ -20,56 +22,93 @@ class KunjunganPoliklinikDokterCollection extends Controller
 	}
 
 	// Function to get dokter collection
-	private function getDokterCollection()
+	private function getJadwalDokterCollection()
 	{
-		$jsonDokter = $this->dokterCollection->getDokter()->getContent();
-		return collect(json_decode($jsonDokter, true));
+		return $this->getJadwalDokter()->map(function ($item) {
+			return $item->map(function ($items) {
+				return $items->dokter;
+			})->first();
+		})->values();
 	}
 
-// Function to get dokter spesialis codes
+	// Function to get dokter spesialis codes
 	private function getDokterSpesialisCodes($dokterCollection)
 	{
 		return $dokterCollection->pluck('kd_dokter');
 	}
 
-// Function to get grouped registration data
-	private function getGroupedRegistrationData($dokterSpesialis, $request)
+	private function getJadwalDokter()
 	{
-		return $this->regPeriksaCollection->getAll($request)
-			->whereIn('kd_dokter', $dokterSpesialis)
-			->where('stts', '!=', 'Batal')
+		return $this->jadwalCollection->getAll()
 			->groupBy('kd_dokter');
 	}
 
-// Function to map data into the required format
+	private function getGroupedRegistrationData($dokterSpesialis, Request $request)
+	{
+		$dokter = [];
+		foreach ($dokterSpesialis as $kd_dokter) {
+			$registrations = $this->regPeriksaCollection->getAll($request)
+				->where('kd_dokter', $kd_dokter)
+				->where('status_lanjut', 'Ralan');
+
+			$dokter[$kd_dokter] = $registrations;
+		}
+
+		return collect($dokter);
+	}
+
 	private function mapRegistrationData($regPeriksa, $dokterCollection)
 	{
-		return $regPeriksa->map(function ($items) use ($dokterCollection) {
-			$dokter = $dokterCollection->firstWhere('kd_dokter', $items->first()->kd_dokter);
-
-			$jumlah = $items->groupBy('tgl_registrasi')->map(function($item) {
+		return $regPeriksa->map(function ($items, $dokterCode) use ($dokterCollection) {
+			$jumlah = $items->groupBy('tgl_registrasi')->map(function ($item) {
 				return $item->count();
 			})->values();
-			$tanggal = $items->groupBy('tgl_registrasi')->keys()->values()->map(function ($item){
+
+			$tanggal = $items->groupBy('tgl_registrasi')->keys()->values()->map(function ($item) {
 				return Carbon::parse($item)->translatedFormat('d F');
 			});
+
+			$dokter = $dokterCollection->firstWhere('kd_dokter', $dokterCode);
 
 			return [
 				'tanggal' => $tanggal,
 				'jumlah' => $jumlah,
-				'dokter' => $dokter,
+				'dokter' => $dokter ? ['kd_dokter' => $dokter->kd_dokter, 'nm_dokter' => $dokter->nm_dokter] : [],
 			];
-		})->values(); // Ensure the outer array is numerically indexed
+		})->values();
 	}
 
-// Main function to handle the request
-	public function getDokterData(Request $request)
+	// Main function to handle the request
+	public function get(Request $request)
 	{
-		$dokterCollection = $this->getDokterCollection();
+		$dokterCollection = $this->getJadwalDokterCollection();
 		$dokterSpesialis = $this->getDokterSpesialisCodes($dokterCollection);
 		$regPeriksa = $this->getGroupedRegistrationData($dokterSpesialis, $request);
-		$data = $this->mapRegistrationData($regPeriksa, $dokterCollection);
-		return response()->json($data);
+		return $data = $this->mapRegistrationData($regPeriksa, $dokterCollection);
 	}
 
+	public function getByDokter($year, $month, $dokter)
+	{
+		$request = ['year' => $year, 'month' => $month, 'dokter' => $dokter];
+		$registrasi = $this->getRegistrasiPoliDokter(new Request($request));
+		return $this->mappingRegistrasiPoliDokter($registrasi, $request['dokter']);
+	}
+
+	private function getRegistrasiPoliDokter($request)
+	{
+		return $this->regPeriksaCollection->getAll($request)
+			->where('status_lanjut', 'Ralan')
+			->where('kd_dokter', $request->dokter)
+			->groupBy('tgl_registrasi');
+	}
+	private function mappingRegistrasiPoliDokter($registrasi, $kd_dokter)
+	{
+		$jumlah = $registrasi->map((function ($item) {
+			return $item->count();
+		}))->values();
+		$tanggal = $registrasi->keys();
+		$dokter = $this->dokterCollection->getDokterById($kd_dokter)->only('kd_dokter', 'nm_dokter');
+
+		return ['jumlah' => $jumlah, 'tanggal' => $tanggal, 'dokter' => $dokter];
+	}
 }

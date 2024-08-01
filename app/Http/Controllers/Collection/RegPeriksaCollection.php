@@ -7,6 +7,7 @@ use App\Http\Controllers\RegPeriksaController;
 use App\Models\RegPeriksa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class RegPeriksaCollection extends Controller
 {
@@ -17,8 +18,9 @@ class RegPeriksaCollection extends Controller
 		$this->regPeriksaController = new RegPeriksaController();
 	}
 
-	function getAll(Request $request) : Collection
+	function getAll(Request $request)
 	{
-		 return collect($this->regPeriksaController->getAll($request));
+		return collect($this->regPeriksaController->getAll($request)
+			->where('stts', 'Sudah'));
 	}
 }

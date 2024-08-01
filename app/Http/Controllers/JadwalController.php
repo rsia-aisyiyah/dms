@@ -7,16 +7,9 @@ use Illuminate\Http\Request;
 
 class JadwalController extends Controller
 {
-	protected $jadwal;
-	public function __construct(Jadwal $jadwal){
-		$this->jadwal = $jadwal;
+	protected $jadwalModel;
+	public function __construct()
+	{
+		$this->jadwalModel = new Jadwal();
 	}
-    function getAll()
-    {
-		$data = $this->jadwal
-			->with('dokter', 'poliklinik')
-			->get();
-		return response()->json($data);
-    }
-
 }

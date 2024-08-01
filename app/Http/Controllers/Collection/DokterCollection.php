@@ -26,4 +26,11 @@ class DokterCollection extends Controller
 
 		return response()->json($dokter);
 	}
+
+	function getDokterById($kd_dokter)
+	{
+
+		$dokter = $this->dokterController->getDokterById($kd_dokter);
+		return collect($dokter);
+	}
 }

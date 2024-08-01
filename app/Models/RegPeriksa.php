@@ -134,6 +134,21 @@ class RegPeriksa extends Model
             ->where('stts', 'Sudah');
     }
 
+    public function scopeMonth($query, $month, $year)
+    {
+        if ($month == '' && $year == '') {
+            $month = date('m');
+            $year = date('Y');
+        }
+        $query->whereMonth('tgl_registrasi', $month)
+            ->whereYear('tgl_registrasi', $year);
+    }
+
+    function scropeStatus($query, $status = 'Sudah')
+    {
+        $query->where('stts', $status);
+    }
+
     // rsia_general_consent
     public function rsiaGeneralConsent()
     {

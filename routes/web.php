@@ -34,6 +34,7 @@ use App\Http\Controllers\FarmasiController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
 use App\Http\Controllers\ResumePasienRanap;
+use App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection;
 
 /*
 |--------------------------------------------------------------------------
@@ -208,6 +209,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('farmasi/dashboard', [FarmasiController::class, 'umum']);
     Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
+
+    Route::prefix('grafik')->group(function ($route) {
+        Route::get('kunjungan/poliklinik/{year?}/{month?}/{dokter?}', [\App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection::class, 'getByDokter']);
+    });
 });
 
-Route::get('/test', [\App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection::class, 'getDokterData']);
+Route::get('/reg', [RegPeriksaController::class, 'getAll']);

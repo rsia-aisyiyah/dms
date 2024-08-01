@@ -21,15 +21,15 @@ class DokterController extends Controller
     public function getDokterSpesialis()
     {
         $data = Dokter::where('kd_sps', '!=', 'S0007')
-	        ->orderBy('kd_sps', 'asc')
-	        ->where('nm_dokter','!=', '-')
+            ->orderBy('kd_sps', 'asc')
+            ->where('nm_dokter', '!=', '-')
             ->where('status', '1')->get();
         return $data;
     }
 
-	function getDokterById($kd_dokter)
-	{
+    function getDokterById($kd_dokter)
+    {
 
-	}
-
+        return Dokter::where('kd_dokter', $kd_dokter)->first();
+    }
 }
