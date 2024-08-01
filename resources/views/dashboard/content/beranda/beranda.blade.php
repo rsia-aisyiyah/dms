@@ -89,12 +89,18 @@
     <div class="row">
         @include('dashboard.content.beranda._diagramRegistrasi')
     </div>
+{{--    <div class="row">--}}
+{{--        @include('dashboard.content.beranda._diagramKunjunganDokter')--}}
+{{--    </div>--}}
     <div class="row">
-        @include('dashboard.content.beranda._diagramKunjunganDokter')
+        <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
     </div>
     <div class="row">
         @include('dashboard.content.beranda._diagramRalan')
     </div>
+
+
+
 @endsection
 
 @push('scripts')

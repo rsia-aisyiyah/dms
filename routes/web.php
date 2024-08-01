@@ -210,4 +210,4 @@ Route::middleware('auth')->group(function () {
     Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
 });
 
-Route::get('/test', [TindakanController::class, 'rawatInapDr']);
+Route::get('/test', [\App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection::class, 'getDokterData']);

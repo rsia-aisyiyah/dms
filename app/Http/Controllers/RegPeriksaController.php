@@ -14,11 +14,33 @@ use function PHPSTORM_META\map;
 
 class RegPeriksaController extends Controller
 {
-    private $tanggal;
+    protected $tanggal;
+    protected $regPeriksaModel;
     public function __construct()
     {
         $this->tanggal = new Carbon();
+        $this->regPeriksaModel = new RegPeriksa();
     }
+
+	function getAll(Request $request)
+	{
+
+		$tgl_pertama = $request->tgl_pertama;
+		$tgl_kedua = $request->tgl_kedua;
+
+		if($tgl_pertama && $tgl_kedua){
+			$data = $this->regPeriksaModel
+				->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua])
+				->get();
+		}else{
+			$data = $this->regPeriksaModel
+				->whereMonth('tgl_registrasi', date('m'))
+				->whereYear('tgl_registrasi', date('Y'))
+				->get();
+		}
+
+		return $data;
+	}
 
     public function caraBooking(Request $request)
     {
