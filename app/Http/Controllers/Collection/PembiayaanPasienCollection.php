@@ -8,6 +8,8 @@ use App\Models\BridgingSep;
 use App\Models\RegPeriksa;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
+
 class PembiayaanPasienCollection extends Controller
 {
 	protected $regPeriksa;
@@ -25,18 +27,26 @@ class PembiayaanPasienCollection extends Controller
 	public function getPembiayaan(Request $request)
 	{
 		$penjabCollection = $this->getAllPenjab();
-		return $this->regPeriksa->getAll($request)
-			->groupBy('status_lanjut')->map(function ($item) use ($penjabCollection) {
-				$groupItem = $item->groupBy('kd_pj')->map(function ($items) use ($penjabCollection) {
-					$penjab = $penjabCollection->firstWhere('kd_pj', $items->first()->kd_pj);
-					return ['jumlah' => $items->count(),
-						'kd_pj' => $penjab['kd_pj'],
-						'png_jawab' => $penjab['png_jawab']
-					];
-				})->sortBy('png_jawab')->values();
+		$regPeriksa = $this->regPeriksa->getAll($request);
 
-				return ['status' => $item->first()->status_lanjut, 'data' => $groupItem];
-			})->values();
+		if (!count($regPeriksa)) {
+			return [
+				['status' => 'Ralan', 'data' => []],
+				['status' => 'Ranap', 'data' => []],
+			];
+		}
+
+		return $regPeriksa->groupBy('status_lanjut')->map(function ($item) use ($penjabCollection) {
+			$groupItem = $item->groupBy('kd_pj')->map(function ($items) use ($penjabCollection) {
+				$penjab = $penjabCollection->firstWhere('kd_pj', $items->first()->kd_pj);
+				return [
+					'jumlah' => $items->count(),
+					'kd_pj' => $penjab['kd_pj'],
+					'png_jawab' => $penjab['png_jawab']
+				];
+			})->sortBy('png_jawab')->values();
+			return ['status' => $item->first()->status_lanjut, 'data' => $groupItem];
+		})->values();
 	}
 
 	private function getAllPenjab()
@@ -46,21 +56,18 @@ class PembiayaanPasienCollection extends Controller
 		});
 	}
 
-	public function getPenjabBpjs(Request $request)
+	public function getPenjabBpjs($year = '', $month = '')
 	{
-		$sepCollection = collect($this->sep->getByMonth($request->month, $request->year)->get());
+		$sepCollection = collect($this->sep->getByMonth($month, $year)->get());
 
 		return $sepCollection->groupBy('jnspelayanan')->map(function ($item) {
 			$pelayanan = $item->first()->jnspelayanan;
 			$pelayanan = $pelayanan === '1' ? 'Rawat Jalan' : 'Rawat Inap';
 			$groupItem =  $item->groupBy('peserta')->map(function ($items, $key) {
-				return$items->count();
+				return $items->count();
 			})->sortBy('peserta');
 
 			return ['jnspelayanan' => $pelayanan, 'data' => $groupItem];
 		})->values();
-
 	}
-
-
 }

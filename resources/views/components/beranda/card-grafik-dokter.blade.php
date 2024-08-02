@@ -76,7 +76,7 @@
                         scales: {
                             y: {
                                 beginAtZero: false,
-                                min: 0, // Set minimum value of the y-axis
+                                min: 0,
                                 max: 80,
                             },
                         },
@@ -84,11 +84,12 @@
                         maintainAspectRatio: false,
                         plugins: {
                             datalabels: {
-                                anchor: 'end', // Position the label relative to the end of the bar
-                                align: 'top', // Align the label at the top
+                                anchor: 'end',
+                                align: 'top',
                                 color: 'grey',
                                 formatter: function(value) {
-                                    return value; // Format the label text (optional)
+                                    return value;
+
                                 }
                             }
                         },

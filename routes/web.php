@@ -213,7 +213,6 @@ Route::middleware('auth')->group(function () {
     Route::prefix('grafik')->group(function ($route) {
         $route->get('kunjungan/poliklinik/{year?}/{month?}/{dokter?}', [\App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection::class, 'getByDokter']);
         $route->get('penjab/{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPembiayaan']);
+        $route->get('penjab/bpjs/{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPenjabBpjs']);
     });
 });
-
-Route::get('/test', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPenjabBpjs']);

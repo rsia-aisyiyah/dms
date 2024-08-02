@@ -9,7 +9,7 @@
                         <div class="row">
                             <label>Filter Data </label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off"/>
+                                <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -75,10 +75,30 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <x-beranda.card-grafik-pembiayaan></x-beranda.card-grafik-pembiayaan>
-                {{--        @include('dashboard.content.beranda._diagramPembayaran')--}}
-            </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <x-beranda.card-grafik-pembiayaan></x-beranda.card-grafik-pembiayaan>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <x-beranda.card-grafik-detail-bpjs></x-beranda.card-grafik-detail-bpjs>
+                </div>
 
+
+                {{--        @include('dashboard.content.beranda._diagramPembayaran') --}}
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="input-group w-25">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                </div>
+                <input type="text" id="blnPembiayaan" class="form-control monthPicker"
+                    data-toggle="datetimepicker" aria-describedby="blnPembiayaan"
+                    data-target="#blnPembiayaan"
+                    autocomplete="off" />
+                <button type="button" class="btn btn-primary" onclick="getPembiayaanPasien()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -98,16 +118,15 @@
     <div class="row">
         @include('dashboard.content.beranda._diagramRegistrasi')
     </div>
-    {{--    <div class="row">--}}
-    {{--        @include('dashboard.content.beranda._diagramKunjunganDokter')--}}
-    {{--    </div>--}}
+    {{--    <div class="row"> --}}
+    {{--        @include('dashboard.content.beranda._diagramKunjunganDokter') --}}
+    {{--    </div> --}}
     <div class="row">
         <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
     </div>
     <div class="row">
         @include('dashboard.content.beranda._diagramRalan')
     </div>
-
 @endsection
 
 @push('scripts')
@@ -122,7 +141,7 @@
                     'tgl_pertama': tgl_pertama,
                     'tgl_kedua': tgl_kedua,
                 },
-                success: function (data) {
+                success: function(data) {
                     var donutChartCanvas = $('#statusDaftar').get(0);
                     var donutData = {
                         labels: [
@@ -164,7 +183,7 @@
                     tgl_pertama: tgl_pertama,
                     tgl_kedua: tgl_kedua
                 },
-                success: function (data) {
+                success: function(data) {
                     ralan = data;
                     document.getElementById('ralan').innerHTML = data;
                 }
@@ -178,7 +197,7 @@
                     tgl_pertama: tgl_pertama,
                     tgl_kedua: tgl_kedua
                 },
-                success: function (data) {
+                success: function(data) {
                     document.getElementById('ranap').innerHTML = data;
                 }
             });
@@ -191,7 +210,7 @@
                     tgl_pertama: tgl_pertama,
                     tgl_kedua: tgl_kedua
                 },
-                success: function (data) {
+                success: function(data) {
                     document.getElementById('igd').innerHTML = data;
 
                 }
@@ -205,14 +224,14 @@
                     tgl_pertama: tgl_pertama,
                     tgl_kedua: tgl_kedua
                 },
-                success: function (data) {
+                success: function(data) {
                     document.getElementById('total').innerHTML = data;
                 }
             });
         }
 
 
-        $('#tanggal').on('apply.daterangepicker', function (env, picker) {
+        $('#tanggal').on('apply.daterangepicker', function(env, picker) {
 
             tgl_pertama = picker.startDate.format('YYYY-MM-DD');
             tgl_kedua = picker.endDate.format('YYYY-MM-DD');
@@ -258,7 +277,7 @@
             statusReg(tgl_pertama, tgl_kedua);
 
         });
-        $(document).ready(function () {
+        $(document).ready(function() {
             statusReg();
             loadDiagramRalan();
             statusDaftar();
