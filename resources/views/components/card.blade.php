@@ -1,4 +1,4 @@
-<div class="card">
+<div {{ $attributes->merge(['class' => 'card']) }}>
     {{ $header ?? '' }}
     {{ $slot }}
     {{ $footer ?? '' }}

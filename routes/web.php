@@ -211,8 +211,9 @@ Route::middleware('auth')->group(function () {
     Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
 
     Route::prefix('grafik')->group(function ($route) {
-        Route::get('kunjungan/poliklinik/{year?}/{month?}/{dokter?}', [\App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection::class, 'getByDokter']);
+        $route->get('kunjungan/poliklinik/{year?}/{month?}/{dokter?}', [\App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection::class, 'getByDokter']);
+        $route->get('penjab/{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPembiayaan']);
     });
 });
 
-Route::get('/reg', [RegPeriksaController::class, 'getAll']);
+Route::get('/test', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPenjabBpjs']);

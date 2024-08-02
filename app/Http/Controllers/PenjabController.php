@@ -7,12 +7,9 @@ use Illuminate\Http\Request;
 
 class PenjabController extends Controller
 {
-    public function getAllPenjab(Request $request)
+    public function getAllPenjab()
     {
-        if($request->ajax()){
-            return $penjab = Penjab::where('status', '1')->orderBy('png_jawab', 'ASC')->get();
-        }else{
-            return redirect()->intended('/');
-        }
+        return $penjab = Penjab::active()
+	        ->orderBy('png_jawab', 'ASC')->get();
     }
 }
