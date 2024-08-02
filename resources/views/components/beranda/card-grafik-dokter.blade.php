@@ -37,6 +37,7 @@
 
 @push('scripts')
     <script>
+        let chartKunjunganInstance = [];
         $('.monthPicker').datetimepicker({
             format: "YYYY-MM",
             useCurrent: false,
@@ -50,10 +51,50 @@
 
         function getGrafikKunjunganDokter(kd_dokter) {
             const valueInput = document.getElementById(`blnKunjungan${kd_dokter}`).value;
+            const element = document.getElementById(`grafikDokter${kd_dokter}`);
+            const card = document.getElementById(`cardDokter${kd_dokter}`);
+            const ctx = element.getContext('2d');
             const month = valueInput.split('-')[1];
             const year = valueInput.split('-')[0];
 
-            getGrafikKunjunganByDokter(year, month, kd_dokter)
+
+            getGrafikKunjunganByDokter(year, month, kd_dokter).done((response) => {
+                destroyChartByDokter(kd_dokter)
+                chartKunjunganInstance.push(new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: response.tanggal,
+                        datasets: [{
+                            label: response.dokter.nm_dokter,
+                            backgroundColor: 'rgb(58,161,98)',
+                            borderColor: 'rgb(39,121,72)',
+                            borderWidth: 1,
+                            data: response.jumlah
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 0, // Set minimum value of the y-axis
+                                max: 80,
+                            },
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                anchor: 'end', // Position the label relative to the end of the bar
+                                align: 'top', // Align the label at the top
+                                color: 'grey',
+                                formatter: function(value) {
+                                    return value; // Format the label text (optional)
+                                }
+                            }
+                        },
+                    }
+                }))
+            })
         }
 
 
@@ -67,8 +108,6 @@
         function renderGrafikKunjunganDokter() {
             const data = @json($dataGrafik);
 
-            console.log(data);
-            let component = []
             data.forEach((item, index) => {
                 const element = document.getElementById(`grafikDokter${item.dokter.kd_dokter}`);
                 const card = document.getElementById(`cardDokter${item.dokter.kd_dokter}`);
@@ -76,7 +115,7 @@
                 card.classList.remove("d-none");
 
                 Chart.register(ChartDataLabels);
-                component.push(new Chart(ctx, {
+                chartKunjunganInstance.push(new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: item.tanggal,
@@ -115,7 +154,17 @@
             })
         }
 
+        function destroyChartByDokter(kd_dokter) {
+            const index = chartKunjunganInstance.findIndex(chart => chart.canvas.id === `grafikDokter${kd_dokter}`);
+            if (index !== -1) {
+                chartKunjunganInstance[index].destroy();
+                chartKunjunganInstance.splice(index, 1); // Remove the destroyed chart from the array
+            }
+        }
+
+
         $(document).ready(() => {
+
             renderGrafikKunjunganDokter()
         })
     </script>

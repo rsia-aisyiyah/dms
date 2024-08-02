@@ -106,7 +106,10 @@ class KunjunganPoliklinikDokterCollection extends Controller
 		$jumlah = $registrasi->map((function ($item) {
 			return $item->count();
 		}))->values();
-		$tanggal = $registrasi->keys();
+
+		$tanggal = $registrasi->keys()->map(function ($item) {
+			return Carbon::parse($item)->translatedFormat('d M y');
+		});
 		$dokter = $this->dokterCollection->getDokterById($kd_dokter)->only('kd_dokter', 'nm_dokter');
 
 		return ['jumlah' => $jumlah, 'tanggal' => $tanggal, 'dokter' => $dokter];
