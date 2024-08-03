@@ -124,9 +124,9 @@
     <div class="row">
         <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
     </div>
-    <div class="row">
-        @include('dashboard.content.beranda._diagramRalan')
-    </div>
+{{--    <div class="row">--}}
+{{--        @include('dashboard.content.beranda._diagramRalan')--}}
+{{--    </div>--}}
 @endsection
 
 @push('scripts')
@@ -270,22 +270,22 @@
             caraBooking(tgl_pertama, tgl_kedua);
             statusDaftar(tgl_pertama, tgl_kedua);
             // pembiayaanPasien(tgl_pertama, tgl_kedua);
-            jumlahIGD(tgl_pertama, tgl_kedua);
-            jumlahRalan(tgl_pertama, tgl_kedua);
-            jumlahRanap(tgl_pertama, tgl_kedua);
-            totalKunjungan(tgl_pertama, tgl_kedua);
+            // jumlahIGD(tgl_pertama, tgl_kedua);
+            // jumlahRalan(tgl_pertama, tgl_kedua);
+            // jumlahRanap(tgl_pertama, tgl_kedua);
+            // totalKunjungan(tgl_pertama, tgl_kedua);
             statusReg(tgl_pertama, tgl_kedua);
 
         });
         $(document).ready(function() {
             statusReg();
-            loadDiagramRalan();
+            // loadDiagramRalan();
             statusDaftar();
             // pembiayaanPasien();
-            jumlahIGD();
-            jumlahRalan();
-            jumlahRanap();
-            totalKunjungan();
+            // jumlahIGD();
+            // jumlahRalan();
+            // jumlahRanap();
+            // totalKunjungan();
             registrasi();
             caraBooking();
         });

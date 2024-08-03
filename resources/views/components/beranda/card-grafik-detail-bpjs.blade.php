@@ -6,7 +6,7 @@
             </div>
         </x-card.card-header>
         <x-card.card-body>
-            <canvas id="grafikDetailBpjs" style="height: 50vh; max-height: 50vh"></canvas>
+            <canvas id="grafikDetailBpjs" style="height: 48vh; max-height: 48vh;"></canvas>
         </x-card.card-body>
         <x-card.card-footer>
             <span class="text-red text-sm font-italic">*Berdasarkan SEP yang terbit</span>

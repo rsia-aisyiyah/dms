@@ -22,7 +22,7 @@
         <div class="info-box">
             <span class="info-box-icon {{$color}} elevation-1"><i class="{{$icon}}"></i></span>
             <div class="info-box-content">
-                <p class="info-box-text mb-0">Kunjungan {{$textInfo}}</p>
+                <p class="info-box-text mb-0">{{$textInfo}}</p>
                 <h3 class="info-box-number mt-0 mb-0 p-0">
                     <span id="count{{$key}}">{{$value}}</span>
                 </h3>
