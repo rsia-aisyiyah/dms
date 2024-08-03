@@ -16,7 +16,7 @@ class BridgingSep extends Model
         return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat');
     }
 
-	function scopeGetByMonth($query, $month='', $year='')
+	function scopeMonth($query, $month='', $year='')
 	{
 		if($month == '' && $year == ''){
 			$month = date('m');

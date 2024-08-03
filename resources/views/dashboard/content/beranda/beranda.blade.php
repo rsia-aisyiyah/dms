@@ -1,73 +1,73 @@
 @extends('dashboard.layouts.main')
 
 @section('content')
+{{--    <div class="row">--}}
+{{--        <div class="col-md-12">--}}
+{{--            <div class="card">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="form-group">--}}
+{{--                        <div class="row">--}}
+{{--                            <label>Filter Data </label>--}}
+{{--                            <div class="input-group">--}}
+{{--                                <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off" />--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <div class="row">
-                            <label>Filter Data </label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-blue elevation-1"><i class="fas fa-hospital-user"></i></span>
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">Total Kunjungan</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id=total>0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-hospital-user"></i></span>
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">Rawat Jalan</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id="ralan">0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-yellow elevation-1"><i class="fas fa-hospital-user"></i></span>
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">Rawat Inap</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id="ranap">0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-hospital-user"></i></span>
+        <x-beranda.counter-kunjungan></x-beranda.counter-kunjungan>
+{{--        <div class="col-12 col-sm-6 col-md-3">--}}
+{{--            <div class="info-box">--}}
+{{--                <span class="info-box-icon bg-blue elevation-1"><i class="fas fa-hospital-user"></i></span>--}}
+{{--                <div class="info-box-content">--}}
+{{--                    <p class="info-box-text mb-0">Total Kunjungan</p>--}}
+{{--                    <h3 class="info-box-number mt-0 mb-0 p-0">--}}
+{{--                        <span id=total>0</span>--}}
+{{--                    </h3>--}}
+{{--                    <small> Pasien</small>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-12 col-sm-6 col-md-3">--}}
+{{--            <div class="info-box">--}}
+{{--                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-hospital-user"></i></span>--}}
+{{--                <div class="info-box-content">--}}
+{{--                    <p class="info-box-text mb-0">Rawat Jalan</p>--}}
+{{--                    <h3 class="info-box-number mt-0 mb-0 p-0">--}}
+{{--                        <span id="ralan">0</span>--}}
+{{--                    </h3>--}}
+{{--                    <small> Pasien</small>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-12 col-sm-6 col-md-3">--}}
+{{--            <div class="info-box">--}}
+{{--                <span class="info-box-icon bg-yellow elevation-1"><i class="fas fa-hospital-user"></i></span>--}}
+{{--                <div class="info-box-content">--}}
+{{--                    <p class="info-box-text mb-0">Rawat Inap</p>--}}
+{{--                    <h3 class="info-box-number mt-0 mb-0 p-0">--}}
+{{--                        <span id="ranap">0</span>--}}
+{{--                    </h3>--}}
+{{--                    <small> Pasien</small>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        <div class="col-12 col-sm-6 col-md-3">--}}
+{{--            <div class="info-box">--}}
+{{--                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-hospital-user"></i></span>--}}
 
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">IGD</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id="igd">0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-
+{{--                <div class="info-box-content">--}}
+{{--                    <p class="info-box-text mb-0">IGD</p>--}}
+{{--                    <h3 class="info-box-number mt-0 mb-0 p-0">--}}
+{{--                        <span id="igd">0</span>--}}
+{{--                    </h3>--}}
+{{--                    <small> Pasien</small>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
     <div class="card">
         <div class="card-header">
@@ -176,59 +176,59 @@
 
         }
 
-        function jumlahRalan(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'ralan/hitung',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    ralan = data;
-                    document.getElementById('ralan').innerHTML = data;
-                }
-            });
-        }
-
-        function jumlahRanap(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'ranap/hitung',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    document.getElementById('ranap').innerHTML = data;
-                }
-            });
-        }
-
-        function jumlahIGD(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'igd/hitung',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    document.getElementById('igd').innerHTML = data;
-
-                }
-            });
-        }
-
-        function totalKunjungan(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'beranda/kunjungan',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    document.getElementById('total').innerHTML = data;
-                }
-            });
-        }
+        // function jumlahRalan(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'ralan/hitung',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             ralan = data;
+        //             document.getElementById('ralan').innerHTML = data;
+        //         }
+        //     });
+        // }
+        //
+        // function jumlahRanap(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'ranap/hitung',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             document.getElementById('ranap').innerHTML = data;
+        //         }
+        //     });
+        // }
+        //
+        // function jumlahIGD(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'igd/hitung',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             document.getElementById('igd').innerHTML = data;
+        //
+        //         }
+        //     });
+        // }
+        //
+        // function totalKunjungan(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'beranda/kunjungan',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             document.getElementById('total').innerHTML = data;
+        //         }
+        //     });
+        // }
 
 
         $('#tanggal').on('apply.daterangepicker', function(env, picker) {

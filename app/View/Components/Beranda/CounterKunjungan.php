@@ -2,21 +2,20 @@
 
 namespace App\View\Components\Beranda;
 
-use App\Http\Controllers\Collection\PembiayaanPasienCollection;
+use App\Http\Controllers\Collection\RegPeriksaCollection;
 use Illuminate\View\Component;
 
-class CardGrafikDetailBpjs extends Component
+class CounterKunjungan extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-
-    protected $pembiayaan;
+	protected $counterKunjungan;
     public function __construct()
     {
-        $this->pembiayaan = new PembiayaanPasienCollection();
+        $this->counterKunjungan = new RegPeriksaCollection();
     }
 
     /**
@@ -26,7 +25,7 @@ class CardGrafikDetailBpjs extends Component
      */
     public function render()
     {
-        $pembiayaan = $this->pembiayaan->getPenjabBpjs();
-        return view('components.beranda.card-grafik-detail-bpjs', ['data' => $pembiayaan]);
+		$data = $this->counterKunjungan->getRegByStatusLanjut();
+        return view('components.beranda.counter-kunjungan', ['data' => $data]);
     }
 }

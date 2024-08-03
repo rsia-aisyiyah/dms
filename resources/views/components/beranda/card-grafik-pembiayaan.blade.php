@@ -17,9 +17,12 @@
                     </div>
                 </x-card.card-header>
                 <x-card.card-body>
-                    <canvas id="grafikPembiayaan{{ $values['status'] }}" style="height: 50vh; max-height: 50vh"></canvas>
+                    <canvas id="grafikPembiayaan{{ $values['status'] }}"
+                            style="height: 50vh; max-height: 50vh"></canvas>
                 </x-card.card-body>
-
+                <x-card.card-footer>
+                    <span class="text-red text-sm font-italic">*Berdasarkan SEP + Non-SEP (BBL Sehat)</span>
+                </x-card.card-footer>
             </x-card>
         </div>
     @endforeach
@@ -95,7 +98,7 @@
             });
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             renderPembiayaanPasien();
         });
     </script>

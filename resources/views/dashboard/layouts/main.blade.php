@@ -48,18 +48,8 @@
             white-space: nowrap;
         }
 
-        input[type=text],
-        input[type=date],
-        input[type=search] {
-            border-radius: 0;
-        }
-
-        button,
-        .card,
-        .card-header,
-        .info-box,
-        .info-box-icon {
-            border-radius: 0 !important;
+        .card{
+            border-radius: 8px !important;
         }
 
         .modal-bottom {

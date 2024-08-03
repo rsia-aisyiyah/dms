@@ -58,14 +58,17 @@ class PembiayaanPasienCollection extends Controller
 
 	public function getPenjabBpjs($year = '', $month = '')
 	{
-		$sepCollection = collect($this->sep->getByMonth($month, $year)->get());
-
+		 $sep = $this->sep->month($month, $year)
+			->whereHas('regPeriksa', function($query){
+				$query->where('stts', 'Sudah');
+			})->get();
+		$sepCollection = collect($sep);
 		return $sepCollection->groupBy('jnspelayanan')->map(function ($item) {
 			$pelayanan = $item->first()->jnspelayanan;
-			$pelayanan = $pelayanan === '1' ? 'Rawat Jalan' : 'Rawat Inap';
-			$groupItem =  $item->groupBy('peserta')->map(function ($items, $key) {
+			$pelayanan = $pelayanan === '1' ? 'Rawat Inap' : 'Rawat Jalan';
+			$groupItem = $item->groupBy('peserta')->map(function ($items, $key) {
 				return $items->count();
-			})->sortBy('peserta');
+			});
 
 			return ['jnspelayanan' => $pelayanan, 'data' => $groupItem];
 		})->values();
