@@ -21,7 +21,11 @@
                             style="height: 50vh; max-height: 50vh"></canvas>
                 </x-card.card-body>
                 <x-card.card-footer>
-                    <span class="text-red text-sm font-italic">*Berdasarkan SEP + Non-SEP (BBL Sehat)</span>
+                    @if($values['status'] === 'Ranap')
+                        <span class="text-red text-sm font-italic">BPJS : <strong>*Berdasarkan SEP + Non-SEP (BBL Sehat)</strong></span>
+                    @elseif($values['status'] === 'Ralan')
+                        <span class="text-red text-sm font-italic">BPJS : <strong>*Berdasarkan SEP Terbit + SEP Belum Terbit</strong></span>
+                    @endif
                 </x-card.card-footer>
             </x-card>
         </div>
