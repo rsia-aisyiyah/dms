@@ -24,6 +24,7 @@
                     'tgl_kedua': tgl_kedua,
                 },
                 success: function(data) {
+                    console.log(data)
                     var dataPembiayaan = {
                         labels: ["Rawat Jalan", "Rawat Inap"],
                         datasets: [{
@@ -50,13 +51,13 @@
                         type: 'bar',
                         data: dataPembiayaan,
                         options: {
-                            indexAxis: 'y',
+                            indexAxis: 'x',
                             responsive: true,
                             scales: {
                                 y: {
                                     beginAtZero: true,
                                     grace: '5%',
-                                    max: 2000,
+                                    // max: 1000
                                 }
                             },
                             plugins: {

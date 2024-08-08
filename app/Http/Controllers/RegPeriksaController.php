@@ -14,10 +14,22 @@ use function PHPSTORM_META\map;
 
 class RegPeriksaController extends Controller
 {
-    private $tanggal;
+    protected $tanggal;
+    protected $regPeriksaModel;
     public function __construct()
     {
         $this->tanggal = new Carbon();
+        $this->regPeriksaModel = new RegPeriksa();
+    }
+
+    function getAll(Request $request)
+    {
+        $month = $request->month ? $request->month : '';
+        $year = $request->year ? $request->year : '';
+
+        $data = $this->regPeriksaModel->month($month, $year)
+            ->get();
+        return $data;
     }
 
     public function caraBooking(Request $request)
