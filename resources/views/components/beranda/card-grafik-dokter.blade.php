@@ -34,7 +34,6 @@
     </div>
 @endforeach
 
-
 @push('scripts')
     <script>
         let chartKunjunganInstance = [];

@@ -33,7 +33,7 @@ class CardGrafikDokter extends Component
 	 */
 	public function render()
 	{
-		$dokter = $this->dokterCollection->getDokter()->getContent();
+		$dokter = $this->dokterCollection->getDokterSpesialis();
 		$dataGrafikCollection = new KunjunganPoliklinikDokterCollection();
 		$dataGrafik = $dataGrafikCollection->get(new \Illuminate\Http\Request());
 		$jsonDokter = json_decode($dokter, true);

@@ -64,7 +64,7 @@ class KunjunganPoliklinikDokterCollection extends Controller
 				return $item->count();
 			})->values();
 
-		$tanggal = $items->groupBy('tgl_registrasi')->keys()->values()->map(function ($item) {
+			$tanggal = $items->groupBy('tgl_registrasi')->keys()->values()->map(function ($item) {
 				return Carbon::parse($item)->translatedFormat('d F');
 			});
 

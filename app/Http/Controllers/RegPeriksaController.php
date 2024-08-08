@@ -6,7 +6,9 @@ use App\Models\BookingRegistrasi;
 use App\Models\RegPeriksa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\LazyCollection;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\DataTables;
 
@@ -30,6 +32,14 @@ class RegPeriksaController extends Controller
         $data = $this->regPeriksaModel->month($month, $year)
             ->get();
         return $data;
+    }
+
+    function getByYear($year): Collection
+    {
+        $data = $this->regPeriksaModel->year($year)->get();
+        $data = LazyCollection::make($data);
+
+        return collect($data);
     }
 
     public function caraBooking(Request $request)

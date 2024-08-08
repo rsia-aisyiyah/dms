@@ -14,17 +14,9 @@ class DokterCollection extends Controller
 		$this->dokterController = new DokterController();
 	}
 
-	function getDokter()
+	function getDokterSpesialis()
 	{
-		$dokterCollection = collect($this->dokterController->getDokterSpesialis());
-		$dokter = $dokterCollection->map(function ($item) {
-			return [
-				'kd_dokter' => $item->kd_dokter,
-				'nm_dokter' => $item->nm_dokter,
-			];
-		});
-
-		return response()->json($dokter);
+		return collect($this->dokterController->getDokterSpesialis());
 	}
 
 	function getDokterById($kd_dokter)

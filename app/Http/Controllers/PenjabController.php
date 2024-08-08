@@ -9,7 +9,8 @@ class PenjabController extends Controller
 {
     public function getAllPenjab()
     {
-        return $penjab = Penjab::active()
-	        ->orderBy('png_jawab', 'ASC')->get();
+        $penjab = Penjab::active()
+            ->orderBy('png_jawab', 'ASC')->get();
+        return collect($penjab);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Collection\SpesialisCollection;
 use App\Models\Dokter;
 use App\Models\ResepObat;
 use App\Models\RegPeriksa;
@@ -35,6 +36,7 @@ use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
 use App\Http\Controllers\ResumePasienRanap;
 use App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection;
+use App\Http\Controllers\SpesialisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -211,10 +213,13 @@ Route::middleware('auth')->group(function () {
 	Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
 
 	Route::prefix('grafik')->group(function ($route) {
-		$route->get('kunjungan/poliklinik/{year?}/{month?}/{dokter?}', [\App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection::class, 'getByDokter']);
+		$route->get('kunjungan/poliklinik/{year?}/{month?}/{dokter?}', [KunjunganPoliklinikDokterCollection::class, 'getByDokter']);
+		$route->get('kunjungan/tahun/{year?}', [\App\Http\Controllers\Collection\RegPeriksaCollection::class, 'getByYear']);
 		$route->get('penjab/bpjs/{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPenjabBpjs']);
 		$route->get('penjab/{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPembiayaan']);
 	});
 });
 
-Route::get('test', [\App\Http\Controllers\Collection\RegPeriksaCollection::class, 'getRegByStatusLanjut']);
+Route::get('test/{year?}', [\App\Http\Controllers\Collection\RegPeriksaCollection::class, 'getByYear']);
+Route::get('spesialis', [SpesialisController::class, 'all']);
+Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);

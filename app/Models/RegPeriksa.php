@@ -144,6 +144,14 @@ class RegPeriksa extends Model
             ->whereYear('tgl_registrasi', $year);
     }
 
+    protected function scopeYear($query, $year)
+    {
+        if ($year == '') {
+            $year = date('Y');
+        }
+        $query->whereYear('tgl_registrasi', $year);
+    }
+
     function scropeStatus($query, $status = 'Sudah')
     {
         $query->where('stts', $status);

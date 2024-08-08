@@ -6,7 +6,7 @@
             </div>
         </x-card.card-header>
         <x-card.card-body>
-            <canvas id="grafikDetailBpjs" style="height: 48vh; max-height: 48vh;"></canvas>
+            <canvas id="grafikDetailBpjs" style="max-height:80vh; width:80vw"></canvas>
         </x-card.card-body>
         <x-card.card-footer>
             <span class="text-red text-sm font-italic">*Berdasarkan SEP yang terbit</span>
@@ -50,18 +50,20 @@
             }, {});
 
             const datasets = data.map((item, index) => {
+
                 const tseee = labels.map(label => item.data[label] || 0)
                 return {
                     label: item.jnspelayanan,
                     data: labels.map(label => item.data[label] || 0),
-                    backgroundColor: index === 0 ? '#ffc107' : '#28a745',
-                    borderColor: index === 0 ? '#ffc107' : '#28a745',
+                    backgroundColor: item.jnspelayanan === 'Rawat Inap' ? '#ffc107' : '#28a745',
+                    borderColor: item.jnspelayanan === 'Rawat Inap'? '#ffc107' : '#28a745',
                     borderWidth: 1
                 };
             });
 
             return new Chart(ctx, {
                 type: 'bar',
+                responsive : true,
                 data: {
                     labels: formatedLabel,
                     datasets: datasets
@@ -69,7 +71,8 @@
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grace : "5%"
                         }
                     },
                     responsive: true,
@@ -78,8 +81,7 @@
                             callbacks: {
                                 title: function(context) {
                                     const truncatedLabel = context[0].label;
-                                    const originalLabel = labelMap[truncatedLabel];
-                                    return originalLabel;
+                                    return labelMap[truncatedLabel];
                                 }
                             }
                         },
