@@ -16,9 +16,6 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <x-beranda.card-grafik-detail-bpjs></x-beranda.card-grafik-detail-bpjs>
                 </div>
-
-
-                {{--        @include('dashboard.content.beranda._diagramPembayaran') --}}
             </div>
         </div>
         <div class="card-footer">

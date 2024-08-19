@@ -13,7 +13,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
-             {{-- <li class="nav-item has-treeview {{ Request::is('report/erm*') ? 'menu-is-opening menu-open' : '' }}">
+            {{-- <li class="nav-item has-treeview {{ Request::is('report/erm*') ? 'menu-is-opening menu-open' : '' }}">
                 <a href="{{ '/dms/report/erm' }}" class="nav-link {{ Request::is('report/erm*') ? 'active' : '' }}">
                     <i class="nav-icon far fa-chart-bar"></i>
                     <p>
@@ -41,45 +41,45 @@
             </li>
 
             @can('rm')
-            <li class="nav-item has-treeview {{ Request::is('rekammedis*') ? 'menu-is-opening menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Request::is('rekammedis*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-copy"></i>
-                    <p>
-                        Laporan Rekam Medis
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview ml-3">
-                    <li class="nav-item">
-                        <a href="/dms/rekammedis" class="nav-link">
-                            <i
-                                class="nav-icon {{ Request::is('rekammedis') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>10 Besar Penyakit</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/dms/rekammedis/dinkes" class="nav-link">
-                            <i
-                                class="nav-icon {{ Request::is('rekammedis/dinkes') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Laporan Dinkes</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/dms/rekammedis/penyakit" class="nav-link">
-                            <i
-                                class="nav-icon {{ Request::is('rekammedis/penyakit') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Laporan Diagnosa Penyakit</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/dms/rekammedis/pasientb" class="nav-link">
-                            <i
-                                class="nav-icon {{ Request::is('rekammedis/pasientb') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Laporan Pasien TB</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                <li class="nav-item has-treeview {{ Request::is('rekammedis*') ? 'menu-is-opening menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('rekammedis*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-copy"></i>
+                        <p>
+                            Laporan Rekam Medis
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview ml-3">
+                        <li class="nav-item">
+                            <a href="/dms/rekammedis" class="nav-link">
+                                <i
+                                    class="nav-icon {{ Request::is('rekammedis') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>10 Besar Penyakit</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dms/rekammedis/dinkes" class="nav-link">
+                                <i
+                                    class="nav-icon {{ Request::is('rekammedis/dinkes') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Laporan Dinkes</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dms/rekammedis/penyakit" class="nav-link">
+                                <i
+                                    class="nav-icon {{ Request::is('rekammedis/penyakit') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Laporan Diagnosa Penyakit</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dms/rekammedis/pasientb" class="nav-link">
+                                <i
+                                    class="nav-icon {{ Request::is('rekammedis/pasientb') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Laporan Pasien TB</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endcan
 
             <li class="nav-item has-treeview {{ Request::is('monitoring/rm*') ? 'menu-is-opening menu-open' : '' }}">
@@ -107,7 +107,7 @@
                     </li>
                 </ul>
             </li>
-            
+
             <li class="nav-item has-treeview {{ Request::is('monitoring/shk*') ? 'menu-is-opening menu-open' : '' }}">
                 <a href="{{ '/dms/monitoring/shk' }}" class="nav-link {{ Request::is('monitoring/shk*') ? 'active' : '' }}">
                     {{-- <i class="nav-icon fas fa-procedures"></i> --}}
@@ -336,52 +336,52 @@
             </li>
 
             @can('admin')
-            <li class="nav-item has-treeview {{ Request::is('tarif*') ? 'menu-is-opening menu-open' : '' }}">
-                <a href="#" class="nav-link {{ Request::is('tarif*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-coins"></i>
-                    <p>
-                        Tarif Pelayanan
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview ml-3">
-                    <li class="nav-item">
-                        <a href="{{ '/dms/tarif/kamar' }}" class="nav-link">
-                            <i
-                                class="far fa-circle nav-icon {{ Request::is('tarif/kamar') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Tarif Kamar</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ '/dms/tarif/ralan' }}" class="nav-link">
-                            <i
-                                class="far fa-circle nav-icon {{ Request::is('tarif/ralan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Tarif Layanan Ralan</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ '/dms/tarif/ranap' }}" class="nav-link">
-                            <i
-                                class="far fa-circle nav-icon {{ Request::is('tarif/ranap') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Tarif Layanan Ranap</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ '/dms/tarif/lab' }}" class="nav-link">
-                            <i
-                                class="far fa-circle nav-icon {{ Request::is('tarif/lab') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Tarif Layanan Lab</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ '/dms/tarif/operasi' }}" class="nav-link">
-                            <i
-                                class="far fa-circle nav-icon {{ Request::is('tarif/operasi') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
-                            <p>Tarif Layanan OK/VK</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                <li class="nav-item has-treeview {{ Request::is('tarif*') ? 'menu-is-opening menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('tarif*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-coins"></i>
+                        <p>
+                            Tarif Pelayanan
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview ml-3">
+                        <li class="nav-item">
+                            <a href="{{ '/dms/tarif/kamar' }}" class="nav-link">
+                                <i
+                                    class="far fa-circle nav-icon {{ Request::is('tarif/kamar') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Tarif Kamar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ '/dms/tarif/ralan' }}" class="nav-link">
+                                <i
+                                    class="far fa-circle nav-icon {{ Request::is('tarif/ralan') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Tarif Layanan Ralan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ '/dms/tarif/ranap' }}" class="nav-link">
+                                <i
+                                    class="far fa-circle nav-icon {{ Request::is('tarif/ranap') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Tarif Layanan Ranap</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ '/dms/tarif/lab' }}" class="nav-link">
+                                <i
+                                    class="far fa-circle nav-icon {{ Request::is('tarif/lab') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Tarif Layanan Lab</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ '/dms/tarif/operasi' }}" class="nav-link">
+                                <i
+                                    class="far fa-circle nav-icon {{ Request::is('tarif/operasi') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                <p>Tarif Layanan OK/VK</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endcan
 
         </ul>

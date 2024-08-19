@@ -48,7 +48,7 @@
             white-space: nowrap;
         }
 
-        .card{
+        .card {
             border-radius: 8px !important;
         }
 
@@ -261,6 +261,15 @@
             return tanggal = bulan + ' ' + t.getFullYear();
         }
         $('.form-select-2').select2();
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
     </script>
     @stack('scripts')
 </body>

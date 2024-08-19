@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class RegPeriksa extends Model
 {
@@ -274,4 +275,17 @@ class RegPeriksa extends Model
     {
         return $this->hasOne(PemeriksaanRalan::class, 'no_rawat', 'no_rawat');
     }
+
+    public function kecamatan(): HasOneThrough
+    {
+        return $this->hasOneThrough(Kecamatan::class, Pasien::class, 'no_rkm_medis', 'kd_kec', 'no_rkm_medis', 'kd_kec');
+    }
+    public function kabupaten(): HasOneThrough
+    {
+        return $this->hasOneThrough(Kabupaten::class, Pasien::class, 'no_rkm_medis', 'kd_kab', 'no_rkm_medis', 'kd_kab');
+    }
+    // public function propinsi(): HasOneThrough
+    // {
+    //     return $this->hasOneThrough(P::class, Pasien::class, 'no_rkm_medis', 'kd_kab', 'no_rkm_medis', 'kd_kab');
+    // }
 }

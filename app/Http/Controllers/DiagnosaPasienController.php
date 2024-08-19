@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\DiagnosaPasien;
 use App\Models\RegPeriksa;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
@@ -21,7 +21,7 @@ class DiagnosaPasienController extends Controller
                 'bigTitle' => 'Rekam Medis',
                 'month' => $date->startOfMonth()->translatedFormat('d F Y') . ' s/d ' . $date->now()->translatedFormat('d F Y'),
                 'dateStart' => $date->startOfMonth()->toDateString(),
-                'dateNow' => $date->now()->toDateString()
+                'dateNow' => $date->now()->toDateString(),
             ]
         );
     }
@@ -85,11 +85,11 @@ class DiagnosaPasienController extends Controller
         return view(
             'dashboard.content.rekammedis.list_pasien_tb',
             [
-                'title' => 'Data Rekam Medis',
-                'bigTitle' => 'Rekam Medis',
+                'title' => 'Data Pasien TB',
+                'bigTitle' => '',
                 'month' => $tanggal->startOfMonth()->translatedFormat('d F Y') . ' s/d ' . $tanggal->now()->translatedFormat('d F Y'),
                 'dateStart' => $tanggal->startOfMonth()->toDateString(),
-                'dateNow' => $tanggal->now()->toDateString()
+                'dateNow' => $tanggal->now()->toDateString(),
             ]
         );
     }
@@ -136,9 +136,9 @@ class DiagnosaPasienController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                    . $data->pasien->kelurahan->nm_kel . ", "
-                    . $data->pasien->kecamatan->nm_kec . ", "
-                    . $data->pasien->kabupaten->nm_kab;
+                . $data->pasien->kelurahan->nm_kel . ", "
+                . $data->pasien->kecamatan->nm_kec . ", "
+                . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_poli', function ($data) {
                 return $data->poli->nm_poli;

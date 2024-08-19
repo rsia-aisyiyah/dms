@@ -168,10 +168,7 @@ class RegPeriksaController extends Controller
                 return $data->pasien->nm_pasien;
             })
             ->editColumn('status', function ($data) {
-
                 return $this->statusResep($data->resepObat, $data->pemberianObat);
-                // return $data->resepObat->;
-                // return $data->resepObat->resepDokter;
             })
             ->editColumn('poliklinik', function ($data) {
                 return $data->poli->nm_poli;
@@ -230,7 +227,6 @@ class RegPeriksaController extends Controller
             } else if ($status == '-') {
                 $kosong += 1;
             }
-            // print_r($status);
         }
 
         return response()->json([
@@ -239,23 +235,15 @@ class RegPeriksaController extends Controller
             'tanpaResep' => $tanpaResep,
             'tidakAmbil' => $tidakAmbil,
             'kosong' => $kosong,
-            // 'resep' => $resep,
 
         ]);
-        // return $resep->map(function ($result) use ($lengkap) {
-        //     if ($status == 'LENGKAP') {
-        //         $lengkap += 1;
-        //     }
-        //     return [
-        //         'lengkap' => $lengkap
-        //     ];
-        //     // return $this->statusResep($result->resepObat, $result->pemberianObat);
-        //     // return $result->resepObat;
-        // });
-        // return [
-        //     'pasien' => $resep->count(),
-        //     'resep' => $resep->get(),
-        //     // 'obat' => count($pemberian),
-        // ];
+    }
+
+    function getByKecamatan(): Collection
+    {
+        $regPeriksa = $this->regPeriksaModel
+            ->with('kecamatan', 'kabupaten')
+            ->limit(10)->get();
+        return collect($regPeriksa);
     }
 }
