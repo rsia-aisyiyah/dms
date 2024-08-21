@@ -50,6 +50,9 @@
             </div>
         </div>
 
+        <div class="col-12">
+            <x-tb.datatable.skrining />
+        </div>
         <div class="col-8">
             <x-tb.card-grafik-skrining-tb />
         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -39,16 +40,19 @@ class LoginController extends Controller
         ]);
 
         $user = User::where('username', $request->get('id_user'))
-            ->where('password', md5($request->get('password')))->first();
+            ->where('password', md5($request->get('password')))
+            ->with('departemen')
+            ->first();
 
         if ($user) {
             Auth::login($user);
+            $role = $user->dep_id ? $user->departemen->nama : $user->username;
             $request->session()->regenerate();
+            $request->session()->put('role', $role);
             return redirect('/');
         } else {
             return back()->with('loginError', 'Login Gagal');
         }
-
 
         // try to /api/auth/room/login
         // try {
@@ -67,14 +71,14 @@ class LoginController extends Controller
         // $code = $response->getStatusCode();
 
         // if ($code == 200) {
-        //     // pass token to request 
+        //     // pass token to request
         //     $this->headers['Authorization'] = 'Bearer ' . $responseBodyAsObject->access_token;
 
         //     // set auth
         //     session()->put('token', $responseBodyAsObject->access_token);
         //     session()->put('username', $request->get('id_user'));
 
-        //     return redirect()->route('index'); 
+        //     return redirect()->route('index');
         // } else {
         //     return back()->with('loginError', 'Login Gagal');
         // }
@@ -104,7 +108,7 @@ class LoginController extends Controller
         // Auth::guard('web')->logout();
 
         Auth::logout();
-        
+        Session::flush();
         $request->session()->regenerateToken();
         return redirect('/login');
     }

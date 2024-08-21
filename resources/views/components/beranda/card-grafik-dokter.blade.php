@@ -37,15 +37,7 @@
 @push('scripts')
     <script>
         let chartKunjunganInstance = [];
-        $('.monthPicker').datetimepicker({
-            format: "YYYY-MM",
-            useCurrent: false,
-        });
-
-        $('.monthPicker').on('blur', function() {
-            $(this).datetimepicker('hide');
-        });
-
+     
 
 
         function getGrafikKunjunganDokter(kd_dokter) {

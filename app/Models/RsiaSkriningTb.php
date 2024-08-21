@@ -17,7 +17,8 @@ class RsiaSkriningTb extends Model
 
     public function regPeriksa(): BelongsTo
     {
-        return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat');
+        return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat')
+            ->select(['no_rawat', 'umurdaftar', 'sttsumur', 'status_lanjut']);
     }
     public function diagnosa(): HasOneThrough
     {
@@ -25,9 +26,29 @@ class RsiaSkriningTb extends Model
     }
     public function pasien(): HasOneThrough
     {
-        return $this->hasOneThrough(Pasien::class, RegPeriksa::class, 'no_rawat', 'no_rkm_medis', 'no_rawat', 'no_rkm_medis');
+        return $this->hasOneThrough(Pasien::class, RegPeriksa::class, 'no_rawat', 'no_rkm_medis', 'no_rawat', 'no_rkm_medis')
+            ->select('pasien.no_rkm_medis', 'nm_pasien', 'kd_kel', 'kd_kec', 'kd_kab');
     }
-    public function getByYear($year = null, $month = null)
+    public function pegawai(): BelongsTo
+    {
+        return $this->belongsTo(Pegawai::class, 'nip', 'nik')->select('nik', 'nama');
+    }
+    public function poliklinik(): HasOneThrough
+    {
+        return $this->hasOneThrough(Poliklinik::class, RegPeriksa::class, 'no_rawat', 'kd_poli', 'no_rawat', 'kd_poli');
+    }
+
+    public function scopeYear($query, $year = null): void
+    {
+        $year = $year ?? date('Y');
+        $query->whereYear('tanggal', $year);
+    }
+    public function scopeMonth($query, $month = null): void
+    {
+        $month = $month ?? date('m');
+        $query->whereMonth('tanggal', $month);
+    }
+    public function getCountByYear($year = null)
     {
         if ($year == null) {
             $year = date('Y');

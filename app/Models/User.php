@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Departemen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -21,5 +20,9 @@ class User extends Authenticatable
     public function getAuthPassword()
     {
         return $this->passwd;
+    }
+    public function departemen(): BelongsTo
+    {
+        return $this->belongsTo(Departemen::class, 'dep_id', 'dep_id');
     }
 }

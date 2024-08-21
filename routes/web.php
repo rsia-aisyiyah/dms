@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Actions\SkriningTbCountByYearAction;
+use App\Http\Controllers\Actions\SkriningTbDataTableAction;
 use App\Http\Controllers\AskepKandunganRalanController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection;
@@ -25,6 +27,7 @@ use App\Http\Controllers\RegPeriksaController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\ResumePasienRanap;
+use App\Http\Controllers\RsiaSkriningTbController;
 use App\Http\Controllers\SepController;
 use App\Http\Controllers\SpesialisController;
 use App\Http\Controllers\TarifLaboratorium;
@@ -32,7 +35,6 @@ use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\TindakanController;
 use App\Models\Dokter;
-use App\Services\RsiaSkriningTb;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -219,13 +221,17 @@ Route::middleware('auth')->group(function () {
 
         });
         $route->prefix('tb')->group(function ($route) {
-            $route->get('skrining/{year?}', [App\Services\RsiaSkriningTb::class, 'getCountByYear']);
+            $route->get('skrining/{year?}', SkriningTbCountByYearAction::class);
         });
 
     });
 
+    Route::prefix('datatable')->group(function ($route) {
+        $route->get('tb/skrining/{year?}/{month?}', SkriningTbDataTableAction::class);
+    });
+
 });
 
-Route::get('test/{year?}', [RsiaSkriningTb::class, 'getCountByYear']);
+Route::get('test/{year?}/{month?}/{isUseDatatable?}', [RsiaSkriningTbController::class, 'get']);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);

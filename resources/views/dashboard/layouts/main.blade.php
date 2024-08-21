@@ -270,6 +270,21 @@
             }
             return color;
         }
+        $('.monthPicker').datetimepicker({
+            format: "YYYY-MM",
+            useCurrent: false,
+        });
+        $('.yearPicker').datetimepicker({
+            format: "YYYY",
+            useCurrent: false,
+        });
+
+        $('.monthPicker').on('blur', function() {
+            $(this).datetimepicker('hide');
+        });
+        $('.yearPicker').on('blur', function() {
+            $(this).datetimepicker('hide');
+        });
     </script>
     @stack('scripts')
 </body>
