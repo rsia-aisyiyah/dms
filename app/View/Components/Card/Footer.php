@@ -4,7 +4,7 @@ namespace App\View\Components\Card;
 
 use Illuminate\View\Component;
 
-class CardBody extends Component
+class Footer extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class CardBody extends Component
      */
     public function render()
     {
-        return view('components.card.card-body');
+        return view('components.card.card-footer');
     }
 }

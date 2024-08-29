@@ -4,7 +4,7 @@ namespace App\View\Components\Card;
 
 use Illuminate\View\Component;
 
-class CardHeader extends Component
+class Header extends Component
 {
     /**
      * Create a new component instance.

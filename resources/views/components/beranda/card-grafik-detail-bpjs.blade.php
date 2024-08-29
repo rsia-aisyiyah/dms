@@ -1,16 +1,16 @@
 <div>
     <x-card class="card card-outline card-indigo">
-        <x-card.card-header>
+        <x-card.header>
             <div class="card-title">
                 <strong>Detail Pembiayaan BPJS</strong>
             </div>
-        </x-card.card-header>
-        <x-card.card-body>
+        </x-card.header>
+        <x-card.body>
             <canvas id="grafikDetailBpjs" style="max-height:80vh; width:80vw"></canvas>
-        </x-card.card-body>
-        <x-card.card-footer>
+        </x-card.body>
+        <x-card.footer>
             <span class="text-red text-sm font-italic">*Berdasarkan SEP yang terbit</span>
-        </x-card.card-footer>
+        </x-card.footer>
 
     </x-card>
 </div>

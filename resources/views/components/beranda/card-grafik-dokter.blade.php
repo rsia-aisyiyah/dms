@@ -1,13 +1,13 @@
 @foreach ($dokter as $dr => $value)
     <div class="col-lg-6 col-md-12 col-sm-12 d-none" id="cardDokter{{ $value['kd_dokter'] }}">
         <x-card>
-            <x-card.card-header>
-                <div class="card-title">Kunjungan Poliklinik</div>
-            </x-card.card-header>
-            <x-card.card-body>
+            <x-card.header>
+                <x.card.title>Kunjungan Poliklinik</x.card.title>
+            </x-card.header>
+            <x-card.body>
                 <canvas id="grafikDokter{{ $value['kd_dokter'] }}" style="height: 40vh; max-height: 60vh"></canvas>
-            </x-card.card-body>
-            <x-card.card-footer>
+            </x-card.body>
+            <x-card.footer>
                 <div class="row">
                     <div class="col-lg-4">
 
@@ -15,9 +15,9 @@
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                             </div>
-                            <input type="text" id="blnKunjungan{{ $value['kd_dokter'] }}" class="form-control monthPicker"
-                                data-toggle="datetimepicker" aria-describedby="blnKunjungan{{ $value['kd_dokter'] }}"
-                                data-target="#blnKunjungan{{ $value['kd_dokter'] }}"
+                            <input type="text" id="tahunGrafikSkrining{{ $value['kd_dokter'] }}" class="form-control monthPicker"
+                                data-toggle="datetimepicker" aria-describedby="tahunGrafikSkrining{{ $value['kd_dokter'] }}"
+                                data-target="#tahunGrafikSkrining{{ $value['kd_dokter'] }}"
                                 autocomplete="off" />
                             <button type="button" class="btn btn-primary" onclick="getGrafikKunjunganDokter('{{ $value['kd_dokter'] }}')">
                                 <i class="fas fa-search"></i>
@@ -28,7 +28,7 @@
 
                 </div>
 
-            </x-card.card-footer>
+            </x-card.footer>
 
         </x-card>
     </div>
@@ -41,7 +41,7 @@
 
 
         function getGrafikKunjunganDokter(kd_dokter) {
-            const valueInput = document.getElementById(`blnKunjungan${kd_dokter}`).value;
+            const valueInput = document.getElementById(`tahunGrafikSkrining${kd_dokter}`).value;
             const element = document.getElementById(`grafikDokter${kd_dokter}`);
             const card = document.getElementById(`cardDokter${kd_dokter}`);
             const ctx = element.getContext('2d');

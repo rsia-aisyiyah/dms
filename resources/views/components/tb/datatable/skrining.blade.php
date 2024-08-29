@@ -1,16 +1,16 @@
 <div>
     <x-card class="card card-outline card-teal">
-        <x-card.card-header>
+        <x-card.header>
             <div class="card-title">
                 <strong>Data Skirining TB</strong>
             </div>
-        </x-card.card-header>
-        <x-card.card-body>
+        </x-card.header>
+        <x-card.body>
             <table class="table table-bordered table-striped table-hover" id="tableSkriningTb" style="width: 100%">
 
             </table>
-        </x-card.card-body>
-        <x-card.card-footer>
+        </x-card.body>
+        <x-card.footer>
             <div class="row">
                 <div class="col-3">
                     <div class="form-check">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
             </div>
-        </x-card.card-footer>
+        </x-card.footer>
     </x-card>
 </div>
 

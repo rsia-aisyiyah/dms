@@ -86,7 +86,7 @@ class DiagnosaPasienController extends Controller
             'dashboard.content.rekammedis.list_pasien_tb',
             [
                 'title' => 'Data Pasien TB',
-                'bigTitle' => '',
+                'bigTitle' => 'Pasien TB',
                 'month' => $tanggal->startOfMonth()->translatedFormat('d F Y') . ' s/d ' . $tanggal->now()->translatedFormat('d F Y'),
                 'dateStart' => $tanggal->startOfMonth()->toDateString(),
                 'dateNow' => $tanggal->now()->toDateString(),

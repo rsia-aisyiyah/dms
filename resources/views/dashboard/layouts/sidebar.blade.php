@@ -72,9 +72,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/dms/rekammedis/pasientb" class="nav-link">
+                            <a href="/dms/rekammedis/tuberkulosis" class="nav-link">
                                 <i
-                                    class="nav-icon {{ Request::is('rekammedis/pasientb') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                                    class="nav-icon {{ Request::is('rekammedis/tuberkulosis') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
                                 <p>Laporan Pasien TB</p>
                             </a>
                         </li>

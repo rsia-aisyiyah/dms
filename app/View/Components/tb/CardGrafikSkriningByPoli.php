@@ -1,19 +1,18 @@
 <?php
 
-namespace App\View\Components\Card;
+namespace App\View\Components\tb;
 
 use Illuminate\View\Component;
 
-class CardFooter extends Component
+class CardGrafikSkriningByPoli extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+	public function __construct()
     {
-        //
     }
 
     /**
@@ -23,6 +22,6 @@ class CardFooter extends Component
      */
     public function render()
     {
-        return view('components.card.card-footer');
+        return view('components.tb.card-grafik-skrining-by-poli');
     }
 }

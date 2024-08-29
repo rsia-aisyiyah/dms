@@ -11,22 +11,22 @@
                 }
             @endphp
             <x-card class="card card-outline {{ $cardColor }}">
-                <x-card.card-header>
+                <x-card.header>
                     <div class="card-title">
                         <strong>{{ $cardTitle }}</strong>
                     </div>
-                </x-card.card-header>
-                <x-card.card-body>
+                </x-card.header>
+                <x-card.body>
                     <canvas id="grafikPembiayaan{{ $values['status'] }}"
                             style="height: 50vh; max-height: 50vh"></canvas>
-                </x-card.card-body>
-                <x-card.card-footer>
+                </x-card.body>
+                <x-card.footer>
                     @if($values['status'] === 'Ranap')
                         <span class="text-red text-sm font-italic">BPJS : <strong>*Berdasarkan SEP + Non-SEP (BBL Sehat)</strong></span>
                     @elseif($values['status'] === 'Ralan')
                         <span class="text-red text-sm font-italic">BPJS : <strong>*Berdasarkan SEP Terbit + SEP Belum Terbit</strong></span>
                     @endif
-                </x-card.card-footer>
+                </x-card.footer>
             </x-card>
         </div>
     @endforeach

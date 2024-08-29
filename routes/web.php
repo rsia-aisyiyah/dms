@@ -185,6 +185,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);
 
     Route::get('/poli', [PoliklinikController::class, 'getAllPoliklinik']);
+    Route::get('/poli/show/{kd_poli}', [PoliklinikController::class, 'show']);
 
     Route::get('/penjab', [PenjabController::class, 'getAllPenjab']);
 
@@ -220,10 +221,6 @@ Route::middleware('auth')->group(function () {
             $route->get('{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPembiayaan']);
 
         });
-        $route->prefix('tb')->group(function ($route) {
-            $route->get('skrining/{year?}', SkriningTbCountByYearAction::class);
-        });
-
     });
 
     Route::prefix('datatable')->group(function ($route) {
@@ -235,3 +232,5 @@ Route::middleware('auth')->group(function () {
 Route::get('test/{year?}/{month?}/{isUseDatatable?}', [RsiaSkriningTbController::class, 'get']);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
+
+require __DIR__ . '/partial/rekammedis/tb.php';

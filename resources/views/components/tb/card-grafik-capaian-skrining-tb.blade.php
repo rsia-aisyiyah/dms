@@ -1,24 +1,53 @@
 <div>
     <x-card class="card card-outline card-teal">
-        <x-card.card-header>
+        <x-card.header>
             <div class="card-title">
                 <strong>Capaian Skirining TB</strong>
             </div>
-        </x-card.card-header>
-        <x-card.card-body>
+        </x-card.header>
+        <x-card.body>
             <canvas id="grafikCapaianSkriningTb" style="max-height:40vh; width:80vw"></canvas>
-        </x-card.card-body>
-        <x-card.card-footer>
             <span><i class="text-danger text-sm">Jumlah Skrining/Total Kunjungan * 100%</i></span>
-        </x-card.card-footer>
+        </x-card.body>
+        <x-card.footer>
+            <div class="input-group w-50">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                </div>
+                <label for="tahunCapaianSkrining"></label>
+                <input type="text" id="tahunCapaianSkrining" class="form-control yearPicker"
+                       data-toggle="datetimepicker" aria-describedby="tahunCapaianSkrining"
+                       data-target="#tahunCapaianSkrining"
+                       autocomplete="off"/>
+
+            </div>
+        </x-card.footer>
     </x-card>
 </div>
 @push('scripts')
     <script>
         const grafikCapaianSkriningTb = document.getElementById('grafikCapaianSkriningTb');
+        const tahunCapaianSkrining = $('#tahunCapaianSkrining')
+        let grafikCapaianSkriningTbInstance = ''
+
+
+        tahunCapaianSkrining.on('change.datetimepicker', function (e) {
+            const tahun = e.currentTarget.value;
+            getGrafikSkriningTb(tahun)
+        })
+
+        function getGrafikSkriningTb(year = '') {
+            return $.get(`${url}/grafik/tb/skrining/${year}`).done((response) => {
+                renderGrafikSkriningTb(response.data, response.label)
+                renderGrafikCapaianSkriningTb(response.capaian, response.label)
+            })
+        }
 
         function renderGrafikCapaianSkriningTb(capaian, label) {
-            return new Chart(grafikCapaianSkriningTb, {
+            if(grafikCapaianSkriningTbInstance){
+                grafikCapaianSkriningTbInstance.destroy();
+            }
+            grafikCapaianSkriningTbInstance = new Chart(grafikCapaianSkriningTb, {
                 type: 'pie',
                 data: {
                     labels: label,
@@ -50,7 +79,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         datalabels: {
-                            formatter: function(value) {
+                            formatter: function (value) {
                                 return `${value}%`;
                             }
                         }

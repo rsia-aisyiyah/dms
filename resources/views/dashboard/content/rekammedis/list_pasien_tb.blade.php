@@ -53,11 +53,14 @@
         <div class="col-12">
             <x-tb.datatable.skrining />
         </div>
-        <div class="col-8">
+        <div class="col-12">
             <x-tb.card-grafik-skrining-tb />
         </div>
-        <div class="col-4">
+        <div class="col-6">
             <x-tb.card-grafik-capaian-skrining-tb />
+        </div>
+        <div class="col-6">
+            <x-tb.card-grafik-skrining-by-poli />
         </div>
     </div>
 @endsection
