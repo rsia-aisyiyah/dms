@@ -229,7 +229,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('test/{year?}/{month?}/{isUseDatatable?}', [RsiaSkriningTbController::class, 'get']);
+Route::get('test/{year?}/{month?}/', \App\Http\Actions\DemografiPasienTb::class);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 

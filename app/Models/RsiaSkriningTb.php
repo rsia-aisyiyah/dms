@@ -29,7 +29,7 @@ class RsiaSkriningTb extends Model
 	public function pasien(): HasOneThrough
 	{
 		return $this->hasOneThrough(Pasien::class, RegPeriksa::class, 'no_rawat', 'no_rkm_medis', 'no_rawat', 'no_rkm_medis')
-			->select('pasien.no_rkm_medis', 'nm_pasien', 'kd_kel', 'kd_kec', 'kd_kab');
+			->select('pasien.no_rkm_medis', 'nm_pasien', 'kd_kel', 'kd_kec', 'kd_kab', 'tgl_lahir');
 	}
 
 	public function pegawai(): BelongsTo

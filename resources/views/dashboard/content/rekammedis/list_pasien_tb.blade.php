@@ -12,19 +12,9 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Tanggal :</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-12">
                             <div class="table-responsive text-sm">
-                                <table class="table table-bordered" id="table-pasien-tb" style="width: 100%" cellspacing="0">
+                                <table class="table table-bordered table-striped table-hover" id="table-pasien-tb" style="width: 100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Tanggal Registrasi</th>
@@ -38,6 +28,7 @@
                                             <th>Alamat</th>
                                             <th>Kode Penyakit</th>
                                             <th>Nama Penyakit</th>
+                                            <th>Satus TB</th>
                                             <th>Status Rawat</th>
                                             <th>Poli</th>
                                         </tr>
@@ -47,9 +38,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="input-group w-auto">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                <input type="text" class="form-control monthPicker" id="bulanPasienTb"
+                                       name="bulanPasienTb" data-toggle="datetimepicker" autocomplete="off"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <div class="col-6">
+            <x-tb.card-grafik-demografi-tb />
+        </div>
         <div class="col-12">
             <x-tb.datatable.skrining />
         </div>
@@ -67,89 +72,39 @@
 
 @push('scripts')
     <script>
-        var tgl_pertama = '';
-        var tgl_kedua = '';
+      
+        const bulanPasienTb = $('#bulanPasienTb')
+        
         $(document).ready(function() {
-
-            $('#tanggal').daterangepicker({
-                locale: {
-                    language: 'id',
-                    applyLabel: 'Terapkan',
-                    cancelLabel: 'Batal',
-                    format: 'DD/MM/YYYY',
-                    daysOfWeek: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Ming'],
-                    monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-                },
-                startDate: moment().startOf('month'),
-                autoclose: true,
-                showDropdowns: true,
-                minYear: 2019,
-                maxYear: {{ date('Y') + 1 }},
-            });
-
-            $('#tanggal').on('apply.daterangepicker', function(env, picker) {
-
-                tgl_pertama = picker.startDate.format('YYYY-MM-DD');
-                tgl_kedua = picker.endDate.format('YYYY-MM-DD');
-
-                var bulan = new Array(12);
-                bulan[0] = "Januari";
-                bulan[1] = "Februari";
-                bulan[2] = "Maret";
-                bulan[3] = "April";
-                bulan[4] = "Mei";
-                bulan[5] = "Juni";
-                bulan[6] = "Juli";
-                bulan[7] = "Agustus";
-                bulan[8] = "September";
-                bulan[9] = "Oktober";
-                bulan[10] = "November";
-                bulan[11] = "Desember";
-                var tanggal1 = new Date(tgl_pertama);
-                var tanggal2 = new Date(tgl_kedua);
-
-                hari1 = tanggal1.getDate();
-                bulan1 = tanggal1.getMonth();
-                tahun1 = tanggal1.getFullYear();
-
-                hari2 = tanggal2.getDate();
-                bulan2 = tanggal2.getMonth();
-                tahun2 = tanggal2.getFullYear();
-
-                tgl1 = hari1 + ' ' + bulan[bulan1] + ' ' + tahun1
-                tgl2 = hari2 + ' ' + bulan[bulan2] + ' ' + tahun2
-
-                $('#bulan').html('<strong>' + tgl1 + ' s/d ' + tgl2 + '</strong>');
-                $('#table-pasien-tb').DataTable().destroy();
-                load_data(tgl_pertama, tgl_kedua);
-            });
-
-            load_data();
-
-
-
-
+            renderTablePasienTb();
         });
 
-        function load_data(tgl_pertama = '', tgl_kedua = '') {
+        bulanPasienTb.on('change.datetimepicker', (e) => {
+            const value = e.currentTarget.value;
+            const month = value.split('-')[1];
+            const year = value.split('-')[0];
+            $('#bulan').html(`<span><strong>${formatBulanTahun(value)}</strong></span>`) //set bulan
+            renderTablePasienTb(month, year)
+        })
+        
+        
+        function renderTablePasienTb(month = '', year = '') {
             $('#table-pasien-tb').DataTable({
                 ajax: {
                     url: 'pasientb/json',
                     data: {
-                        tgl_pertama: tgl_pertama,
-                        tgl_kedua: tgl_kedua,
+                        month: month,
+                        year: year,
                     }
                 },
                 processing: true,
-                searching: false,
                 serverSide: true,
-                lengthChange: true,
-                ordering: false,
-                scrollY: "40vh",
+                destroy: true,
+                scrollY: '40vh',
                 scrollX: true,
-                scroller: false,
-                paging: false,
-                dom: 'Bfrtip',
+                deferRender: true,
+                ordering: false,
+                dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                 initComplete: function(settings, json) {
                     toastr.success('Data telah dimuat', 'Berhasil');
                 },
@@ -160,45 +115,36 @@
                     info: "Menampilkan sebanyak _START_ ke _END_ dari _TOTAL_ data",
                     loadingRecords: "Sedang memuat ...",
                     infoFiltered: "(Disaring dari _MAX_ total baris)",
-                    buttons: {
-                        copyTitle: 'Data telah disalin',
-                        copySuccess: {
-                            _: '%d baris data telah disalin',
-                        },
-                    },
-                    lengthMenu: '<div class="text-md mt-3">Tampilkan <select>' +
-                        '<option value="50">50</option>' +
-                        '<option value="100">100</option>' +
-                        '<option value="200">200</option>' +
-                        '<option value="250">250</option>' +
-                        '<option value="500">500</option>' +
-                        '<option value="-1">Semua</option>' +
-                        '</select> Baris',
+                    lengthMenu: "Tampilkan _MENU_ baris",
                     paginate: {
-                        "first": "Pertama",
-                        "last": "Terakhir",
-                        "next": "Selanjutnya",
-                        "previous": "Sebelumnya"
+                        "first": "Awal",
+                        "last": "Akhir",
+                        "next": ">",
+                        "previous": "<"
                     },
-                    search: 'Cari Penyakit : ',
+                    search: 'Cari Penyakit: ',
                 },
+                lengthMenu: [
+                    [50, 100, 200, 250, 500, -1],
+                    ['50', '100', '200', '250', '500', 'Semua']
+                ],
                 buttons: [{
                         extend: 'copy',
                         text: '<i class="fas fa-copy"></i> Salin',
                         className: 'btn btn-info',
-                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                        title: 'laporan_pasien_tb{{ date('dmy') }}'
                     },
                     {
                         extend: 'csv',
                         text: '<i class="fas fa-file-csv"></i> CSV',
                         className: 'btn btn-info',
-                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                        title: 'laporan_pasien_tb{{ date('dmy') }}'
                     },
                     {
                         extend: 'excel',
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         className: 'btn btn-info',
-                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                        title: 'laporan_pasien_tb{{ date('dmy') }}'
                     },
                 ],
                 columns: [{
@@ -243,9 +189,16 @@
                     },
                     {
                         data: 'nm_penyakit',
-                        name: 'nm_penyakit'
+                        name: 'nm_penyakit',
+                        render: function(data, type, row) {
+                            return data;
+                        }
+
                     },
                     {
+                        data: 'status',
+                        name: 'status'
+                    },{
                         data: 'stts_daftar',
                         name: 'stts_daftar'
                     },
@@ -256,5 +209,6 @@
                 ],
             });
         }
+
     </script>
 @endpush

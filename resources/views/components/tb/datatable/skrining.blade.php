@@ -6,9 +6,11 @@
             </div>
         </x-card.header>
         <x-card.body>
-            <table class="table table-bordered table-striped table-hover" id="tableSkriningTb" style="width: 100%">
+            <div class="table-responsive text-sm">
+                <table class="table table-bordered table-striped table-hover table-sm" id="tableSkriningTb" style="width: 100%">
 
-            </table>
+                </table>
+            </div>
         </x-card.body>
         <x-card.footer>
             <div class="row">
@@ -94,7 +96,7 @@
                 scrollX: true,
                 deferRender: true,
                 ordering: false,
-                dom: 'Blfrtip',
+                dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                 language: {
                     processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>',
                     zeroRecords: "Tidak Ditemukan Data",
@@ -102,26 +104,31 @@
                     info: "Menampilkan sebanyak _START_ ke _END_ dari _TOTAL_ data",
                     loadingRecords: "Sedang memuat ...",
                     infoFiltered: "(Disaring dari _MAX_ total baris)",
+                    lengthMenu: "Tampilkan _MENU_ baris",
                     buttons: {
                         copyTitle: 'Data telah disalin',
                         copySuccess: {
                             _: '%d baris data telah disalin',
                         },
                     },
-                    lengthMenu: '<div class="text-md mt-3">Tampilkan <select>' +
-                        '<option value="50" selected>50</option>' +
-                        '<option value="100">100</option>' +
-                        '<option value="500">500</option>' +
-                        '<option value="-1">Semua</option>' +
-                        '</select> Baris',
+                    // lengthMenu: '<div class="text-md mt-3">Tampilkan <select>' +
+                    //     '<option value="50" selected>50</option>' +
+                    //     '<option value="100">100</option>' +
+                    //     '<option value="500">500</option>' +
+                    //     '<option value="-1">Semua</option>' +
+                    //     '</select> Baris',
                     paginate: {
-                        "first": "Pertama",
+                        "first": "Awal",
                         "last": "Akhir",
                         "next": ">",
                         "previous": "<"
                     },
                     search: 'Cari Penyakit : ',
                 },
+                lengthMenu: [
+                    [50, 100, 200, 250, 500, -1],
+                    ['50', '100', '200', '250', '500', 'Semua']
+                ],
                 ajax: {
                     url: `${url}/datatable/tb/skrining/${year}/${month}`,
                     type: 'GET',
@@ -158,6 +165,11 @@
                         title: 'Pasien',
                         data: 'pasien.nm_pasien',
                         name: 'pasien.nm_pasien',
+                    },
+                    {
+                        title: 'Tgl. Lahir',
+                        name : 'tgl_pasien',
+                        data : 'pasien.tgl_lahir'
                     },
                     {
                         title: 'Umur',

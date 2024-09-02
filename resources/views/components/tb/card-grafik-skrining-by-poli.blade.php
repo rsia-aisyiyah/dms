@@ -35,12 +35,8 @@
             $.get(`${url}/grafik/tb/skrining/poli/${year}/${month}`).done((response) => {
                 const labels = Object.keys(response);
                 const data = Object.values(response);
-
-                console.log('data',data)
-
                 const formatedLabel = labels.map((item)=>item.length > 9 ? item.substring(0, 4) + '...' : item)
                 renderGrafikSkriningByPoli(data, formatedLabel)
-                console.log(labels)
             });
         }
 
