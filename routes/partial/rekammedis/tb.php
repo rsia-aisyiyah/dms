@@ -10,6 +10,7 @@ Route::middleware('auth')->group(function () {
 
 	Route::prefix('grafik')->group(function ($route) {
 		$route->prefix('tb')->group(function ($route) {
+			$route->get('demografi/kelurahan/{year?}/{month?}', \App\Http\Actions\DemografiKelurahanPasienTb::class);
 			$route->get('demografi/{year?}/{month?}', \App\Http\Actions\DemografiPasienTb::class);
 			$route->get('skrining/poli/{year?}/{month?}', \App\Http\Actions\SkriningTbByPoliklinik::class);
 			$route->get('skrining/{year?}', SkriningTbCountByYearAction::class);

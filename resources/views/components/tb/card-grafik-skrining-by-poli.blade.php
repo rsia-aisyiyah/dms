@@ -3,7 +3,7 @@
         <x-card.header>
             <x-card.title><strong>Skrining Berdasarkan Poli</strong></x-card.title>
         </x-card.header>
-        <x-card.body>
+        <x-card.body class="p-4">
             <canvas id="grafikSkriningByPoli" style="max-height:40vh; width:80vw"></canvas>
         </x-card.body>
         <x-card.footer>
@@ -15,7 +15,7 @@
                 <input type="text" id="blnSkriningTbPoli" class="form-control monthPicker"
                        data-toggle="datetimepicker" aria-describedby="blnSkriningTbPoli"
                        data-target="#blnSkriningTbPoli"
-                       autocomplete="off" />
+                       autocomplete="off"/>
 
             </div>
         </x-card.footer>
@@ -27,15 +27,15 @@
         const blnSkriningTbPoli = $('#blnSkriningTbPoli');
         const grafikSkriningByPoli = document.getElementById('grafikSkriningByPoli').getContext('2d');
         let chartSkriningByPoliInstance = '';
-        $(document).ready(()=>{
+        $(document).ready(() => {
             getGrafikSkriningByPoli();
         })
 
-        const getGrafikSkriningByPoli = (year='', month='') => {
+        const getGrafikSkriningByPoli = (year = '', month = '') => {
             $.get(`${url}/grafik/tb/skrining/poli/${year}/${month}`).done((response) => {
                 const labels = Object.keys(response);
                 const data = Object.values(response);
-                const formatedLabel = labels.map((item)=>item.length > 9 ? item.substring(0, 4) + '...' : item)
+                const formatedLabel = labels.map((item) => item.length > 9 ? item.substring(0, 4) + '...' : item)
                 renderGrafikSkriningByPoli(data, formatedLabel)
             });
         }
@@ -53,10 +53,10 @@
                 chartSkriningByPoliInstance.destroy();
             }
             chartSkriningByPoliInstance = new Chart(grafikSkriningByPoli, {
-                type : 'pie',
-                data  : {
-                    labels : label,
-                    datasets : [{
+                type: 'pie',
+                data: {
+                    labels: label,
+                    datasets: [{
                         data: data,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -83,33 +83,35 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        tooltip :{
-                          callbacks: {
-                              title : function (context){
-                                  const label = context[0].label;
-                                  let result = label;
+                        tooltip: {
+                            callbacks: {
+                                title: function (context) {
+                                    const label = context[0].label;
+                                    let result = label;
 
-                                  $.ajax({
-                                      url: `${url}/poli/show/${label}`,
-                                      type: 'GET',
-                                      dataType: 'json',
-                                      async: false,
-                                      success: function(response) {
-                                          result = response.nm_poli;
-                                      },
-                                      error: function(xhr, status, error) {
-                                          console.error('Error fetching tooltip data:', error);
-                                          result = label;
-                                      }
-                                  });
+                                    $.ajax({
+                                        url: `${url}/poli/show/${label}`,
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        async: false,
+                                        success: function (response) {
+                                            result = response.nm_poli;
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.error('Error fetching tooltip data:', error);
+                                            result = label;
+                                        }
+                                    });
 
-                                  return result;
+                                    return result;
 
-                              }
-                          }
+                                }
+                            }
                         },
                         datalabels: {
-                            formatter: function(value, ctx) {
+                            anchor : 'end',
+                            align: 'middle',
+                            formatter: function (value, ctx) {
                                 let sum = 0;
                                 let dataArr = ctx.chart.data.datasets[0].data;
                                 dataArr.forEach(data => {

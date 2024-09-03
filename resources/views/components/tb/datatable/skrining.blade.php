@@ -7,7 +7,8 @@
         </x-card.header>
         <x-card.body>
             <div class="table-responsive text-sm">
-                <table class="table table-bordered table-striped table-hover table-sm" id="tableSkriningTb" style="width: 100%">
+                <table class="table table-bordered table-striped table-hover table-sm" id="tableSkriningTb"
+                       style="width: 100%">
 
                 </table>
             </div>
@@ -16,7 +17,8 @@
             <div class="row">
                 <div class="col-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="radioBlnSkriningTb" id="radioBlnSkriningTb1" checked="">
+                        <input class="form-check-input" type="radio" name="radioBlnSkriningTb" id="radioBlnSkriningTb1"
+                               checked="">
                         <label class="form-check-label" for="radioBlnSkriningTb1">Data Bulanan</label>
                     </div>
                     <div class="input-group">
@@ -24,9 +26,9 @@
                             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                         </div>
                         <input type="text" id="blnSkriningTb" class="form-control monthPicker"
-                            data-toggle="datetimepicker" aria-describedby="blnSkriningTb"
-                            data-target="#blnSkriningTb"
-                            autocomplete="off" />
+                               data-toggle="datetimepicker" aria-describedby="blnSkriningTb"
+                               data-target="#blnSkriningTb"
+                               autocomplete="off"/>
 
                     </div>
                 </div>
@@ -40,9 +42,9 @@
                             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                         </div>
                         <input type="text" id="tahunSkriningTb" class="form-control yearPicker"
-                            data-toggle="datetimepicker" aria-describedby="tahunSkriningTb"
-                            data-target="#tahunSkriningTb"
-                            autocomplete="off" />
+                               data-toggle="datetimepicker" aria-describedby="tahunSkriningTb"
+                               data-target="#tahunSkriningTb"
+                               autocomplete="off"/>
 
                     </div>
                 </div>
@@ -55,6 +57,7 @@
     <script>
         const tahunSkriningTb = $('#tahunSkriningTb');
         const blnSkriningTb = $('#blnSkriningTb');
+        const radioBlnSkriningTb = $('input[name="radioBlnSkriningTb"]');
 
         tahunSkriningTb.on('change.datetimepicker', (e) => {
             const tahun = e.currentTarget.value;
@@ -70,10 +73,10 @@
 
         $(document).ready(() => {
             loadTableSkriningTb()
-            toggleInputFields();
+            radioBlnSkriningTb.trigger('change')
         })
 
-        function toggleInputFields() {
+        radioBlnSkriningTb.change(function () {
             if ($('#radioBlnSkriningTb1').is(':checked')) {
                 $('#blnSkriningTb').prop('disabled', false); // Enable monthly input
                 $('#tahunSkriningTb').prop('disabled', true); // Disable yearly input
@@ -81,10 +84,6 @@
                 $('#blnSkriningTb').prop('disabled', true); // Disable monthly input
                 $('#tahunSkriningTb').prop('disabled', false); // Enable yearly input
             }
-        }
-
-        $('input[name="radioBlnSkriningTb"]').change(function() {
-            toggleInputFields();
         });
 
         function loadTableSkriningTb(year = '', month = '') {
@@ -134,11 +133,11 @@
                     type: 'GET',
                 },
                 buttons: [{
-                        extend: 'copy',
-                        text: '<i class="fas fa-copy"></i> Salin',
-                        className: 'btn btn-info mb-2',
-                        title: 'tabel-skrining-tb-{{ date('dmy') }}'
-                    },
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy"></i> Salin',
+                    className: 'btn btn-info mb-2',
+                    title: 'tabel-skrining-tb-{{ date('dmy') }}'
+                },
                     {
                         extend: 'csv',
                         text: '<i class="fas fa-file-csv"></i> CSV',
@@ -153,10 +152,10 @@
                     },
                 ],
                 columns: [{
-                        title: 'Tgl. Skrining',
-                        name: 'tanggal',
-                        data: 'tanggal',
-                    },
+                    title: 'Tgl. Skrining',
+                    name: 'tanggal',
+                    data: 'tanggal',
+                },
                     {
                         title: 'No. Rawat',
                         data: 'no_rawat',
@@ -168,13 +167,13 @@
                     },
                     {
                         title: 'Tgl. Lahir',
-                        name : 'tgl_pasien',
-                        data : 'pasien.tgl_lahir'
+                        name: 'tgl_pasien',
+                        data: 'pasien.tgl_lahir'
                     },
                     {
                         title: 'Umur',
                         name: 'pasien',
-                        data: function(data, type, row) {
+                        data: function (data, type, row) {
                             const {
                                 reg_periksa
                             } = data;
@@ -184,14 +183,14 @@
                     {
                         title: 'Alamat',
                         name: 'pasien',
-                        data: function(data, type, row) {
+                        data: function (data, type, row) {
                             const {
                                 kecamatan,
                                 kelurahan,
                                 kabupaten
                             } = data.pasien
 
-                            return `${kelurahan.nm_kel!=='-' ? `${kelurahan.nm_kel},` : ''} ${kecamatan.nm_kec}, ${kabupaten.nm_kab}`
+                            return `${kelurahan.nm_kel !== '-' ? `${kelurahan.nm_kel},` : ''} ${kecamatan.nm_kec}, ${kabupaten.nm_kab}`
                         },
                     },
                     {

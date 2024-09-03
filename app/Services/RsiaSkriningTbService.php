@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\RsiaSkriningTb;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class RsiaSkriningTbService
@@ -32,7 +33,22 @@ class RsiaSkriningTbService
     {
 
         $query = $this->filterByYearAndMonth(new RsiaSkriningTb(), $year, $month);
-        return DataTables::of($query)->make(true);
+        return DataTables::of($query)
+	        ->filter(function ($query) use($month, $year) {
+	        	$request = request();
+	        	if($request->has('search') && $request->get('search')['value']) {
+					$keyword = $request->get('search')['value'];
+			        return $query->whereHas('pasien', function ($query) use ($keyword) {
+				        $query->where('nm_pasien', 'like', '%' . $keyword . '%')
+				        ->orWhereHas('kecamatan', function ($query) use ($keyword) {
+					        $query->where('nm_kec', 'like', '%' . $keyword . '%');
+				        });
+			        })->orWhereHas('poliklinik', function ($query) use ($keyword, $month, $year) {
+				        $query->where('nm_poli', 'like', '%' . $keyword . '%');
+			        });
+		        }
+	        })
+	        ->make(true);
     }
 
 }

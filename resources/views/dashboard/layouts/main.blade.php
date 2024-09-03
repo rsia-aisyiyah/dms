@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="id-ID">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>E-DASHBOARD | {{ is_null($bigTitle) ? 'Dashboard' : $bigTitle }}</title>
+    <title>E-DASHBOARD | {{ is_null($bigTitle) ? 'DASHBOARD' : strtoupper($bigTitle) }}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
@@ -47,30 +47,21 @@
         .table tr td {
             white-space: nowrap;
         }
-
-        .card {
-            border-radius: 8px !important;
+        .table tr th {
+            white-space: nowrap;
         }
 
-        .modal-bottom {
-            overflow-y: inherit !important;
-        }
     </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
     <div class="wrapper">
-
-        {{-- <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="https://sim.rsiaaisyiyah.com/rsiap/assets/images/rsiap.ico" alt="AdminLTELogo" height="60" width="60">
-    <h2 class="m-3 animation__shake">E-DASHBOARD</h2>
-  </div> --}}
         <!-- Navbar -->
         @include('dashboard.layouts.navbar')
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-light-teal nav-sidebar flex-column" elevation-4">
+        <aside class="main-sidebar sidebar-light-teal nav-sidebar flex-column">
             <!-- Brand Logo -->
             <a href="/dms/" class="brand-link">
                 <img src="https://sim.rsiaaisyiyah.com/rsiap/assets/images/rsiap.ico" alt="RSIA logo"
@@ -90,7 +81,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">{{ is_null($bigTitle) ? 'Dashboard' : $bigTitle }}</h1>
+                            <h1 class="m-0 text-dark">{{ is_null($bigTitle) ? 'DASHBOARD' : strtoupper($bigTitle) }}</h1>
                         </div>
                     </div>
                 </div>

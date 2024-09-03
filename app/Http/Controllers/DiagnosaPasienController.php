@@ -104,25 +104,30 @@ class DiagnosaPasienController extends Controller
 				});
 			})
 			->groupBy('no_rkm_medis')
-			->orderBy('tgl_registrasi', 'ASC')
-			->month($request->month, $request->year)->get();
+			->orderBy('tgl_registrasi', 'ASC');
 
-//        $tanggal = new Carbon('this month');
-//        if ($request->ajax()) {
-//            if ($request->month && $request->year) {
-//                $data->month($request->month, $request->year)->get;
-//            }
-//        }
+		if($request->year){
+			$data = $data->year($request->year)->get();
+		}
+
+		if($request->month){
+			$data = $data->month($request->month, $request->year)->get();
+
+		}
+
+		if(!$request->year && !$request->month){
+			$data = $data->month(date('m'), date('Y'))->get();
+		}
 
 		return DataTables::of($data)
 			->editColumn('tgl_registrasi', function ($data){
-				return Carbon::parse($data->tgl_registrasi)->translatedFormat('d F Y');
+				return $data->tgl_registrasi;
 			})
 			->editColumn('nm_pasien', function ($data) {
 				return $data->pasien->nm_pasien;
 			})
 			->editColumn('tgl_lahir', function ($data) {
-				return $data->pasien->tgl_lahir;
+				return Carbon::parse($data->pasien->tgl_lahir)->translatedFormat('d F Y');
 			})
 			->editColumn('no_ktp', function ($data) {
 				return $data->pasien->no_ktp;
