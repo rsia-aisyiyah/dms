@@ -16,11 +16,11 @@
                 </div>
                 <label for="tahunCapaianSkrining"></label>
                 <input type="text" id="tahunCapaianSkrining" class="form-control yearPicker"
-                       data-toggle="datetimepicker" aria-describedby="tahunCapaianSkrining"
-                       data-target="#tahunCapaianSkrining"
-                       autocomplete="off"/>
+                    data-toggle="datetimepicker" aria-describedby="tahunCapaianSkrining"
+                    data-target="#tahunCapaianSkrining"
+                    autocomplete="off" />
 
-        </div>
+            </div>
         </x-card.footer>
     </x-card>
 </div>
@@ -31,7 +31,7 @@
         let grafikCapaianSkriningTbInstance = ''
 
 
-        tahunCapaianSkrining.on('change.datetimepicker', function (e) {
+        tahunCapaianSkrining.on('change.datetimepicker', function(e) {
             const tahun = e.currentTarget.value;
             getGrafikSkriningTb(tahun)
         })
@@ -44,11 +44,11 @@
         }
 
         function renderGrafikCapaianSkriningTb(capaian, label) {
-            if(grafikCapaianSkriningTbInstance){
+            if (grafikCapaianSkriningTbInstance) {
                 grafikCapaianSkriningTbInstance.destroy();
             }
             grafikCapaianSkriningTbInstance = new Chart(grafikCapaianSkriningTb, {
-                type: 'pie',
+                type: 'bar',
                 data: {
                     labels: label,
                     datasets: [{
@@ -79,7 +79,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         datalabels: {
-                            formatter: function (value) {
+                            formatter: function(value) {
                                 return `${value}%`;
                             }
                         }

@@ -97,7 +97,9 @@ class DiagnosaPasienController extends Controller
 
 	public function jsonPasienTb(Request $request)
 	{
-		$data = RegPeriksa::select('*')
+		$regPeriksa = new RegPeriksa();
+
+		$query = $regPeriksa->select('*')
 			->whereHas('diagnosa', function ($query) {
 				$query->whereHas('penyakit', function ($q) {
 					$q->where('nm_penyakit', 'like', '%Tuberculosis%');
@@ -107,16 +109,17 @@ class DiagnosaPasienController extends Controller
 			->orderBy('tgl_registrasi', 'ASC');
 
 		if($request->year){
-			$data = $data->year($request->year)->get();
+			$data = $query->year($request->year)->get();
 		}
 
 		if($request->month){
-			$data = $data->month($request->month, $request->year)->get();
-
+			$data = $query->month($request->month, $request->year)->get();
 		}
 
+
+
 		if(!$request->year && !$request->month){
-			$data = $data->month(date('m'), date('Y'))->get();
+			$data = $query->month(date('m'), date('Y'))->get();
 		}
 
 		return DataTables::of($data)
