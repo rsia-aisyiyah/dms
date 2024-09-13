@@ -2,7 +2,7 @@
     <x-card class="card card-outline card-teal">
         <x-card.header>
             <div class="card-title">
-                <strong>Skirining TB</strong>
+                <strong>Skrining TB</strong>
             </div>
         </x-card.header>
         <x-card.body>
@@ -53,8 +53,24 @@
                         label: '',
                         data: data,
                         borderWidth: 1,
-                        borderColor: '#36A2EB',
-                        backgroundColor: '#9BD0F5',
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(201, 203, 207, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)'
+                        ],
                     }]
                 },
                 options: {
@@ -67,6 +83,9 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
+                        legend: {
+                            display: false
+                        },
                         datalabels: {
                             anchor: 'end',
                             align: 'top',

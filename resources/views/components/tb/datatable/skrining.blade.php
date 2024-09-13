@@ -2,7 +2,7 @@
     <x-card class="card card-outline card-teal">
         <x-card.header>
             <div class="card-title">
-                <strong>Data Skirining TB</strong>
+                <strong>Data Skrining TB</strong>
             </div>
         </x-card.header>
         <x-card.body>

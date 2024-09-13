@@ -53,7 +53,7 @@
                 chartSkriningByPoliInstance.destroy();
             }
             chartSkriningByPoliInstance = new Chart(grafikSkriningByPoli, {
-                type: 'pie',
+                type: 'bar',
                 data: {
                     labels: label,
                     datasets: [{
@@ -82,7 +82,16 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grace: "5%"
+                        }
+                    },
                     plugins: {
+                        legend: {
+                            display: false
+                        },
                         tooltip: {
                             callbacks: {
                                 title: function (context) {
@@ -110,7 +119,7 @@
                         },
                         datalabels: {
                             anchor : 'end',
-                            align: 'middle',
+                            align: 'end',
                             formatter: function (value, ctx) {
                                 let sum = 0;
                                 let dataArr = ctx.chart.data.datasets[0].data;

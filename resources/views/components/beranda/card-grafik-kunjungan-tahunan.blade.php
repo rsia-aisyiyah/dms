@@ -82,6 +82,9 @@
                     datasets: chartData.datasets
                 },
                 options: {
+                    legend: {
+                        display: false
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,

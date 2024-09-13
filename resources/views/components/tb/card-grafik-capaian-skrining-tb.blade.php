@@ -2,7 +2,7 @@
     <x-card class="card card-outline card-teal">
         <x-card.header>
             <div class="card-title">
-                <strong>Capaian Skirining TB</strong>
+                <strong>Capaian Skrining TB</strong>
             </div>
         </x-card.header>
         <x-card.body>
@@ -48,7 +48,7 @@
                 grafikCapaianSkriningTbInstance.destroy();
             }
             grafikCapaianSkriningTbInstance = new Chart(grafikCapaianSkriningTb, {
-                type: 'bar',
+                type: 'pie',
                 data: {
                     labels: label,
                     datasets: [{
@@ -78,6 +78,9 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
+                        legend: {
+                            display: false
+                        },
                         datalabels: {
                             formatter: function(value) {
                                 return `${value}%`;
