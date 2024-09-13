@@ -32,9 +32,9 @@ class RegPeriksaCollection extends Controller
         return collect($this->regPeriksaController->getAll($request))->where('stts', 'Sudah');
     }
 
-    function getRegByStatusLanjut()
+    function getRegByStatusLanjut(Request $request) : array
     {
-        $regCollection = $this->getAll(new Request());
+        $regCollection = $this->getAll($request);
         $kunjungan = $regCollection->groupBy('status_lanjut')->mapWithKeys(function ($item, $key) {
             return [$key => $item->count()];
         })->toArray();

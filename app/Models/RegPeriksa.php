@@ -179,7 +179,7 @@ class RegPeriksa extends Model
 		$query->whereYear('tgl_registrasi', $year);
 	}
 
-	function scropeStatus($query, $status = 'Sudah')
+	function scopeStatus($query, $status = 'Sudah')
 	{
 		$query->where('stts', $status);
 	}

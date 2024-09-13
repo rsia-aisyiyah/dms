@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
     Route::get('/beranda/kunjungan', [BerandaController::class, 'countTotal']);
+    Route::get('/beranda/kunjungan/total', \App\Http\Actions\CounterKunjunganByStatusLanjut::class);
     Route::get('/beranda/pembiayaan', [BerandaController::class, 'pembiayaan']);
     Route::get('/beranda/pembiayaan/ranap', [BerandaController::class, 'countPembiayaanRanap']);
     Route::get('/beranda/pembiayaan/ralan', [BerandaController::class, 'countPembiayaanRalan']);
@@ -229,7 +230,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('test/{year?}/{month?}/', \App\Http\Actions\DemografiKelurahanPasienTb::class);
+//Route::get('test/{year?}/{month?}/', \App\Http\Actions\DemografiKelurahanPasienTb::class);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 

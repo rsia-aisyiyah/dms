@@ -3,6 +3,7 @@
 namespace App\View\Components\Beranda;
 
 use App\Http\Controllers\Collection\RegPeriksaCollection;
+use Illuminate\Http\Request;
 use Illuminate\View\Component;
 
 class CounterKunjungan extends Component
@@ -25,7 +26,7 @@ class CounterKunjungan extends Component
      */
     public function render()
     {
-		$data = $this->counterKunjungan->getRegByStatusLanjut();
+		$data = $this->counterKunjungan->getRegByStatusLanjut(new Request());
         return view('components.beranda.counter-kunjungan', ['data' => $data]);
     }
 }

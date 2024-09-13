@@ -1,3 +1,14 @@
+<div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+        </div>
+        <input type="text" id="blnCounterKunjungan" class="form-control monthPicker"
+               data-toggle="datetimepicker" aria-describedby="blnCounterKunjungan"
+               data-target="#blnCounterKunjungan"
+               autocomplete="off"/>
+    </div>
+</div>
 @foreach($data as $key => $value)
     @php
         if($key === 'Ralan'){
@@ -32,3 +43,33 @@
     </div>
 
 @endforeach
+
+@push('scripts')
+    <script>
+        const blnCounterKunjungan = $('#blnCounterKunjungan');
+
+        blnCounterKunjungan.on('change.datetimepicker', function (e) {
+            const year = e.currentTarget.value.split('-')[0];
+            const month = e.currentTarget.value.split('-')[1];
+            getCounterKunjungan(year, month);
+
+        })
+
+        function getCounterKunjungan(year = '', month = '') {
+            $.get(`${url}/beranda/kunjungan/total`, {
+                'year': year,
+                'month': month
+            }).done((response) => {
+                console.log(response)
+                for (const [key, value] of Object.entries(response)) {
+                    if (value === 0) {
+                        $('.info-box-number').find('span').text(0)
+                    }
+                    $(`#count${key}`).text(value)
+                }
+                toastr.success('Memuat data total kunjungan', 'Berhasil');
+            })
+        }
+
+    </script>
+@endpush
