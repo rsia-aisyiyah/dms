@@ -2,76 +2,38 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <div class="row">
-                            <label>Filter Data </label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off" />
-                            </div>
-                        </div>
-                    </div>
+        <x-beranda.counter-kunjungan></x-beranda.counter-kunjungan>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <strong>Pembiayaan Pasien</strong>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <x-beranda.card-grafik-pembiayaan></x-beranda.card-grafik-pembiayaan>
                 </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <x-beranda.card-grafik-detail-bpjs></x-beranda.card-grafik-detail-bpjs>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="input-group w-25">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                </div>
+                <input type="text" id="blnPembiayaan" class="form-control monthPicker"
+                    data-toggle="datetimepicker" aria-describedby="blnPembiayaan"
+                    data-target="#blnPembiayaan"
+                    autocomplete="off" />
+                <button type="button" class="btn btn-primary" onclick="getPembiayaanPasien()">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-blue elevation-1"><i class="fas fa-hospital-user"></i></span>
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">Total Kunjungan</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id=total>0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-hospital-user"></i></span>
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">Rawat Jalan</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id="ralan">0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-yellow elevation-1"><i class="fas fa-hospital-user"></i></span>
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">Rawat Inap</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id="ranap">0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-hospital-user"></i></span>
-
-                <div class="info-box-content">
-                    <p class="info-box-text mb-0">IGD</p>
-                    <h3 class="info-box-number mt-0 mb-0 p-0">
-                        <span id="igd">0</span>
-                    </h3>
-                    <small> Pasien</small>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="row">
-        @include('dashboard.content.beranda._diagramPembayaran')
-    </div>
+    <x-beranda.card-grafik-kunjungan-tahunan></x-beranda.card-grafik-kunjungan-tahunan>
     <div class="row">
         <div class="col-sm-12 col-md-4">
             <div class="card">
@@ -89,12 +51,15 @@
     <div class="row">
         @include('dashboard.content.beranda._diagramRegistrasi')
     </div>
+    {{--    <div class="row"> --}}
+    {{--        @include('dashboard.content.beranda._diagramKunjunganDokter') --}}
+    {{--    </div> --}}
     <div class="row">
-        @include('dashboard.content.beranda._diagramKunjunganDokter')
+        <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
     </div>
-    <div class="row">
-        @include('dashboard.content.beranda._diagramRalan')
-    </div>
+    {{--    <div class="row"> --}}
+    {{--        @include('dashboard.content.beranda._diagramRalan') --}}
+    {{--    </div> --}}
 @endsection
 
 @push('scripts')
@@ -144,59 +109,59 @@
 
         }
 
-        function jumlahRalan(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'ralan/hitung',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    ralan = data;
-                    document.getElementById('ralan').innerHTML = data;
-                }
-            });
-        }
-
-        function jumlahRanap(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'ranap/hitung',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    document.getElementById('ranap').innerHTML = data;
-                }
-            });
-        }
-
-        function jumlahIGD(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'igd/hitung',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    document.getElementById('igd').innerHTML = data;
-
-                }
-            });
-        }
-
-        function totalKunjungan(tgl_pertama = '', tgl_kedua = '') {
-            $.ajax({
-                url: 'beranda/kunjungan',
-                data: {
-                    tgl_pertama: tgl_pertama,
-                    tgl_kedua: tgl_kedua
-                },
-                success: function(data) {
-                    document.getElementById('total').innerHTML = data;
-                }
-            });
-        }
+        // function jumlahRalan(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'ralan/hitung',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             ralan = data;
+        //             document.getElementById('ralan').innerHTML = data;
+        //         }
+        //     });
+        // }
+        //
+        // function jumlahRanap(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'ranap/hitung',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             document.getElementById('ranap').innerHTML = data;
+        //         }
+        //     });
+        // }
+        //
+        // function jumlahIGD(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'igd/hitung',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             document.getElementById('igd').innerHTML = data;
+        //
+        //         }
+        //     });
+        // }
+        //
+        // function totalKunjungan(tgl_pertama = '', tgl_kedua = '') {
+        //     $.ajax({
+        //         url: 'beranda/kunjungan',
+        //         data: {
+        //             tgl_pertama: tgl_pertama,
+        //             tgl_kedua: tgl_kedua
+        //         },
+        //         success: function(data) {
+        //             document.getElementById('total').innerHTML = data;
+        //         }
+        //     });
+        // }
 
 
         $('#tanggal').on('apply.daterangepicker', function(env, picker) {
@@ -237,23 +202,23 @@
             statusPeriksa.destroy();
             caraBooking(tgl_pertama, tgl_kedua);
             statusDaftar(tgl_pertama, tgl_kedua);
-            pembiayaanPasien(tgl_pertama, tgl_kedua);
-            jumlahIGD(tgl_pertama, tgl_kedua);
-            jumlahRalan(tgl_pertama, tgl_kedua);
-            jumlahRanap(tgl_pertama, tgl_kedua);
-            totalKunjungan(tgl_pertama, tgl_kedua);
+            // pembiayaanPasien(tgl_pertama, tgl_kedua);
+            // jumlahIGD(tgl_pertama, tgl_kedua);
+            // jumlahRalan(tgl_pertama, tgl_kedua);
+            // jumlahRanap(tgl_pertama, tgl_kedua);
+            // totalKunjungan(tgl_pertama, tgl_kedua);
             statusReg(tgl_pertama, tgl_kedua);
 
         });
         $(document).ready(function() {
             statusReg();
-            loadDiagramRalan();
+            // loadDiagramRalan();
             statusDaftar();
-            pembiayaanPasien();
-            jumlahIGD();
-            jumlahRalan();
-            jumlahRanap();
-            totalKunjungan();
+            // pembiayaanPasien();
+            // jumlahIGD();
+            // jumlahRalan();
+            // jumlahRanap();
+            // totalKunjungan();
             registrasi();
             caraBooking();
         });

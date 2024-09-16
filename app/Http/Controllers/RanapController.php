@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Dokter;
-use App\Models\RegPeriksa;
-use App\Models\RawatInapDr;
-use Illuminate\Http\Request;
 use App\Models\DiagnosaPasien;
-use Yajra\DataTables\DataTables;
-use PhpParser\Node\Expr\FuncCall;
+use App\Models\Dokter;
+use App\Models\RawatInapDr;
+use App\Models\RegPeriksa;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class RanapController extends Controller
 {
@@ -68,7 +67,6 @@ class RanapController extends Controller
             }
         }
 
-
         return DataTables::of($data)
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && $request->get('search')['value']) {
@@ -82,7 +80,7 @@ class RanapController extends Controller
             })
             ->editColumn('nm_pasien', function ($data) use ($tanggal) {
                 return $data->pasien->nm_pasien . "<br/>" .
-                    "<small class='text-red'> " . $tanggal->parse($data->pasien->tgl_lahir)->translatedFormat('d F Y') . "</small>";
+                "<small class='text-red'> " . $tanggal->parse($data->pasien->tgl_lahir)->translatedFormat('d F Y') . "</small>";
             })
             ->editColumn('no_tlp', function ($data) {
                 return $data->pasien->no_tlp;
@@ -96,9 +94,9 @@ class RanapController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                    . $data->pasien->kelurahan->nm_kel . ", "
-                    . $data->pasien->kecamatan->nm_kec . ", "
-                    . $data->pasien->kabupaten->nm_kab;
+                . $data->pasien->kelurahan->nm_kel . ", "
+                . $data->pasien->kecamatan->nm_kec . ", "
+                . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_dokter', function ($data) {
                 return $data->dokter->nm_dokter;
@@ -123,10 +121,10 @@ class RanapController extends Controller
             ->editColumn('kamar', function ($data) {
                 return $data->kamarInap->kd_kamar;
             })->editColumn('tglsep', function ($data) use ($tanggal) {
-                $data->tglsep == null ? $tgl_sep = '-' :
-                    $tgl_sep = $tanggal->parse($data->tglsep)->translatedFormat('d F Y');
-                return $tgl_sep;
-            })
+            $data->tglsep == null ? $tgl_sep = '-' :
+            $tgl_sep = $tanggal->parse($data->tglsep)->translatedFormat('d F Y');
+            return $tgl_sep;
+        })
             ->make(true);
     }
 
@@ -199,9 +197,9 @@ class RanapController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                    . $data->pasien->kelurahan->nm_kel . ", "
-                    . $data->pasien->kecamatan->nm_kec . ", "
-                    . $data->pasien->kabupaten->nm_kab;
+                . $data->pasien->kelurahan->nm_kel . ", "
+                . $data->pasien->kecamatan->nm_kec . ", "
+                . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_dokter', function ($data) {
                 return $data->dokter->nm_dokter;
@@ -271,13 +269,11 @@ class RanapController extends Controller
                 $jmlUmum = $umum;
                 $jmlTotal = $jmlUmum + $jmlBpjs;
 
-
-
                 $persenBpjs = 'aaa';
 
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
 
-                $data["$indexBulan"] = (object)[
+                $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
                     'bpjs' => $jmlBpjs,
                     'umum' => $jmlUmum,
@@ -319,7 +315,7 @@ class RanapController extends Controller
 
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
 
-                $data["$indexBulan"] = (object)[
+                $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
                     'laki' => $laki,
                     'perempuan' => $perempuan,
@@ -340,7 +336,7 @@ class RanapController extends Controller
         for ($j = 1; $j <= 12; $j++) {
             $indexBulan = $tanggal->month($j)->translatedFormat('F');
 
-            $query = RawatInapDr::select(DB::raw('count(*) as jumlah'))
+            $query = RawatInapDr::select(DB::raw('count(*) as jumlah'), 'kd_dokter')
                 ->whereYear('tgl_perawatan', $tahun)
                 ->whereMonth('tgl_perawatan', $j)
                 ->whereHas('jnsPerawatanInap', function ($query) {
@@ -349,9 +345,11 @@ class RanapController extends Controller
                 ->whereHas('dokter', function ($query) {
                     $query->whereIn('kd_sps', ['S0001', 'S0003']);
                 })
-                ->with(['dokter' => function ($query) {
-                    return $query->select(['kd_dokter', 'nm_dokter']);
-                }])
+                ->with([
+                    'dokter' => function ($query) {
+                        return $query->select(['kd_dokter', 'nm_dokter']);
+                    },
+                ])
                 ->groupBy('kd_dokter')
                 ->get()
                 ->pluck('jumlah');
@@ -363,8 +361,7 @@ class RanapController extends Controller
             $jumlah5 = empty($query[4]) ? 0 : $query[4];
             $jumlah6 = empty($query[5]) ? 0 : $query[5];
 
-
-            $data["$indexBulan"] = (object)[
+            $data["$indexBulan"] = (object) [
                 'bulan' => $indexBulan . ' ' . $tahun,
                 'dokter1' => $jumlah1,
                 'dokter2' => $jumlah2,
@@ -373,7 +370,10 @@ class RanapController extends Controller
                 'dokter5' => $jumlah5,
                 'dokter6' => $jumlah6,
             ];
+
+            // $data[$indexBulan] = $query;
         }
+        // return $data;
         return DataTables::of($data)->make(true);
     }
     public function viewVisitDokter()
@@ -417,7 +417,7 @@ class RanapController extends Controller
         $tgl_kedua = $request->tgl_kedua;
         $dokter = $request->dokter;
 
-        $data = RawatInapDr::select('*', DB::raw('count(*) as jumlah, sum(biaya_rawat) as total_biaya',))
+        $data = RawatInapDr::select('*', DB::raw('count(*) as jumlah, sum(biaya_rawat) as total_biaya', ))
             ->whereHas('jnsPerawatanInap', function ($q) {
                 $q->where('nm_perawatan', 'like', '%transfusi%');
             })
@@ -427,8 +427,8 @@ class RanapController extends Controller
         if ($request->ajax()) {
             // filter tanggal
             $tgl_pertama && $tgl_kedua ?
-                $data->whereBetween('tgl_perawatan', [$tgl_pertama, $tgl_kedua])->get() :
-                $data->whereYear('tgl_perawatan', $tanggal->year)
+            $data->whereBetween('tgl_perawatan', [$tgl_pertama, $tgl_kedua])->get() :
+            $data->whereYear('tgl_perawatan', $tanggal->year)
                 ->whereMonth('tgl_perawatan', $tanggal->month)->get();
             // filter dokter
             if ($dokter) {
@@ -443,13 +443,13 @@ class RanapController extends Controller
                 return $tanggal->parse($data->tgl_perawatan)->translatedFormat('d F Y');
             })
             ->editColumn('nm_pasien', function ($data) {
-                return  $data->regPeriksa->pasien->nm_pasien . ' (' . $data->regPeriksa->no_rkm_medis . ')';
+                return $data->regPeriksa->pasien->nm_pasien . ' (' . $data->regPeriksa->no_rkm_medis . ')';
             })
             ->editColumn('nm_perawatan', function ($data) {
-                return  $data->jnsPerawatanInap->nm_perawatan;
+                return $data->jnsPerawatanInap->nm_perawatan;
             })
             ->editColumn('dokter', function ($data) {
-                return  $data->dokter->nm_dokter;
+                return $data->dokter->nm_dokter;
             })
             ->editColumn('spesialis', function ($data) {
                 return $data->dokter->spesialis->nm_sps;
@@ -470,7 +470,7 @@ class RanapController extends Controller
                 })->count();
             $data[] = [
                 'bulan' => $indexBulan . ' ' . $tahun,
-                'jumlah' => $q
+                'jumlah' => $q,
             ];
         }
 

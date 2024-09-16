@@ -18,5 +18,9 @@ class Penjab extends Model
     {
         return $this->hasMany(JnsPerawatan::class, 'kd_pj', 'kd_pj');
     }
+	function scopeActive($query, $status = '1')
+	{
+		$query->where('status', $status);
+	}
 
 }

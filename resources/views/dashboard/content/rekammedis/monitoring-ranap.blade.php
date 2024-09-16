@@ -94,8 +94,6 @@
     var tgl_pertama = null;
     var pembiayaan = null;
     var status = null;
-    const token = '{{ Session::get('token') }}';
-    const apiUrl = "{{ env('API_URL') }}";
 
     $('#tanggal').daterangepicker({
         locale: {
@@ -122,7 +120,7 @@
             processing: true,
             serverSide: true,
             ajax : {
-                url: apiUrl + 'monitor/rme/ranap?datatables=true',
+                url: `{{ env('APP_URL') }}/api/monitor/rme/ranap?datatables=true`,
                 type: 'GET',
                 data: {
                     pembiayaan: pembiayaan,
@@ -132,9 +130,6 @@
                         end: tgl_kedua,
                     },
                 },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + token);
-                },
             },
             searching: true,
             lengthChange: true,
@@ -142,7 +137,7 @@
             fixedHeader: true,
             scrollCollapse: true,
             scrollX: true,
-            scrollY: 300,
+            scrollY: 480,
             // dom: 'Blfrtip',
             dom: "<'d-flex align-items-center justify-content-between'<'text-center'l><'text-center'f><'text-center'B>>" +
                 "<'row'<'col-sm-12 col-md-12'tr>>" +

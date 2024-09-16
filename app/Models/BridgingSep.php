@@ -13,6 +13,15 @@ class BridgingSep extends Model
 
     public function regPeriksa()
     {
-        return $this->hasOne(RegPeriksa::class, 'no_rawat', 'no_rawat');
+        return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat');
     }
+
+	function scopeMonth($query, $month='', $year='')
+	{
+		if($month == '' && $year == ''){
+			$month = date('m');
+			$year = date('Y');
+		}
+		return $query->whereMonth('tglsep', $month)->whereYear('tglsep', $year);
+	}
 }

@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Models\RegPeriksa;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Pasien extends Model
 {
     use HasFactory;
     protected $table = "pasien";
+    protected $hidden = ['laravel_through_key'];
 
     public function regPeriksa()
     {

@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
             return $user->username === 'admin'
             || $user->username === 'direksi'
             || $user->username === 'rm'
+            || $user->username === 'poli'
             || $user->username === 'casemix'
             || $user->username === 'ipcn'
             || $user->username === 'admin_casemix';

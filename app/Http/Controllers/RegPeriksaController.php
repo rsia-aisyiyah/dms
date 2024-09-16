@@ -6,7 +6,9 @@ use App\Models\BookingRegistrasi;
 use App\Models\RegPeriksa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\LazyCollection;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\DataTables;
 
@@ -14,10 +16,30 @@ use function PHPSTORM_META\map;
 
 class RegPeriksaController extends Controller
 {
-    private $tanggal;
+    protected $tanggal;
+    protected $regPeriksaModel;
     public function __construct()
     {
         $this->tanggal = new Carbon();
+        $this->regPeriksaModel = new RegPeriksa();
+    }
+
+    function getAll(Request $request)
+    {
+        $month = $request->month ? $request->month : '';
+        $year = $request->year ? $request->year : '';
+
+        $data = $this->regPeriksaModel->month($month, $year)
+            ->get();
+        return $data;
+    }
+
+    function getByYear($year): Collection
+    {
+        $data = $this->regPeriksaModel->year($year)->get();
+        $data = LazyCollection::make($data);
+
+        return collect($data);
     }
 
     public function caraBooking(Request $request)
@@ -146,10 +168,7 @@ class RegPeriksaController extends Controller
                 return $data->pasien->nm_pasien;
             })
             ->editColumn('status', function ($data) {
-
                 return $this->statusResep($data->resepObat, $data->pemberianObat);
-                // return $data->resepObat->;
-                // return $data->resepObat->resepDokter;
             })
             ->editColumn('poliklinik', function ($data) {
                 return $data->poli->nm_poli;
@@ -208,7 +227,6 @@ class RegPeriksaController extends Controller
             } else if ($status == '-') {
                 $kosong += 1;
             }
-            // print_r($status);
         }
 
         return response()->json([
@@ -217,23 +235,15 @@ class RegPeriksaController extends Controller
             'tanpaResep' => $tanpaResep,
             'tidakAmbil' => $tidakAmbil,
             'kosong' => $kosong,
-            // 'resep' => $resep,
 
         ]);
-        // return $resep->map(function ($result) use ($lengkap) {
-        //     if ($status == 'LENGKAP') {
-        //         $lengkap += 1;
-        //     }
-        //     return [
-        //         'lengkap' => $lengkap
-        //     ];
-        //     // return $this->statusResep($result->resepObat, $result->pemberianObat);
-        //     // return $result->resepObat;
-        // });
-        // return [
-        //     'pasien' => $resep->count(),
-        //     'resep' => $resep->get(),
-        //     // 'obat' => count($pemberian),
-        // ];
+    }
+
+    function getByKecamatan(): Collection
+    {
+        $regPeriksa = $this->regPeriksaModel
+            ->with('kecamatan', 'kabupaten')
+            ->limit(10)->get();
+        return collect($regPeriksa);
     }
 }

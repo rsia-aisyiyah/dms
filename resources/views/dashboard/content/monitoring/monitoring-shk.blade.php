@@ -79,9 +79,7 @@
 @endsection
 
 @push('scripts')
-<script>
-    const apiUrl = "{{ env('API_URL') }}";
-    
+<script>    
     var table;
     var shk = null;
     var tgl_kedua = null;
@@ -111,9 +109,9 @@
             $('#table-monitoring-shk').DataTable({
                 processing: true,
                 serverSide: true,
-                scrollY: "300",
+                scrollY: "500",
                 ajax: {
-                    url: apiUrl + 'monitor/resume/ranap?datatables=true',
+                    url: `{{ env('APP_URL') }}/api/monitor/resume/ranap?datatables=true`,
                     data: {
                         shk: shk,
                         pembiayaan: pembiayaan,
@@ -121,9 +119,6 @@
                             start: tgl_pertama,
                             end: tgl_kedua,
                         },
-                    },
-                    beforeSend: function (request) {
-                        request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
                     },
                 },
                 columns: [

@@ -9,6 +9,7 @@ class Poliklinik extends Model
 {
     use HasFactory;
     protected $table = 'poliklinik';
+    protected $hidden = ['laravel_through_key'];
 
     public function jnsPerawatan()
     {

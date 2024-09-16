@@ -102,8 +102,6 @@
     var tgl_pertama = null;
     var pembiayaan = null;
     var status = null;
-    const token = '{{ Session::get('token') }}';
-    const apiUrl = "{{ env('API_URL') }}";
 
     $('.card-ranap #tanggal').daterangepicker({
         locale: {
@@ -151,7 +149,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: apiUrl + 'monitor/pengisian-erm/spesialis/ranap?datatables=1',
+                url: `{{ env('APP_URL') }}/api/monitor/pengisian-erm/spesialis/ranap?datatables=1`,
                 type: 'GET',
                 data: {
                     tgl_registrasi: {
@@ -159,12 +157,8 @@
                         end: tgl_kedua,
                     }
                 },
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 beforeSend: function(req) {
                     req.setRequestHeader("Accept", "application/json");
-                    req.setRequestHeader("Authorization", "Bearer " + token);
                 },
             },
             searching: false,
@@ -240,7 +234,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: apiUrl + 'monitor/pengisian-erm/spesialis/ralan?datatables=1',
+                url: `{{ env('APP_URL') }}/api/monitor/pengisian-erm/spesialis/ralan?datatables=1`,
                 type: 'GET',
                 data: {
                     tgl_registrasi: {
@@ -248,12 +242,8 @@
                         end: tgl_kedua,
                     }
                 },
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
                 beforeSend: function(req) {
                     req.setRequestHeader("Accept", "application/json");
-                    req.setRequestHeader("Authorization", "Bearer " + token);
                 },
             },
             searching: false,

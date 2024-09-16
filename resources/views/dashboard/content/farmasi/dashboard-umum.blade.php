@@ -117,7 +117,6 @@
 
 @push('scripts')
 <script>
-    const apiUrl = "{{ env('API_URL') }}";
     function formatRupiah(angka, prefix){
 
         if (typeof angka === 'number') {
@@ -143,7 +142,7 @@
     function fetchData(bulan = '', tahun = '') {
         console.log("ajax fetching data");
         $.ajax({
-            url: apiUrl + 'farmasi/gudang/metrics',
+            url: `{{ env('APP_URL') }}/api/farmasi/gudang/metrics`,
             type: "POST",
             dataType: "JSON",
             data: {
@@ -151,10 +150,6 @@
                     'bulan': bulan,
                     'tahun': tahun,
                 }
-            },
-
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
             },
             
             success: function (data) {
@@ -191,7 +186,7 @@
             serverSide: true,
             destroy: true,
             ajax: {
-                url: apiUrl + 'farmasi/gudang/metrics/top/obat?datatables=1',
+                url: `{{ env('APP_URL') }}/api/farmasi/gudang/metrics/top/obat?datatables=1`,
                 type: "POST",
                 dataType: "JSON",
                 data: {
@@ -199,18 +194,25 @@
                         'bulan': bulan,
                         'tahun': tahun,
                     }
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
                 }
             },
+            lengChange: false,
+            order: [[ 1, "desc" ]],
+            searching: false,
+            paging: true,
             columns: [
                 { data: 'nama_obat', name: 'nama_obat' },
                 { data: 'total', name: 'total', className: 'text-center' },
             ],
-            order: [[ 1, "desc" ]],
-            searching: false,
-            paging: false,
+            // dom make info and pagination in one line
+            dom: 't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            pagingType: 'simple',
+            language: {
+                paginate: {
+                    previous: "<i class='fas fa-chevron-left'></i>",
+                    next: "<i class='fas fa-chevron-right'></i>"
+                }
+            }
         });
     }   
 
@@ -221,7 +223,7 @@
             serverSide: true,
             destroy: true,
             ajax: {
-                url: apiUrl + 'farmasi/gudang/metrics/bottom/obat?datatables=1',
+                url: `{{ env('APP_URL') }}/api/farmasi/gudang/metrics/bottom/obat?datatables=1`,
                 type: "POST",
                 dataType: "JSON",
                 data: {
@@ -229,9 +231,6 @@
                         'bulan': bulan,
                         'tahun': tahun,
                     }
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
                 }
             },
             lengChange: false,
@@ -260,7 +259,7 @@
 
         console.log("ajax fetching detail data");
         $.ajax({
-            url: apiUrl + 'farmasi/gudang/metrics/detail',
+            url: `{{ env('APP_URL') }}/api/farmasi/gudang/metrics/detail`,
             type: "POST",
             dataType: "JSON",
             data: {
@@ -268,10 +267,6 @@
                     'bulan': bulan,
                     'tahun': tahun,
                 }
-            },
-
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
             },
             
             success: function(data) {

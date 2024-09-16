@@ -86,7 +86,6 @@
 
 @push('scripts')
 <script>
-    const apiUrl = "{{ env('API_URL') }}";
     var tahun = '';
     var bulan = '';
     var type = 'tgl_pesan';
@@ -115,7 +114,7 @@
 
     function fetchMetrics (bulan = '', tahun = '', jenis = '') {
         $.ajax({
-            url: `${apiUrl}farmasi/gudang/pesanan`,
+            url: `{{ env('APP_URL') }}/api/farmasi/gudang/pesanan`,
             type: 'GET',
             data: {
                 "tgl" : {
@@ -123,9 +122,6 @@
                     "tahun" : tahun != '' ? tahun : moment().format('YYYY'),
                     "type" : jenis
                 },
-            },
-            beforeSend: function (request) {
-                request.setRequestHeader("Authorization", "Bearer " + '{{ Session::get('token') }}');
             },
             success: function (response) {
                 if (response.success) {

@@ -5,189 +5,248 @@
         <div class="col-12">
             <div class="card card-teal">
                 <div class="card-header">
-                    <p class="card-title border-bottom-0">{{$title}} </p>
+                    <p class="card-title border-bottom-0">{{ $title }} </p>
                     <div class="card-tools mr-4" id="bulan">
-                        <span><strong>{{$month}}</strong></span>
+                        <span><strong>{{ $month }}</strong></span>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Tanggal :</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-12">
                             <div class="table-responsive text-sm">
-                                <table class="table table-bordered"  id="table-pasien-tb" style="width: 100%" cellspacing="0">
+                                <table class="table table-bordered table-striped table-hover table-sm"
+                                       id="table-pasien-tb" style="width: 100%" cellspacing="0">
                                     <thead>
-                                        <tr>
-                                            <th>Tanggal Registrasi</th>
-                                            <th>No. Rawat</th>
-                                            <th>No. RM</th>
-                                            <th>Nama Pasien</th>
-                                            <th>Tgl Lahir</th>
-                                            <th>Umur</th>
-                                            <th>NIK</th>
-                                            <th>Jenis Kelamin</th>
-                                            <th>Alamat</th>
-                                            <th>Kode Penyakit</th>
-                                            <th>Nama Penyakit</th>
-                                            <th>Status Rawat</th>
-                                            <th>Poli</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Tgl. Registrasi</th>
+                                        <th>No. Rawat</th>
+                                        <th>No. RM</th>
+                                        <th>Nama</th>
+                                        <th>Tgl. Lahir</th>
+                                        <th>Umur</th>
+                                        <th>NIK</th>
+                                        <th>JK</th>
+                                        <th>Alamat</th>
+                                        <th>ICD-10</th>
+                                        <th>Penyakit</th>
+                                        <th>Status TB</th>
+                                        <th>Poli</th>
+                                    </tr>
                                     </thead>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radioBlnPasienTb"
+                                       id="radioBlnPasienTb1" checked="">
+                                <label class="form-check-label" for="radioBlnPasienTb1">Data Bulanan</label>
+                            </div>
+                            <div class="input-group w-auto">
+
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                <input type="text" class="form-control monthPicker" id="bulanPasienTb"
+                                       name="bulanPasienTb" data-toggle="datetimepicker" autocomplete="off"/>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radioBlnPasienTb"
+                                       id="radioBlnPasienTb2">
+                                <label class="form-check-label" for="radioBlnPasienTb2">Data Tahunan</label>
+                            </div>
+                            <div class="input-group w-auto">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                <input type="text" class="form-control yearPicker" id="tahunPasienTb"
+                                       name="tahunPasienTb" data-toggle="datetimepicker" autocomplete="off"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div class="col-6">
+            <x-tb.card-grafik-demografi-tb/>
+        </div>
+        <div class="col-6">
+            <x-tb.card-grafik-demografi-kelurahan-tb/>
+        </div>
+        <div class="col-12">
+            <x-tb.datatable.skrining/>
+        </div>
+        <div class="col-12">
+            <x-tb.card-grafik-skrining-tb/>
+        </div>
+        <div class="col-6">
+            <x-tb.card-grafik-capaian-skrining-tb/>
+        </div>
+        <div class="col-6">
+            <x-tb.card-grafik-skrining-by-poli/>
         </div>
     </div>
 @endsection
 
 @push('scripts')
-<script>
-    var tgl_pertama = '';
-    var tgl_kedua = '';
-    $(document).ready(function(){
+    <script>
+        const radioBlnPasienTb = $('input[name="radioBlnPasienTb"]');
+        const bulanPasienTb = $('#bulanPasienTb')
+        const tahunPasienTb = $('#tahunPasienTb')
 
-        $('#tanggal').daterangepicker({
-        locale : {
-            language: 'id' ,
-            applyLabel: 'Terapkan',
-            cancelLabel: 'Batal',
-            format:'DD/MM/YYYY',
-            daysOfWeek: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Ming'],
-            monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-        },
-            startDate: moment().startOf('month'),
-            autoclose:true,
-            showDropdowns: true,
-            minYear: 2019,
-            maxYear: {{date('Y')+1}},
-    });
+        $(document).ready(function () {
+            renderTablePasienTb();
+            radioBlnPasienTb.trigger('change')
+        });
 
-    $('#tanggal').on('apply.daterangepicker', function (env, picker) {
+        radioBlnPasienTb.on('change', (e) => {
+            const isRadioChecked = $('#radioBlnPasienTb1').is(':checked');
+            if(isRadioChecked) {
+                $('#bulanPasienTb').prop('disabled', false);
+                $('#tahunPasienTb').prop('disabled', true);
+            }else{
+                $('#bulanPasienTb').prop('disabled', true);
+                $('#tahunPasienTb').prop('disabled', false);
+            }
+        })
 
-        tgl_pertama = picker.startDate.format('YYYY-MM-DD');
-        tgl_kedua = picker.endDate.format('YYYY-MM-DD');
+        bulanPasienTb.on('change.datetimepicker', (e) => {
+            const value = e.currentTarget.value;
+            const month = value.split('-')[1];
+            const year = value.split('-')[0];
+            $('#bulan').html(`<span><strong>${formatBulanTahun(value)}</strong></span>`) //set bulan
+            renderTablePasienTb(year, month)
+        })
 
-        var bulan = new Array(12);
-                    bulan[0] = "Januari";
-                    bulan[1] = "Februari";
-                    bulan[2] = "Maret";
-                    bulan[3] = "April";
-                    bulan[4] = "Mei";
-                    bulan[5] = "Juni";
-                    bulan[6] = "Juli";
-                    bulan[7] = "Agustus";
-                    bulan[8] = "September";
-                    bulan[9] = "Oktober";
-                    bulan[10] = "November";
-                    bulan[11] = "Desember";
-                var tanggal1 = new Date(tgl_pertama);
-                var tanggal2 = new Date(tgl_kedua);
-                
-                hari1 = tanggal1.getDate();
-                bulan1 = tanggal1.getMonth();
-                tahun1 = tanggal1.getFullYear();
+        tahunPasienTb.on('change.datetimepicker', (e) => {
+            const value = e.currentTarget.value;
+            renderTablePasienTb(value)
+        })
 
-                hari2 = tanggal2.getDate();
-                bulan2 = tanggal2.getMonth();
-                tahun2 = tanggal2.getFullYear();
 
-                tgl1 = hari1+' '+bulan[bulan1]+' '+tahun1
-                tgl2 = hari2+' '+bulan[bulan2]+' '+tahun2
 
-        $('#bulan').html('<strong>'+tgl1+' s/d '+tgl2+'</strong>');
-        $('#table-pasien-tb').DataTable().destroy();
-        load_data(tgl_pertama, tgl_kedua); 
-    });
-
-        load_data();
-        function load_data(tgl_pertama='', tgl_kedua='') {
+        function renderTablePasienTb(year = '', month = '') {
             $('#table-pasien-tb').DataTable({
-            ajax: {
-                url:'pasientb/json',
-                data: {
-                    tgl_pertama:tgl_pertama,
-                    tgl_kedua:tgl_kedua,
+                ajax: {
+                    url: 'pasientb/json',
+                    data: {
+                        month: month,
+                        year: year,
                     }
                 },
-            processing: true,
-            searching : false,
-            serverSide: true,
-            lengthChange: true,
-            ordering: false,
-            scrollY: "350px",
-            scrollX: true,
-            scroller: false,
-            paging:false,
-            dom: 'Bfrtip',
-            initComplete: function(settings, json) {
-                                toastr.success('Data telah dimuat', 'Berhasil');
-                            },
-            language: {
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                scrollY: '40vh',
+                scrollX: true,
+                deferRender: true,
+                ordering: false,
+                dom: '<"top"lBf>rt<"bottom"ip><"clear">',
+                initComplete: function (settings, json) {
+                    toastr.success('Data telah dimuat', 'Berhasil');
+                },
+                language: {
                     processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>',
                     zeroRecords: "Tidak Ditemukan Data",
-                    infoEmpty:      "",
+                    infoEmpty: "",
                     info: "Menampilkan sebanyak _START_ ke _END_ dari _TOTAL_ data",
                     loadingRecords: "Sedang memuat ...",
-                    infoFiltered:   "(Disaring dari _MAX_ total baris)",
-                    buttons: {
-                                copyTitle: 'Data telah disalin',
-                                copySuccess: {
-                                                _: '%d baris data telah disalin',
-                                            },
-                            },
-                    lengthMenu: '<div class="text-md mt-3">Tampilkan <select>'+
-                                    '<option value="50">50</option>'+
-                                    '<option value="100">100</option>'+
-                                    '<option value="200">200</option>'+
-                                    '<option value="250">250</option>'+
-                                    '<option value="500">500</option>'+
-                                    '<option value="-1">Semua</option>'+
-                                    '</select> Baris',
+                    infoFiltered: "(Disaring dari _MAX_ total baris)",
+                    lengthMenu: "Tampilkan _MENU_ baris",
                     paginate: {
-                                    "first":      "Pertama",
-                                    "last":       "Terakhir",
-                                    "next":       "Selanjutnya",
-                                    "previous":   "Sebelumnya"
-                                },
-                                search: 'Cari Penyakit : ',
+                        "first": "Awal",
+                        "last": "Akhir",
+                        "next": ">",
+                        "previous": "<"
+                    },
+                    search: 'Cari Penyakit: ',
                 },
-            buttons: [
-                {extend: 'copy', text:'<i class="fas fa-copy"></i> Salin',className:'btn btn-info', title: 'laporan-kunjungan-pasien-rawat-jalan{{date("dmy")}}'},
-                {extend: 'csv',  text:'<i class="fas fa-file-csv"></i> CSV',className:'btn btn-info', title: 'laporan-kunjungan-pasien-rawat-jalan{{date("dmy")}}'},
-                {extend: 'excel', text:'<i class="fas fa-file-excel"></i> Excel',className:'btn btn-info', title: 'laporan-kunjungan-pasien-rawat-jalan{{date("dmy")}}'},
-            ],
-            columns:[
-                {data:'tgl_registrasi', name:'tgl_registrasi'},
-                {data:'no_rawat', name:'no_rawat'},
-                {data:'no_rkm_medis', name:'no_rkm_medis'},
-                {data:'nm_pasien', name:'nm_pasien'},
-                {data:'tgl_lahir', name:'tgl_lahir'},
-                {data:'umurdaftar', name:'umurdaftar'},
-                {data:'no_ktp', name:'no_ktp'},
-                {data:'jk', name:'jk'},
-                {data:'alamat', name:'alamat'},
-                {data:'kd_penyakit', name:'kd_penyakit'},
-                {data:'nm_penyakit', name:'nm_penyakit'},
-                {data:'stts_daftar', name:'stts_daftar'},
-                {data:'nm_poli', name:'nm_poli'},
+                lengthMenu: [
+                    [50, 100, 200, 250, 500, -1],
+                    ['50', '100', '200', '250', '500', 'Semua']
+                ],
+                buttons: [{
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy"></i> Salin',
+                    className: 'btn btn-info',
+                    title: 'laporan_pasien_tb{{ date('dmy') }}'
+                },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fas fa-file-csv"></i> CSV',
+                        className: 'btn btn-info',
+                        title: 'laporan_pasien_tb{{ date('dmy') }}'
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        className: 'btn btn-info',
+                        title: 'laporan_pasien_tb{{ date('dmy') }}'
+                    },
+                ],
+                columns: [{
+                    data: 'tgl_registrasi',
+                    name: 'tgl_registrasi'
+                },
+                    {
+                        data: 'no_rawat',
+                        name: 'no_rawat'
+                    },
+                    {
+                        data: 'no_rkm_medis',
+                        name: 'no_rkm_medis'
+                    },
+                    {
+                        data: 'nm_pasien',
+                        name: 'nm_pasien'
+                    },
+                    {
+                        data: 'tgl_lahir',
+                        name: 'tgl_lahir'
+                    },
+                    {
+                        data: 'umurdaftar',
+                        name: 'umurdaftar'
+                    },
+                    {
+                        data: 'no_ktp',
+                        name: 'no_ktp'
+                    },
+                    {
+                        data: 'jk',
+                        name: 'jk'
+                    },
+                    {
+                        data: 'alamat',
+                        name: 'alamat'
+                    },
+                    {
+                        data: 'kd_penyakit',
+                        name: 'kd_penyakit'
+                    },
+                    {
+                        data: 'nm_penyakit',
+                        name: 'nm_penyakit',
+                        render: function (data, type, row) {
+                            return data;
+                        }
+
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'nm_poli',
+                        name: 'nm_poli'
+                    },
                 ],
             });
         }
 
-        
-    });
-</script>
-    
+    </script>
 @endpush

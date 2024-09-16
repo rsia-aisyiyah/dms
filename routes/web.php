@@ -1,39 +1,41 @@
 <?php
 
-use App\Models\Dokter;
-use App\Models\ResepObat;
-use App\Models\RegPeriksa;
-use App\Models\AskepKandunganRalan;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SepController;
-use App\Http\Controllers\KamarController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RalanController;
-use App\Http\Controllers\RanapController;
-use App\Http\Controllers\DokterController;
-use App\Http\Controllers\PenjabController;
-use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\OperasiController;
-use App\Http\Controllers\TarifLaboratorium;
-use App\Http\Controllers\TindakanController;
-use App\Http\Controllers\KamarInapController;
-use App\Http\Controllers\ResepObatController;
-use App\Http\Controllers\LaporanIGDController;
-use App\Http\Controllers\PasienBayiController;
-use App\Http\Controllers\PersalinanController;
-use App\Http\Controllers\PoliklinikController;
-use App\Http\Controllers\RegPeriksaController;
-use App\Http\Controllers\RekamMedisController;
-use App\Http\Controllers\TarifRalanController;
-use App\Http\Controllers\TarifRanapController;
-use App\Http\Controllers\PaketOperasiController;
-use App\Http\Controllers\DiagnosaPasienController;
-use App\Http\Controllers\KategoriPerawatanController;
+use App\Http\Controllers\Actions\SkriningTbCountByYearAction;
+use App\Http\Controllers\Actions\SkriningTbDataTableAction;
 use App\Http\Controllers\AskepKandunganRalanController;
+use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection;
+use App\Http\Controllers\DiagnosaPasienController;
+use App\Http\Controllers\DokterController;
 use App\Http\Controllers\FarmasiController;
+use App\Http\Controllers\KamarController;
+use App\Http\Controllers\KamarInapController;
+use App\Http\Controllers\KategoriPerawatanController;
 use App\Http\Controllers\LaporanDiagnosaDinkesController;
 use App\Http\Controllers\LaporanDiagnosaPenyakitController;
+use App\Http\Controllers\LaporanIGDController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OperasiController;
+use App\Http\Controllers\PaketOperasiController;
+use App\Http\Controllers\PasienBayiController;
+use App\Http\Controllers\PenjabController;
+use App\Http\Controllers\PersalinanController;
+use App\Http\Controllers\PoliklinikController;
+use App\Http\Controllers\RalanController;
+use App\Http\Controllers\RanapController;
+use App\Http\Controllers\RegPeriksaController;
+use App\Http\Controllers\RekamMedisController;
+use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\ResumePasienRanap;
+use App\Http\Controllers\RsiaSkriningTbController;
+use App\Http\Controllers\SepController;
+use App\Http\Controllers\SpesialisController;
+use App\Http\Controllers\TarifLaboratorium;
+use App\Http\Controllers\TarifRalanController;
+use App\Http\Controllers\TarifRanapController;
+use App\Http\Controllers\TindakanController;
+use App\Models\Dokter;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,11 +51,12 @@ use App\Http\Controllers\ResumePasienRanap;
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
 
-Route::group(['middleware' => ['auth:token']], function () {
+Route::middleware('auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout']);
     Route::get('/', [BerandaController::class, 'index'])->name('index');
     Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
     Route::get('/beranda/kunjungan', [BerandaController::class, 'countTotal']);
+    Route::get('/beranda/kunjungan/total', \App\Http\Actions\CounterKunjunganByStatusLanjut::class);
     Route::get('/beranda/pembiayaan', [BerandaController::class, 'pembiayaan']);
     Route::get('/beranda/pembiayaan/ranap', [BerandaController::class, 'countPembiayaanRanap']);
     Route::get('/beranda/pembiayaan/ralan', [BerandaController::class, 'countPembiayaanRalan']);
@@ -183,9 +186,9 @@ Route::group(['middleware' => ['auth:token']], function () {
     Route::get('/persalinan/json', [PersalinanController::class, 'json']);
 
     Route::get('/poli', [PoliklinikController::class, 'getAllPoliklinik']);
+    Route::get('/poli/show/{kd_poli}', [PoliklinikController::class, 'show']);
 
     Route::get('/penjab', [PenjabController::class, 'getAllPenjab']);
-
 
     Route::get('/tindakan', [TindakanController::class, 'index']);
     Route::get('/tindakan/json', [TindakanController::class, 'rekapTindakan']);
@@ -205,9 +208,30 @@ Route::group(['middleware' => ['auth:token']], function () {
     Route::get('farmasi/resep/ambil', [RegPeriksaController::class, 'ambilResepTabel']);
     Route::get('farmasi/resep/hitung', [RegPeriksaController::class, 'hitungStatusResep']);
 
-
     Route::get('farmasi/dashboard', [FarmasiController::class, 'umum']);
     Route::get('farmasi/dashboard/persediaan', [FarmasiController::class, 'persediaan']);
+
+    Route::prefix('grafik')->group(function ($route) {
+        $route->prefix('kunjungan')->group(function ($route) {
+            $route->get('poliklinik/{year?}/{month?}/{dokter?}', [KunjunganPoliklinikDokterCollection::class, 'getByDokter']);
+            $route->get('tahun/{year?}', [\App\Http\Controllers\Collection\RegPeriksaCollection::class, 'getByYear']);
+
+        });
+        $route->prefix('penjab')->group(function ($route) {
+            $route->get('bpjs/{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPenjabBpjs']);
+            $route->get('{year?}/{month?}', [\App\Http\Controllers\Collection\PembiayaanPasienCollection::class, 'getPembiayaan']);
+
+        });
+    });
+
+    Route::prefix('datatable')->group(function ($route) {
+        $route->get('tb/skrining/{year?}/{month?}', SkriningTbDataTableAction::class);
+    });
+
 });
 
-Route::get('/test', [TindakanController::class, 'rawatInapDr']);
+//Route::get('test/{year?}/{month?}/', \App\Http\Actions\DemografiKelurahanPasienTb::class);
+Route::get('spesialis', [SpesialisController::class, 'all']);
+Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
+
+require __DIR__ . '/partial/rekammedis/tb.php';

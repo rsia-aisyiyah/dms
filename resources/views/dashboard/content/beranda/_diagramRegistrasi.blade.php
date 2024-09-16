@@ -76,13 +76,7 @@
                                 beginAtZero: true,
                                 grace: '5%',
                                 max: 2000,
-                                stacked: true
-                            },
-                            y: {
-
-                                stacked: true
                             }
-
                         },
                         plugins: {
                             datalabels: {

@@ -78,8 +78,6 @@
 <script>
     var tgl_kedua = '';
     var tgl_pertama = '';
-    const token = '{{ Session::get('token') }}';
-    const apiUrl = "{{ env('API_URL') }}";
 
     $('#tanggal').daterangepicker({
         locale: {
@@ -103,12 +101,12 @@
         $('#table-monitoring-ugd').DataTable({
             fixedHeader: true,
             lengthMenu: [10, 25, 50, 75, 100],
-            scrollY: 300,
+            scrollY: 500,
             processing: true,
             serverSide: true,
             pageLength: 10,
             ajax : {
-                url:  apiUrl + 'monitor/rme/ugd?datatables=true',
+                url:  `{{ env('APP_URL') }}/api/monitor/rme/ugd?datatables=true`,
                 type: 'GET',
                 data: {
                     tgl_registrasi: {
@@ -116,9 +114,6 @@
                         end: tgl_kedua,
                     },
                     pembiayaan: pembiayaan,
-                },
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + token);
                 },
             },
             responsive: true,
