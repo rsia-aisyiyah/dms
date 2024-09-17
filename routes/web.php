@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/beranda/booking', [RegPeriksaController::class, 'caraBooking']);
     Route::get('/beranda/dokter', [BerandaController::class, 'jsonKunjunganDokter']);
     Route::get('/beranda/ralan', [RalanController::class, 'diagramRalanPoli']);
+	Route::get('/beranda/demografi/kecamatan/{year?}/{month?}', \App\Http\Actions\DemografiPasienRajal::class);
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);
     Route::get('/operasi/sectio', [OperasiController::class, 'viewSectio']);
@@ -230,7 +231,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-//Route::get('test/{year?}/{month?}/', \App\Http\Actions\DemografiKelurahanPasienTb::class);
+Route::get('test/{year?}/{month?}', \App\Http\Actions\DemografiPasienRajal::class);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 
