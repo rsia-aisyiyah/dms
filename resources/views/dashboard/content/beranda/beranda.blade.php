@@ -50,16 +50,14 @@
     </div>
     <div class="row">
         @include('dashboard.content.beranda._diagramRegistrasi')
+        <x-beranda.demografi.kecamatan-rajal></x-beranda.demografi.kecamatan-rajal>
+        <x-beranda.demografi.kelurahan-rajal></x-beranda.demografi.kelurahan-rajal>
     </div>
-    {{--    <div class="row"> --}}
-    {{--        @include('dashboard.content.beranda._diagramKunjunganDokter') --}}
-    {{--    </div> --}}
+
     <div class="row">
         <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
     </div>
-    {{--    <div class="row"> --}}
-    {{--        @include('dashboard.content.beranda._diagramRalan') --}}
-    {{--    </div> --}}
+
 @endsection
 
 @push('scripts')

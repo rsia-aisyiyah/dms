@@ -306,6 +306,10 @@ class RegPeriksa extends Model
 	{
 		return $this->hasOneThrough(Kecamatan::class, Pasien::class, 'no_rkm_medis', 'kd_kec', 'no_rkm_medis', 'kd_kec');
 	}
+	public function kelurahan(): HasOneThrough
+	{
+		return $this->hasOneThrough(Kelurahan::class, Pasien::class, 'no_rkm_medis', 'kd_kel', 'no_rkm_medis', 'kd_kel');
+	}
 
 	public function kabupaten(): HasOneThrough
 	{

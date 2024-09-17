@@ -19,22 +19,20 @@ class DemografiPasienRajal
 			return $item->count();
 		})->sortDesc();
 
-		if(isset($month)){
-			$map = $map->slice(0,10);
-		}
+		$limited = $map->take(20);
+		$othersSum = $map->slice(20)->sum();
 
-		return response()->json($map);
+		if ($othersSum > 0) {
+			$limited = $limited->put('LAINYA', $othersSum);
+		}
+		return response()->json($limited->sortDesc());
 
 	}
 
 	protected function groupingByKecamatan(RegPeriksa $regPeriksa, $year, $month)
 	{
-		$query = $regPeriksa->with(['kecamatan']);
-		if($month){
-			$query = $query->month($month, $year);
-		}else{
-			$query = $query->year($year);
-		}
+		$query = $regPeriksa->with(['kecamatan'])->month($month, $year);
+
 		return collect($query->get());
 	}
 }
