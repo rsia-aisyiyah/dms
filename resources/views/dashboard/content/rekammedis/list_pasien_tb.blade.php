@@ -27,6 +27,7 @@
                                         <th>NIK</th>
                                         <th>JK</th>
                                         <th>Alamat</th>
+                                        <th>No. Telp</th>
                                         <th>ICD-10</th>
                                         <th>Penyakit</th>
                                         <th>Status TB</th>
@@ -105,10 +106,10 @@
 
         radioBlnPasienTb.on('change', (e) => {
             const isRadioChecked = $('#radioBlnPasienTb1').is(':checked');
-            if(isRadioChecked) {
+            if (isRadioChecked) {
                 $('#bulanPasienTb').prop('disabled', false);
                 $('#tahunPasienTb').prop('disabled', true);
-            }else{
+            } else {
                 $('#bulanPasienTb').prop('disabled', true);
                 $('#tahunPasienTb').prop('disabled', false);
             }
@@ -126,7 +127,6 @@
             const value = e.currentTarget.value;
             renderTablePasienTb(value)
         })
-
 
 
         function renderTablePasienTb(year = '', month = '') {
@@ -204,6 +204,7 @@
                         data: 'nm_pasien',
                         name: 'nm_pasien'
                     },
+
                     {
                         data: 'tgl_lahir',
                         name: 'tgl_lahir'
@@ -223,6 +224,10 @@
                     {
                         data: 'alamat',
                         name: 'alamat'
+                    },
+                    {
+                        data: 'no_tlp',
+                        name: 'no_tlp'
                     },
                     {
                         data: 'kd_penyakit',

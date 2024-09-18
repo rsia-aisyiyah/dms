@@ -6,7 +6,7 @@ use App\Models\RegPeriksa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
-class DemografiPasienRanap
+class DemografiKelurahanPasienRajal
 {
 
 	public function __invoke(RegPeriksa $regPeriksa, $year = '', $month = '') : JsonResponse
@@ -33,7 +33,10 @@ class DemografiPasienRanap
 
 	protected function groupingByKelurahan(RegPeriksa $regPeriksa, $year, $month) : Collection{
 
-		$query = $regPeriksa->with(['kelurahan'])->month($month, $year);
+		$query = $regPeriksa
+			->where('status_lanjut', 'Ralan')
+			->where('stts', 'Sudah')
+			->with(['kelurahan'])->month($month, $year);
 		return collect($query->get());
 	}
 }

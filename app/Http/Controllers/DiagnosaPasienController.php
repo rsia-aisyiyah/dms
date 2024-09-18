@@ -135,6 +135,9 @@ class DiagnosaPasienController extends Controller
 			->editColumn('no_ktp', function ($data) {
 				return $data->pasien->no_ktp;
 			})
+			->editColumn('no_tlp', function ($data) {
+				return $data->pasien->no_tlp;
+			})
 			->editColumn('umurdaftar', function ($data) {
 				return $data->umurdaftar . ' ' . $data->sttsumur;
 			})

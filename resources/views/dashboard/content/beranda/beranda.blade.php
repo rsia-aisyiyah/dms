@@ -52,6 +52,7 @@
         @include('dashboard.content.beranda._diagramRegistrasi')
         <x-beranda.demografi.kecamatan-rajal></x-beranda.demografi.kecamatan-rajal>
         <x-beranda.demografi.kelurahan-rajal></x-beranda.demografi.kelurahan-rajal>
+        <x-beranda.demografi.kecamatan-ranap></x-beranda.demografi.kecamatan-ranap>
     </div>
 
     <div class="row">

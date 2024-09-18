@@ -54,21 +54,7 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout']);
     Route::get('/', [BerandaController::class, 'index'])->name('index');
-    Route::get('/beranda', [BerandaController::class, 'dataPembayaran']);
-    Route::get('/beranda/kunjungan', [BerandaController::class, 'countTotal']);
-    Route::get('/beranda/kunjungan/total', \App\Http\Actions\CounterKunjunganByStatusLanjut::class);
-    Route::get('/beranda/pembiayaan', [BerandaController::class, 'pembiayaan']);
-    Route::get('/beranda/pembiayaan/ranap', [BerandaController::class, 'countPembiayaanRanap']);
-    Route::get('/beranda/pembiayaan/ralan', [BerandaController::class, 'countPembiayaanRalan']);
-    Route::get('/beranda/status', [BerandaController::class, 'statusPasien']);
-    Route::get('/beranda/dokter/{tahun?}/{bulan?}', [BerandaController::class, 'jsonKunjunganDokter']);
-    Route::get('/beranda/registrasi', [RegPeriksaController::class, 'caraRegistrasi']);
-    Route::get('/beranda/periksa', [RegPeriksaController::class, 'statusRegistrasi']);
-    Route::get('/beranda/booking', [RegPeriksaController::class, 'caraBooking']);
-    Route::get('/beranda/dokter', [BerandaController::class, 'jsonKunjunganDokter']);
-    Route::get('/beranda/ralan', [RalanController::class, 'diagramRalanPoli']);
-	Route::get('/beranda/demografi/ralan/kecamatan/{year?}/{month?}', \App\Http\Actions\DemografiPasienRajal::class);
-	Route::get('/beranda/demografi/ralan/kelurahan/{year?}/{month?}', \App\Http\Actions\DemografiPasienRanap::class);
+
     Route::get('/operasi', [OperasiController::class, 'index']);
     Route::get('/operasi/json', [OperasiController::class, 'json']);
     Route::get('/operasi/sectio', [OperasiController::class, 'viewSectio']);
@@ -232,8 +218,9 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('test/{year?}/{month?}', \App\Http\Actions\DemografiPasienRanap::class);
+Route::get('test/{year?}/{month?}/{limit?}', \App\Http\Actions\DemografiKecamatanPasienRanap::class);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 
 require __DIR__ . '/partial/rekammedis/tb.php';
+require __DIR__ . '/partial/beranda.php';

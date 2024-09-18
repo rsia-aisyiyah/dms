@@ -4,8 +4,9 @@ namespace App\Http\Actions;
 
 use App\Models\RegPeriksa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
-class DemografiPasienRajal
+class DemografiKecamatanPasienRajal
 {
 
 	public function __invoke(RegPeriksa $regPeriksa, $year = '', $month = '')
@@ -29,9 +30,12 @@ class DemografiPasienRajal
 
 	}
 
-	protected function groupingByKecamatan(RegPeriksa $regPeriksa, $year, $month)
+	protected function groupingByKecamatan(RegPeriksa $regPeriksa, $year, $month) : Collection
 	{
-		$query = $regPeriksa->with(['kecamatan'])->month($month, $year);
+		$query = $regPeriksa
+			->where('status_lanjut', 'Ralan')
+			->where('stts', 'Sudah')
+			->with(['kecamatan'])->month($month, $year);
 
 		return collect($query->get());
 	}
