@@ -46,7 +46,7 @@ class LoginController extends Controller
 
         if ($user) {
             Auth::login($user);
-            $role = $user->dep_id ? $user->departemen->nama : $user->username;
+            $role = $user->dep_id ? $user->departemen->nama ? $user->departemen->nama : $user->username : $user->username;
             $request->session()->regenerate();
             $request->session()->put('role', $role);
             return redirect('/');
