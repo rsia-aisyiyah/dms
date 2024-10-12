@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive text-sm">
-                                <table class="table table-striped" id="table-visit-dokter" style="width: 100%" cellspacing="0">
+                                {{-- <table class="table table-striped" id="table-visit-dokter" style="width: 100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Bulan</th>
@@ -37,10 +37,32 @@
                                             <th>dr. Pravitasari. Sp.OG</th>
                                         </tr>
                                     </thead>
+                                </table> --}}
+                                <table id="visitTable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Dokter</th>
+                                            <th>Januari</th>
+                                            <th>Februari</th>
+                                            <th>Maret</th>
+                                            <th>April</th>
+                                            <th>Mei</th>
+                                            <th>Juni</th>
+                                            <th>Juli</th>
+                                            <th>Agustus</th>
+                                            <th>September</th>
+                                            <th>Oktober</th>
+                                            <th>November</th>
+                                            <th>Desember</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                    <button id="exportVisit" class="btn btn-success"><i class="fas fa-file-excel mr-2"></i>Export ke XLS</button>
                 </div>
             </div>
         </div>
@@ -51,6 +73,22 @@
     <script>
         $(document).ready(function() {
 
+            $("#exportVisit").click(function(e) {
+                const table = $('#visitTable');
+                if (table && table.length) {
+                    var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
+                    $(table).table2excel({
+                        exclude: ".noExl",
+                        name: "Excel Document Name",
+                        filename: "dataVisiteDokter" + new Date().toISOString().replace(/[\-\:\.]/g, "") + ".xls",
+                        fileext: ".xls",
+                        exclude_img: true,
+                        exclude_links: true,
+                        exclude_inputs: true,
+                        preserveColors: preserveColors
+                    });
+                }
+            });
 
             $('#yearpicker').datetimepicker({
                 format: "YYYY",
@@ -60,90 +98,64 @@
 
             load_data();
 
-            function load_data(tahun) {
-                $('#table-visit-dokter').DataTable({
-                    ajax: {
-                        url: 'visit/json',
-                        dataType: 'json',
-                        data: {
-                            tahun: tahun,
-                        },
+            function load_data(tahun = '') {
+                $.ajax({
+                    url: "http://localhost/dms/ranap/visit/json",
+                    method: "GET",
+                    data: {
+                        tahun: tahun
                     },
-                    processing: true,
-                    serverSide: true,
-                    destroy: false,
-                    deferRender: true,
-                    lengthChange: false,
-                    ordering: false,
-                    searching: false,
-                    stateSave: true,
-                    paging: false,
-                    dom: 'Blfrtip',
-                    initComplete: function(settings, json) {
-                        toastr.success('Data telah dimuat', 'Berhasil');
+                    dataType: "json",
+                    success: function(data) {
+                        var tableBody = $("#visitTable tbody");
+                        tableBody.empty();
+
+                        var doctorData = {};
+
+                        $.each(data, function(month, visits) {
+                            $.each(visits, function(doctor, count) {
+                                if (!doctorData[doctor]) {
+                                    doctorData[doctor] = {
+                                        "Januari": 0,
+                                        "Februari": 0,
+                                        "Maret": 0,
+                                        "April": 0,
+                                        "Mei": 0,
+                                        "Juni": 0,
+                                        "Juli": 0,
+                                        "Agustus": 0,
+                                        "September": 0,
+                                        "Oktober": 0,
+                                        "November": 0,
+                                        "Desember": 0
+                                    };
+                                }
+                                doctorData[doctor][month] = count;
+                            });
+                        });
+
+                        $.each(doctorData, function(doctor, months) {
+                            var row = "<tr>" +
+                                "<td>" + doctor + "</td>" +
+                                "<td>" + months.Januari + "</td>" +
+                                "<td>" + months.Februari + "</td>" +
+                                "<td>" + months.Maret + "</td>" +
+                                "<td>" + months.April + "</td>" +
+                                "<td>" + months.Mei + "</td>" +
+                                "<td>" + months.Juni + "</td>" +
+                                "<td>" + months.Juli + "</td>" +
+                                "<td>" + months.Agustus + "</td>" +
+                                "<td>" + months.September + "</td>" +
+                                "<td>" + months.Oktober + "</td>" +
+                                "<td>" + months.November + "</td>" +
+                                "<td>" + months.Desember + "</td>" +
+                                "</tr>";
+                            tableBody.append(row);
+                        });
                     },
-                    language: {
-                        processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>',
-                        zeroRecords: "Tidak Ditemukan Data",
-                        infoEmpty: "",
-                        info: "Menampilkan sebanyak _START_ ke _END_ dari _TOTAL_ data",
-                        loadingRecords: "Sedang memuat ...",
-                        infoFiltered: "(Disaring dari _MAX_ total baris)",
-                        buttons: {
-                            copyTitle: 'Data telah disalin',
-                            copySuccess: {
-                                _: '%d baris data telah disalin',
-                            },
-                        },
-                    },
-                    buttons: [{
-                            extend: 'copy',
-                            text: '<i class="fas fa-copy"></i> Salin',
-                            className: 'btn btn-info',
-                            title: 'laporan-jumlah-pasien-bayi-{{ date('dmy') }}'
-                        },
-                        {
-                            extend: 'csv',
-                            text: '<i class="fas fa-file-csv"></i> CSV',
-                            className: 'btn btn-info',
-                            title: 'laporan-jumlah-pasien-bayi-{{ date('dmy') }}'
-                        },
-                        {
-                            extend: 'excel',
-                            text: '<i class="fas fa-file-excel"></i> Excel',
-                            className: 'btn btn-info',
-                            title: 'laporan-jumlah-pasien-bayi-{{ date('dmy') }}'
-                        },
-                    ],
-                    columns: [{
-                            data: 'bulan',
-                            name: 'bulan'
-                        },
-                        {
-                            data: 'dokter1',
-                            name: 'dokter1'
-                        },
-                        {
-                            data: 'dokter2',
-                            name: 'dokter2'
-                        },
-                        {
-                            data: 'dokter3',
-                            name: 'dokter3'
-                        },
-                        {
-                            data: 'dokter4',
-                            name: 'dokter4'
-                        },
-                        {
-                            data: 'dokter5',
-                            name: 'dokter5'
-                        },
-                        {
-                            data: 'dokter6',
-                            name: 'dokter6'
-                        },
-                    ],
+                    error: function(error) {
+                        console.log("Error fetching data", error);
+                    }
                 });
             }
 

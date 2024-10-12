@@ -47,10 +47,10 @@
         .table tr td {
             white-space: nowrap;
         }
+
         .table tr th {
             white-space: nowrap;
         }
-
     </style>
 </head>
 
@@ -155,6 +155,8 @@
     <script src="{{ asset('dist/js/adminlte.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('dist/js/script.js') }}"></script>
+    <!-- table to excel -->
+    <script src="{{ asset('dist/js/table2excel.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script>

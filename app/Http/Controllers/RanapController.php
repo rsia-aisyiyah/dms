@@ -351,30 +351,13 @@ class RanapController extends Controller
                     },
                 ])
                 ->groupBy('kd_dokter')
+                ->with('dokter')
                 ->get()
-                ->pluck('jumlah');
+                ->pluck('jumlah', 'dokter.nm_dokter');
 
-            $jumlah1 = empty($query[0]) ? 0 : $query[0];
-            $jumlah2 = empty($query[1]) ? 0 : $query[1];
-            $jumlah3 = empty($query[2]) ? 0 : $query[2];
-            $jumlah4 = empty($query[3]) ? 0 : $query[3];
-            $jumlah5 = empty($query[4]) ? 0 : $query[4];
-            $jumlah6 = empty($query[5]) ? 0 : $query[5];
-
-            $data["$indexBulan"] = (object) [
-                'bulan' => $indexBulan . ' ' . $tahun,
-                'dokter1' => $jumlah1,
-                'dokter2' => $jumlah2,
-                'dokter3' => $jumlah3,
-                'dokter4' => $jumlah4,
-                'dokter5' => $jumlah5,
-                'dokter6' => $jumlah6,
-            ];
-
-            // $data[$indexBulan] = $query;
+            $data[$indexBulan] = $query;
         }
-        // return $data;
-        return DataTables::of($data)->make(true);
+        return response()->json($data);
     }
     public function viewVisitDokter()
     {
