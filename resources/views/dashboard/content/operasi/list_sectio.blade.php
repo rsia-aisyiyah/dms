@@ -30,6 +30,7 @@
                                         <option value="">Semua Dokter</option>
                                         <option value="1.101.1112">dr. Himawan Budityastomo, SpOG</option>
                                         <option value="1.109.1119">dr. Siti Pattihatun Nasyiroh, SpOG</option>
+                                        <option value="1.113.1023">dr. Achmad Dahlan Kadir, Sp.OG</option>
                                     </select>
                                 </div>
                             </div>
@@ -55,8 +56,10 @@
                                     <thead>
                                         <tr role="row">
                                             <th>Nomor Rawat</th>
+                                            <th>NIK</th>
                                             <th>Nama</th>
-                                            <th>Umur/Tanggal Lahir</th>
+                                            <th>Umur</th>
+                                            <th>Tanggal Lahir</th>
                                             <th>Suami</th>
                                             <th>Alamat</th>
                                             <th>Kecamatan</th>
@@ -218,19 +221,34 @@
                                 name: 'no_rawat',
                             },
                             {
+                                data: 'reg_periksa',
+                                render: function(data, type, row) {
+                                    nik = row.reg_periksa?.pasien?.no_ktp
+                                    return nik;
+                                },
+                                name: 'nik',
+                            },
+                            {
                                 data: 'pasien',
                                 render: function(data, type, row) {
-                                    pasien = row.reg_periksa.pasien.nm_pasien
+                                    pasien = row.reg_periksa?.pasien?.nm_pasien
                                     return pasien;
                                 },
                                 name: 'pasien',
                             },
                             {
+                                data: 'umur',
+                                render: function(data, type, row) {
+
+                                    return row.reg_periksa.umurdaftar + ' Th.';
+                                },
+                                name: 'umur',
+                            },
+                            {
                                 data: 'tgl_lahir',
                                 render: function(data, type, row) {
                                     tgl = row.reg_periksa.pasien.tgl_lahir
-                                    umur = row.reg_periksa.umurdaftar
-                                    return umur + ' Th. / ' + formatTanggal(tgl);
+                                    return formatTanggal(tgl);
                                 },
                                 name: 'tgl_lahir',
                             },
