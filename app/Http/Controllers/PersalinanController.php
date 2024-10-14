@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Persalinan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -19,7 +19,7 @@ class PersalinanController extends Controller
             'bigTitle' => 'Persalinan',
             'month' => $awalBulan->translatedFormat('d F Y') . ' s/d ' . $sekarang->translatedFormat('d F Y'),
             'dateNow' => $sekarang->toDateString(),
-            'dateStart' => $awalBulan->toDateString()
+            'dateStart' => $awalBulan->toDateString(),
         ]);
     }
 
@@ -71,12 +71,15 @@ class PersalinanController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->regPeriksa->pasien->alamatpj . ', ' .
-                    $data->regPeriksa->pasien->kelurahanpj . ', ' .
-                    $data->regPeriksa->pasien->kecamatanpj . ', ' .
-                    $data->regPeriksa->pasien->kabupatenpj;
+                $data->regPeriksa->pasien->kelurahanpj . ', ' .
+                $data->regPeriksa->pasien->kecamatanpj . ', ' .
+                $data->regPeriksa->pasien->kabupatenpj;
             })
             ->editColumn('tgl_lahir', function ($data) use ($tanggal) {
-                return $data->regPeriksa->umurdaftar . ' Th' . ' / ' . $tanggal->parse($data->regPeriksa->pasien->tgl_lahir)->translatedFormat('d F Y');
+                return $tanggal->parse($data->regPeriksa->pasien->tgl_lahir)->translatedFormat('d F Y');
+            })
+            ->editColumn('umur', function ($data) {
+                return $data->regPeriksa->umurdaftar . ' Th';
             })
             ->editColumn('pembiayaan', function ($data) {
                 return $data->pembiayaan->png_jawab;

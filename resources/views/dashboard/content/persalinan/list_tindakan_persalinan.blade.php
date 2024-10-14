@@ -30,6 +30,7 @@
                                         <option value="">Semua Dokter</option>
                                         <option value="1.101.1112">dr. Himawan Budityastomo, SpOG</option>
                                         <option value="1.109.1119">dr. Siti Pattihatun Nasyiroh, SpOG</option>
+                                        <option value="1.113.1023">dr. Achmad Dahlan Kadir, Sp.OG</option>
                                     </select>
                                 </div>
                             </div>
@@ -55,8 +56,10 @@
                                     <thead>
                                         <tr role="row">
                                             <th>Nomor Rawat</th>
+                                            <th>NIK</th>
                                             <th>Nama</th>
-                                            <th>Umur/Tanggal Lahir</th>
+                                            <th>Umut</th>
+                                            <th>Tanggal Lahir</th>
                                             <th>Suami</th>
                                             <th>Alamat</th>
                                             <th>Kecamatan</th>
@@ -220,10 +223,22 @@
                             {
                                 data: '',
                                 render: (data, meta, row, x) => {
-                                    console.log('ROW===', row.reg_periksa.pasien);
-                                    return row.no_rawat;
+
+                                    return row.reg_periksa?.pasien.no_ktp;
+                                },
+                                name: 'nik',
+                            },
+                            {
+                                data: '',
+                                render: (data, meta, row, x) => {
+
+                                    return row.reg_periksa?.pasien?.nm_pasien;
                                 },
                                 name: 'pasien',
+                            },
+                            {
+                                data: 'umur',
+                                name: 'umur',
                             },
                             {
                                 data: 'tgl_lahir',
@@ -241,7 +256,6 @@
                                 data: '',
                                 name: 'kecamatan',
                                 render: (data, type, row, meta) => {
-                                    // render row.reg_periksa.pasien.
                                     return row.reg_periksa.pasien.kecamatanpj
                                 }
                             },
