@@ -52,6 +52,7 @@
             white-space: nowrap;
         }
     </style>
+    @stack('css')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
