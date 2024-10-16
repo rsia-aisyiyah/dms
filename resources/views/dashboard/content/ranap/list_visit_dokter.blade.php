@@ -100,7 +100,7 @@
 
             function load_data(tahun = '') {
                 $.ajax({
-                    url: "http://localhost/dms/ranap/visit/json",
+                    url: `${url}/ranap/visit/json`,
                     method: "GET",
                     data: {
                         tahun: tahun
