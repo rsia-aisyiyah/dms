@@ -306,7 +306,7 @@ class RalanController extends Controller
             return Carbon::parse($item->tgl_registrasi)->format('n'); // Group by numeric month (1, 2, ..., 12)
         })->map(function ($monthRecords, $monthNumber) use ($tahun) {
             $groupBySpecialization = $monthRecords->groupBy(function ($item) {
-                return $item->dokter?->kd_sps;
+                return $item->dokter ? $item->dokter->kd_sps : '';
             })->map(function ($specializationRecords) {
                 return $specializationRecords->groupBy('penjab.png_jawab')
                     ->map(function ($item) {
