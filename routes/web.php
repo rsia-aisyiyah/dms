@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Actions\SkriningTbCountByYearAction;
 use App\Http\Controllers\Actions\SkriningTbDataTableAction;
 use App\Http\Controllers\AskepKandunganRalanController;
 use App\Http\Controllers\BerandaController;
@@ -27,7 +26,6 @@ use App\Http\Controllers\RegPeriksaController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\ResumePasienRanap;
-use App\Http\Controllers\RsiaSkriningTbController;
 use App\Http\Controllers\SepController;
 use App\Http\Controllers\SpesialisController;
 use App\Http\Controllers\TarifLaboratorium;
@@ -128,6 +126,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/transfusi/json', [RanapController::class, 'jsonTransfusi']);
     Route::get('/ranap/jk/json', [RanapController::class, 'jsonGenderRanap']);
     Route::get('/ranap/transfusi/rekap/json', [RanapController::class, 'jsonRekapTransfusi']);
+    Route::get('/ranap/pembiayaan/json', [RanapController::class, 'jsonpPembiayaan']);
+    
 
     Route::get('/kamar', [KamarInapController::class, 'jumlahKamar']);
     Route::get('/kamar/rekap', [KamarInapController::class, 'rekapKunjungan']);
@@ -218,7 +218,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('test/{year?}/{month?}/{limit?}', \App\Http\Actions\DemografiKecamatanPasienRanap::class);
+Route::get('test', [RanapController::class, 'jsonKamarInap']);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 

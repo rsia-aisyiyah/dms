@@ -1,4 +1,4 @@
-<div class="col-12 col-sm-12 col-md-4">
+<div class="col-12 col-sm-12 col-md-5">
     <div class="card card-teal">
         <div class="card-header">
             <p class="card-title border-bottom-0">Rekap Kamar</p>
@@ -12,7 +12,7 @@
                             <span class="input-group-text" id="tahun-addon"><i
                                     class="fas fa-calendar"></i></span>
                         </div>
-                            <input type="text" class="form-control" id="tanggal-rekap" name="tanggal" autocomplete="off">
+                        <input type="text" class="form-control" id="tanggal-rekap" name="tanggal" autocomplete="off">
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped text-sm" id="tabel-rekap-ranap" style="width: 100%"

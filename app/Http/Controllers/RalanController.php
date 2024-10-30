@@ -325,6 +325,7 @@ class RalanController extends Controller
                 'dalam' => $groupBySpecialization['S0005'] ?? null,
             ];
         });
+        
         return DataTables::of($data)->make(true);
     }
 

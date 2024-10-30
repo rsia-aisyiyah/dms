@@ -283,6 +283,51 @@ class RanapController extends Controller
             return DataTables::of($data)->make(true);
         }
     }
+
+    public function jsonpPembiayaan(Request $request)
+    {
+
+        $tahun = $request->tahun ? $request->tahun : date('Y');
+
+        $records = RegPeriksa::with('penjab', 'dokter')
+            ->whereYear('tgl_registrasi', $tahun)
+            ->where('status_lanjut', 'Ranap')
+            ->whereHas('kamarInap', function ($query) {
+                $query->where('stts_pulang', '!=', 'Pindah Kamar');
+            })
+            ->where('stts', '!=', 'Batal')
+            ->whereHas('dokter', function ($q) {
+
+                $q->whereIn('dokter.kd_sps', ['S0001', 'S0003']);
+
+            })
+            ->get();
+
+        $data = $records->groupBy(function ($item) {
+            return Carbon::parse($item->tgl_registrasi)->translatedFormat('n'); // Group by numeric month (1, 2, ..., 12
+        })->map(function ($monthRecords, $monthNumber) use ($tahun) {
+            $groupBySpecialization = $monthRecords->groupBy(function ($item) {
+                return $item->dokter ? $item->dokter->kd_sps : '';
+            })->map(function ($specializationRecords) {
+                return $specializationRecords->groupBy('penjab.png_jawab')
+                    ->map(function ($item) {
+                        return $item->count();
+                    })->mapWithKeys(function ($item, $key) {
+                    return strpos($key, 'BPJS') !== false ? ['bpjs' => $item] : [strtolower($key) => $item];
+                })->put('total', $specializationRecords->count());
+            });
+
+            $monthName = Carbon::create()->month($monthNumber)->format('F') . " " . $tahun;
+
+            return (object) [
+                'bulan' => $monthName,
+                'obgyn' => $groupBySpecialization['S0001'] ?? null,
+                'anak' => $groupBySpecialization['S0003'] ?? null,
+            ];
+        })->sortKeys();
+        return DataTables::of($data)->make(true);
+
+    }
     public function jsonGenderRanap(Request $request)
     {
 
