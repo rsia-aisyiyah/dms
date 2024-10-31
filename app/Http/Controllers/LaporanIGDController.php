@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\KamarInap;
-use Carbon\Carbon;
 use App\Models\RegPeriksa;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -30,7 +30,7 @@ class LaporanIGDController extends Controller
             'bigTitle' => 'Laporan IGD',
             'month' => $awalBulan->translatedFormat('d F Y') . ' s/d ' . $sekarang->translatedFormat('d F Y'),
             'dateNow' => $sekarang->translatedFormat('d F Y'),
-            'dateStart' => $awalBulan->toDateString()
+            'dateStart' => $awalBulan->toDateString(),
 
         ]);
     }
@@ -50,7 +50,6 @@ class LaporanIGDController extends Controller
         $hcu = KamarInap::where('kd_kamar', 'like', '%HCU%')
             ->where('stts_pulang', '!=', 'Pindah Kamar');
 
-
         if ($request->ajax()) {
             if ($tgl_pertama && $tgl_kedua) {
                 $igd->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
@@ -58,10 +57,10 @@ class LaporanIGDController extends Controller
             } else {
                 $igd->whereYear('tgl_registrasi', $tanggal->year)
                     ->whereMonth('tgl_registrasi', $tanggal->month);
-                $hcu->whereYear('tgl_masuk', $tanggal->year)->whereMonth('tgl_masuk', $tanggal->month);
+                $hcu->whereYear('tgl_masuk', $tanggal->year)
+                    ->whereMonth('tgl_masuk', $tanggal->month);
             }
         }
-
 
         $dataIgd = $igd->get()->pluck('jumlah');
         $data = [
@@ -91,28 +90,29 @@ class LaporanIGDController extends Controller
 
         if ($request->ajax()) {
             $tgl_pertama && $tgl_kedua ?
-                $data->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua])
+            $data->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua])
                 ->with('bridgingSep')
-                ->get()
-                :
-                $data->whereMonth('tgl_registrasi', '04')
-                ->whereYear('tgl_registrasi', '2022')->with('bridgingSep')->get();
+            :
+            $data->whereMonth('tgl_registrasi', date('m'))
+                ->whereYear('tgl_registrasi', date('Y'))
+                ->with('bridgingSep');
+
             if ($spesialis) {
                 $data->whereHas('dokter.spesialis', function ($query) use ($spesialis) {
                     $query->where('kd_sps', 'like', "%$spesialis%");
-                })->get();
+                });
             }
             if ($status_lanjut) {
-                $data->where('status_lanjut', $status_lanjut)->get();
+                $data->where('status_lanjut', $status_lanjut);
             }
             if ($pembiayaan) {
                 $data->whereHas('penjab', function ($query) use ($pembiayaan) {
                     $query->where('png_jawab', 'like', '%' . $pembiayaan . '%');
-                })->get();
+                });
             }
         }
 
-        return DataTables::of($data)
+        return DataTables::of($data->get())
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && $request->get('search')['value']) {
                     return $query->whereHas('pasien', function ($query) use ($request) {
@@ -131,9 +131,9 @@ class LaporanIGDController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                    . $data->pasien->kelurahan->nm_kel . ", "
-                    . $data->pasien->kecamatan->nm_kec . ", "
-                    . $data->pasien->kabupaten->nm_kab;
+                . $data->pasien->kelurahan->nm_kel . ", "
+                . $data->pasien->kecamatan->nm_kec . ", "
+                . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_sps', function ($data) {
                 return $data->dokter->spesialis->nm_sps;
