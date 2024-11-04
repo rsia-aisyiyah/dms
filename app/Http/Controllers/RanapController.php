@@ -33,7 +33,7 @@ class RanapController extends Controller
     public function json(Request $request)
     {
         $tanggal = new Carbon('this month');
-        $data = RegPeriksa::select('reg_periksa.no_rawat', 'tgl_registrasi', 'kd_dokter', 'no_rkm_medis', 'stts_daftar', 'kd_pj', 'bridging_sep.tglsep')
+        $data = RegPeriksa::select('reg_periksa.no_rawat', 'tgl_registrasi', 'kd_dokter', 'no_rkm_medis', 'stts_daftar', 'kd_pj', 'bridging_sep.tglsep', 'umurdaftar', 'sttsumur')
             ->leftJoin('bridging_sep', function ($join) {
                 $join->on('reg_periksa.no_rawat', '=', 'bridging_sep.no_rawat')
                     ->whereNotNull('bridging_sep.no_rawat');
@@ -79,11 +79,19 @@ class RanapController extends Controller
                 return $tanggal->parse($data->tgl_registrasi)->translatedFormat('d F Y');
             })
             ->editColumn('nm_pasien', function ($data) use ($tanggal) {
-                return $data->pasien->nm_pasien . "<br/>" .
-                "<small class='text-red'> " . $tanggal->parse($data->pasien->tgl_lahir)->translatedFormat('d F Y') . "</small>";
+                return $data->pasien->nm_pasien;
             })
             ->editColumn('no_tlp', function ($data) {
                 return $data->pasien->no_tlp;
+            })
+            ->editColumn('jk', function ($data) {
+                return $data->pasien->jk;
+            })
+            ->editColumn('umurdaftar', function ($data) {
+                return $data->umurdaftar . " " . $data->sttsumur;
+            })
+            ->editColumn('tgl_lahir', function ($data) use ($tanggal) {
+                return $tanggal->parse($data->pasien->tgl_lahir)->translatedFormat('d F Y');
             })
             ->editColumn('stts_daftar', function ($data) {
                 if ($data->stts_daftar == 'Lama') {
@@ -110,6 +118,12 @@ class RanapController extends Controller
             ->editColumn('tgl_masuk', function ($data) use ($tanggal) {
                 return $tanggal->parse($data->kamarInap->tgl_masuk)->translatedFormat('d F Y');
             })
+            ->editColumn('diagnosa_awal', function ($data) {
+                return $data->kamarInap->diagnosa_awal;
+            })
+            ->editColumn('diagnosa_akhir', function ($data) {
+                return $data->kamarInap->diagnosa_akhir;
+            })
             ->editColumn('tgl_keluar', function ($data) use ($tanggal) {
                 if ($data->kamarInap->tgl_keluar == '0000-00-00') {
                     return '<span class="badge badge-warning">Belum Pulang</span>';
@@ -119,7 +133,7 @@ class RanapController extends Controller
             })
             ->rawColumns(['tgl_keluar', 'stts_daftar', 'nm_pasien'])
             ->editColumn('kamar', function ($data) {
-                return $data->kamarInap->kd_kamar;
+                return $data->kamarInap->kamar->bangsal->nm_bangsal;
             })->editColumn('tglsep', function ($data) use ($tanggal) {
             $data->tglsep == null ? $tgl_sep = '-' :
             $tgl_sep = $tanggal->parse($data->tglsep)->translatedFormat('d F Y');
@@ -449,7 +463,7 @@ class RanapController extends Controller
             ->whereHas('jnsPerawatanInap', function ($q) {
                 $q->where('nm_perawatan', 'like', '%transfusi%');
             })
-            ->with('dokter')
+            ->with('dokter', 'kamarInap.kamar.bangsal')
             ->groupBy('no_rawat');
 
         if ($request->ajax()) {
@@ -481,6 +495,9 @@ class RanapController extends Controller
             })
             ->editColumn('spesialis', function ($data) {
                 return $data->dokter->spesialis->nm_sps;
+            })
+            ->editColumn('kamar', function ($data) {
+                return $data->kamarInap->kamar->bangsal->nm_bangsal;
             })
             ->make(true);
     }

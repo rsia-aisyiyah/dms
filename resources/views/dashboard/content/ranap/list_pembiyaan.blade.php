@@ -31,7 +31,7 @@
                                         <th rowspan="2">Bulan</th>
                                         <th colspan="3" class="text-center">Obgyn</th>
                                         <th colspan="3" class="text-center">Anak</th>
-                                        <th colspan="3" class="text-center">Total</th>
+                                        <th rowspan="2" class="text-center">Total</th>
                                     </tr>
                                     <!-- Sub-headers -->
                                     <tr>
@@ -41,7 +41,6 @@
                                         <th class="bg-info text-white">BPJS</th>
                                         <th class="bg-success text-white">Umum</th>
                                         <th class="bg-warning text-dark">T. Anak</th>
-                                        <th class=""></th>
 
                                     </tr>
                                 </thead>
@@ -177,7 +176,6 @@
                             },
                             {
                                 render: (data, type, row, meta) => {
-                                    console.log(row);
                                     const {
                                         anak,
                                         obgyn

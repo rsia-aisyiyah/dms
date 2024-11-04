@@ -23,4 +23,8 @@ class RawatInapDr extends Model
     {
         return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat');
     }
+    public function kamarInap()
+    {
+        return $this->belongsTo(KamarInap::class, 'no_rawat', 'no_rawat');
+    }
 }
