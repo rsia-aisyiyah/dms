@@ -120,6 +120,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/bayi/json', [PasienBayiController::class, 'json']);
     Route::get('/ranap/bayis', [PasienBayiController::class, 'getTahun']);
     Route::get('/ranap/visit/json', [RanapController::class, 'jsonVisitDokter']);
+    Route::get('/ranap/visit/cppt/json', [RanapController::class, 'getCpptVisitDokter']);
     Route::get('/ranap/visit', [RanapController::class, 'viewVisitDokter']);
     Route::get('/ranap/bayar/json', [RanapController::class, 'jsonStatusBayar']);
     Route::get('/ranap/transfusi', [RanapController::class, 'viewTransfusi']);
@@ -127,7 +128,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/jk/json', [RanapController::class, 'jsonGenderRanap']);
     Route::get('/ranap/transfusi/rekap/json', [RanapController::class, 'jsonRekapTransfusi']);
     Route::get('/ranap/pembiayaan/json', [RanapController::class, 'jsonpPembiayaan']);
-    
 
     Route::get('/kamar', [KamarInapController::class, 'jumlahKamar']);
     Route::get('/kamar/rekap', [KamarInapController::class, 'rekapKunjungan']);

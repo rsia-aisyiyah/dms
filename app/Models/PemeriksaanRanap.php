@@ -35,4 +35,8 @@ class PemeriksaanRanap extends Model
     {
         return $this->belongsTo(Petugas::class, 'nip', 'nip');
     }
+    public function kamarInap()
+    {
+        return $this->hasMany(KamarInap::class, 'no_rawat', 'no_rawat');
+    }
 }

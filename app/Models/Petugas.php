@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Operasi;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Petugas extends Model
 {
@@ -14,5 +14,10 @@ class Petugas extends Model
     public function operasi()
     {
         return $this->hasMany(Operasi::class, 'omloop', 'nip');
+    }
+
+    public function dokter()
+    {
+        return $this->hasOne(Dokter::class, 'kd_dokter', 'nip');
     }
 }

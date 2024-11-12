@@ -25,19 +25,6 @@
                                 </div>
                             </div>
                             <div class="table-responsive text-sm">
-                                {{-- <table class="table table-striped" id="table-visit-dokter" style="width: 100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Bulan</th>
-                                            <th>dr. Himawan Budityastomo, SpO.G</th>
-                                            <th>dr. Dwi Riyanto, Sp.A</th>
-                                            <th>dr. Siti Pattihatun Nasyiroh, Sp.OG</th>
-                                            <th>dr. Rendy Yoga Ardian, Sp.A</th>
-                                            <th>dr. Achmad Dahlan K. Sp.OG</th>
-                                            <th>dr. Pravitasari. Sp.OG</th>
-                                        </tr>
-                                    </thead>
-                                </table> --}}
                                 <table id="visitTable" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
@@ -67,11 +54,206 @@
             </div>
         </div>
     </div>
+    <div class="table-responsive">
+        <div class="col-sm-8">
+            <div class="card card-teal">
+                <div class="card-header">
+                    <p class="card-title border-bottom-0">{{ $title }} </p>
+                    <div class="card-tools mr-4" id="bulan">
+                        <span><strong>{{ $month }}</strong></span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label>Bulan</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="tahun-addon"><i class="fas fa-calendar"></i></span>
+                                        </div>
+                                        <input type="text" id="monthPickerCpptVisit" class="form-control datetimepicker-input monthpicker" data-toggle="datetimepicker" aria-describedby="tahun-addon" data-target="#monthPickerCpptVisit" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive text-sm">
+                                <table class="table table-striped table-bordered" id="table-cppt-visit">
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 @endsection
 
 @push('scripts')
     <script>
+        function parseTanggalVisit(tgl, jam) {
+            if (tgl === "0000-00-00" && jam === "00:00:00") {
+                return new Date(); // current date and time
+            }
+            return new Date(`${tgl}T${jam}`)
+        }
+
+
+
+        function isCpptInKamar(examTime, kamarInap) {
+            const invalidTanggal = kamarInap.tgl_keluar === "0000-00-00" && kamarInap.jam_keluar === "00:00:00"
+            if (invalidTanggal) {
+                return false;
+            }
+            const roomStart = parseTanggalVisit(kamarInap.tgl_masuk, kamarInap.jam_masuk);
+            const roomEnd = parseTanggalVisit(kamarInap.tgl_keluar, kamarInap.jam_keluar);
+            return examTime >= roomStart && examTime <= roomEnd;
+        }
+
+        function loadTableCpptVisit(month = '', year = '') {
+            $('#table-cppt-visit').DataTable({
+                ajax: {
+                    url: `${url}/ranap/visit/cppt/json`,
+                    data: {
+                        month: month,
+                        year: year,
+                    },
+                },
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                deferRender: true,
+                lengthChange: true,
+                ordering: false,
+                searching: true,
+                stateSave: false,
+                scrollY: 300,
+                scrollX: true,
+                scroller: {
+                    loadingIndicator: true
+                },
+                paging: true,
+                dom: 'Blfrtip',
+                initComplete: function(settings, json) {
+                    toastr.success('Data telah dimuat', 'Berhasil');
+                },
+                language: {
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>',
+                    zeroRecords: "Tidak Ditemukan Data",
+                    infoEmpty: "",
+                    info: "Menampilkan sebanyak _START_ ke _END_ dari _TOTAL_ data",
+                    loadingRecords: "Sedang memuat ...",
+                    infoFiltered: "(Disaring dari _MAX_ total baris)",
+                    buttons: {
+                        copyTitle: 'Data telah disalin',
+                        copySuccess: {
+                            _: '%d baris data telah disalin',
+                        },
+                    },
+                    lengthMenu: '<div class="text-md mt-3">Tampilkan <select>' +
+                        '<option value="50">50</option>' +
+                        '<option value="100">100</option>' +
+                        '<option value="200">200</option>' +
+                        '<option value="250">250</option>' +
+                        '<option value="500">500</option>' +
+                        '<option value="-1">Semua</option>' +
+                        '</select> Baris',
+                    paginate: {
+                        "first": "Pertama",
+                        "last": "Terakhir",
+                        "next": "Selanjutnya",
+                        "previous": "Sebelumnya"
+                    },
+                    search: 'Cari Pasien : ',
+                },
+                buttons: [{
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> Salin',
+                        className: 'btn btn-info',
+                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fas fa-file-csv"></i> CSV',
+                        className: 'btn btn-info',
+                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        className: 'btn btn-info',
+                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                    },
+                ],
+                columns: [{
+                        name: 'no_rawat',
+                        data: 'no_rawat',
+                        render: (data, type, row, meta) => {
+                            return data;
+                        },
+                        title: 'No. Rawat',
+                    },
+                    {
+                        name: 'nama',
+                        data: 'reg_periksa.pasien.nm_pasien',
+                        render: (data, type, row, meta) => {
+                            return data;
+                        },
+                        title: 'Nama',
+                    },
+                    {
+                        name: 'tanggal',
+                        data: 'tgl_perawatan',
+                        render: (data, type, row, meta) => {
+                            return formatTanggal(data);
+                        },
+                        title: 'Tgl. Pemeriksaan',
+                    },
+                    {
+                        name: 'jam',
+                        data: 'jam_rawat',
+                        render: (data, type, row, meta) => {
+                            return data;
+                        },
+                        title: 'Jam',
+                    },
+                    {
+                        name: 'dokter',
+                        data: 'petugas.nama',
+                        render: (data, type, row, meta) => {
+                            return data;
+                        },
+                        title: 'Dokter DPJP',
+                    },
+                    {
+                        name: 'kamar_inap',
+                        data: 'kamar_inap',
+                        render: (data, type, row, meta) => {
+                            let kamar = '';
+                            if (data) {
+                                kamar = data;
+                            } else {
+                                kamar = row.reg_periksa.ranap_gabung.kamarInap
+                            }
+                            const examTime = parseTanggalVisit(row.tgl_perawatan, row.jam_rawat);
+                            for (const room of kamar) {
+                                if (isCpptInKamar(examTime, room)) {
+                                    examinedRoom = room.kamar.bangsal.nm_bangsal;
+                                    break;
+                                }
+                            }
+                            return examinedRoom;
+                        },
+                        title: 'Kamar',
+                    },
+                ],
+            });
+        }
         $(document).ready(function() {
+            loadTableCpptVisit()
 
             $("#exportVisit").click(function(e) {
                 const table = $('#visitTable');
@@ -96,6 +278,28 @@
                 viewMode: "years"
             });
 
+            $('.yearpicker').datetimepicker({
+                format: "YYYY",
+                useCurrent: false,
+                viewMode: "years",
+
+            });
+            $('.monthpicker').datetimepicker({
+                format: "MM-YYYY",
+                useCurrent: false,
+                viewMode: "months",
+
+            });
+
+
+
+
+            $('#monthPickerCpptVisit').on('change.datetimepicker', function(e) {
+                const month = e.date.month() + 1;
+                const year = e.date.year();
+                loadTableCpptVisit(month, year)
+
+            })
             load_data();
 
             function load_data(tahun = '') {

@@ -6,6 +6,7 @@ use App\Models\DiagnosaPasien;
 use App\Models\Dokter;
 use App\Models\RawatInapDr;
 use App\Models\RegPeriksa;
+use App\Services\VisitDokterService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -387,6 +388,7 @@ class RanapController extends Controller
 
     public function jsonVisitDokter(Request $request)
     {
+        $visit = new VisitDokterService();
         $tanggal = new Carbon('this month');
         $tahun = $request->tahun;
         $tahun = $request->tahun ? $request->tahun : date('Y');
@@ -418,6 +420,15 @@ class RanapController extends Controller
         }
         return response()->json($data);
     }
+
+    public function getCpptVisitDokter(Request $request)
+    {
+        $visit = new VisitDokterService();
+        $dokter = $request->dokter;
+        $data = $visit->getVisitData($request);
+        return DataTables::of($data)->make(true);
+    }
+
     public function viewVisitDokter()
     {
         $tanggal = new Carbon('this month');

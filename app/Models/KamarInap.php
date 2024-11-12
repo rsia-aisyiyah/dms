@@ -22,4 +22,6 @@ class KamarInap extends Model
     {
         return $this->hasMany(RegPeriksa::class, 'no_rawat', 'no_rawat');
     }
+
+    
 }
