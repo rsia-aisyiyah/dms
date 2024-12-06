@@ -48,7 +48,7 @@
                 grafikCapaianSkriningTbInstance.destroy();
             }
             grafikCapaianSkriningTbInstance = new Chart(grafikCapaianSkriningTb, {
-                type: 'pie',
+                type: 'line',
                 data: {
                     labels: label,
                     datasets: [{
@@ -77,11 +77,19 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grace: "5%"
+                        }
+                    },
                     plugins: {
                         legend: {
                             display: false
                         },
                         datalabels: {
+                            anchor: 'end',
+                            align: 'end',
                             formatter: function(value) {
                                 return `${value}%`;
                             }

@@ -13,9 +13,9 @@
                 </div>
                 <label for="blnSkriningTbPoli"></label>
                 <input type="text" id="blnSkriningTbPoli" class="form-control monthPicker"
-                       data-toggle="datetimepicker" aria-describedby="blnSkriningTbPoli"
-                       data-target="#blnSkriningTbPoli"
-                       autocomplete="off"/>
+                    data-toggle="datetimepicker" aria-describedby="blnSkriningTbPoli"
+                    data-target="#blnSkriningTbPoli"
+                    autocomplete="off" />
 
             </div>
         </x-card.footer>
@@ -53,7 +53,7 @@
                 chartSkriningByPoliInstance.destroy();
             }
             chartSkriningByPoliInstance = new Chart(grafikSkriningByPoli, {
-                type: 'bar',
+                type: 'pie',
                 data: {
                     labels: label,
                     datasets: [{
@@ -94,7 +94,7 @@
                         },
                         tooltip: {
                             callbacks: {
-                                title: function (context) {
+                                title: function(context) {
                                     const label = context[0].label;
                                     let result = label;
 
@@ -103,10 +103,10 @@
                                         type: 'GET',
                                         dataType: 'json',
                                         async: false,
-                                        success: function (response) {
+                                        success: function(response) {
                                             result = response.nm_poli;
                                         },
-                                        error: function (xhr, status, error) {
+                                        error: function(xhr, status, error) {
                                             console.error('Error fetching tooltip data:', error);
                                             result = label;
                                         }
@@ -118,9 +118,9 @@
                             }
                         },
                         datalabels: {
-                            anchor : 'end',
-                            align: 'end',
-                            formatter: function (value, ctx) {
+                            anchor: 'mid',
+                            align: 'mid',
+                            formatter: function(value, ctx) {
                                 let sum = 0;
                                 let dataArr = ctx.chart.data.datasets[0].data;
                                 dataArr.forEach(data => {
@@ -134,7 +134,5 @@
                 }
             })
         }
-
-
     </script>
 @endpush

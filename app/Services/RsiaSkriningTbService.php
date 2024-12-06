@@ -14,18 +14,27 @@ class RsiaSkriningTbService
         $query = $skrining->with([
             'pasien' => function ($query) {
                 $query->with(['kecamatan', 'kelurahan', 'kabupaten']);
-            }, 'pegawai', 'poliklinik', 'regPeriksa']);
+            }, 'pegawai', 'poliklinik', 'regPeriksa'])
+            ->whereHas('regPeriksa', function ($query) {
+                $query->where('stts', 'Sudah');
+            });
 
         if ($year) {
-            $query = $query->year($year);
+            $query = $query->year($year)->whereHas('regPeriksa', function ($query) use ($year) {
+                $query->whereYear('tgl_registrasi', $year);
+            });
         }
 
         if ($month) {
-            $query = $query->year($year)->month($month);
+            $query = $query->year($year)->month($month)->whereHas('regPeriksa', function ($query) use ($month, $year) {
+                $query->whereMonth('tgl_registrasi', $month)->whereYear('tgl_registrasi', $year);
+            });
         }
 
         if (!$year && !$month) {
-            $query = $query->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'));
+            $query = $query->whereMonth('tanggal', date('m'))->whereYear('tanggal', date('Y'))->whereHas('regPeriksa', function ($query) {
+                $query->whereMonth('tgl_registrasi', date('m'))->whereYear('tgl_registrasi', date('Y'));
+            });
         }
         return $query;
     }
@@ -34,21 +43,21 @@ class RsiaSkriningTbService
 
         $query = $this->filterByYearAndMonth(new RsiaSkriningTb(), $year, $month);
         return DataTables::of($query)
-	        ->filter(function ($query) use($month, $year) {
-	        	$request = request();
-	        	if($request->has('search') && $request->get('search')['value']) {
-					$keyword = $request->get('search')['value'];
-			        return $query->whereHas('pasien', function ($query) use ($keyword) {
-				        $query->where('nm_pasien', 'like', '%' . $keyword . '%')
-				        ->orWhereHas('kecamatan', function ($query) use ($keyword) {
-					        $query->where('nm_kec', 'like', '%' . $keyword . '%');
-				        });
-			        })->orWhereHas('poliklinik', function ($query) use ($keyword, $month, $year) {
-				        $query->where('nm_poli', 'like', '%' . $keyword . '%');
-			        });
-		        }
-	        })
-	        ->make(true);
+            ->filter(function ($query) use ($month, $year) {
+                $request = request();
+                if ($request->has('search') && $request->get('search')['value']) {
+                    $keyword = $request->get('search')['value'];
+                    return $query->whereHas('pasien', function ($query) use ($keyword) {
+                        $query->where('nm_pasien', 'like', '%' . $keyword . '%')
+                            ->orWhereHas('kecamatan', function ($query) use ($keyword) {
+                                $query->where('nm_kec', 'like', '%' . $keyword . '%');
+                            });
+                    })->orWhereHas('poliklinik', function ($query) use ($keyword, $month, $year) {
+                        $query->where('nm_poli', 'like', '%' . $keyword . '%');
+                    });
+                }
+            })
+            ->make(true);
     }
 
 }

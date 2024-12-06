@@ -8,7 +8,7 @@
         <x-card.body>
             <div class="table-responsive text-sm">
                 <table class="table table-bordered table-striped table-hover table-sm" id="tableSkriningTb"
-                       style="width: 100%">
+                    style="width: 100%">
 
                 </table>
             </div>
@@ -18,7 +18,7 @@
                 <div class="col-3">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="radioBlnSkriningTb" id="radioBlnSkriningTb1"
-                               checked="">
+                            checked="">
                         <label class="form-check-label" for="radioBlnSkriningTb1">Data Bulanan</label>
                     </div>
                     <div class="input-group">
@@ -26,9 +26,9 @@
                             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                         </div>
                         <input type="text" id="blnSkriningTb" class="form-control monthPicker"
-                               data-toggle="datetimepicker" aria-describedby="blnSkriningTb"
-                               data-target="#blnSkriningTb"
-                               autocomplete="off"/>
+                            data-toggle="datetimepicker" aria-describedby="blnSkriningTb"
+                            data-target="#blnSkriningTb"
+                            autocomplete="off" />
 
                     </div>
                 </div>
@@ -42,9 +42,9 @@
                             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                         </div>
                         <input type="text" id="tahunSkriningTb" class="form-control yearPicker"
-                               data-toggle="datetimepicker" aria-describedby="tahunSkriningTb"
-                               data-target="#tahunSkriningTb"
-                               autocomplete="off"/>
+                            data-toggle="datetimepicker" aria-describedby="tahunSkriningTb"
+                            data-target="#tahunSkriningTb"
+                            autocomplete="off" />
 
                     </div>
                 </div>
@@ -76,7 +76,7 @@
             radioBlnSkriningTb.trigger('change')
         })
 
-        radioBlnSkriningTb.change(function () {
+        radioBlnSkriningTb.change(function() {
             if ($('#radioBlnSkriningTb1').is(':checked')) {
                 $('#blnSkriningTb').prop('disabled', false); // Enable monthly input
                 $('#tahunSkriningTb').prop('disabled', true); // Disable yearly input
@@ -133,11 +133,11 @@
                     type: 'GET',
                 },
                 buttons: [{
-                    extend: 'copy',
-                    text: '<i class="fas fa-copy"></i> Salin',
-                    className: 'btn btn-info mb-2',
-                    title: 'tabel-skrining-tb-{{ date('dmy') }}'
-                },
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> Salin',
+                        className: 'btn btn-info mb-2',
+                        title: 'tabel-skrining-tb-{{ date('dmy') }}'
+                    },
                     {
                         extend: 'csv',
                         text: '<i class="fas fa-file-csv"></i> CSV',
@@ -152,10 +152,10 @@
                     },
                 ],
                 columns: [{
-                    title: 'Tgl. Skrining',
-                    name: 'tanggal',
-                    data: 'tanggal',
-                },
+                        title: 'Tgl. Skrining',
+                        name: 'tanggal',
+                        data: 'tanggal',
+                    },
                     {
                         title: 'No. Rawat',
                         data: 'no_rawat',
@@ -173,7 +173,7 @@
                     {
                         title: 'Umur',
                         name: 'pasien',
-                        data: function (data, type, row) {
+                        data: function(data, type, row) {
                             const {
                                 reg_periksa
                             } = data;
@@ -183,7 +183,7 @@
                     {
                         title: 'Alamat',
                         name: 'pasien',
-                        data: function (data, type, row) {
+                        data: function(data, type, row) {
                             const {
                                 kecamatan,
                                 kelurahan,
