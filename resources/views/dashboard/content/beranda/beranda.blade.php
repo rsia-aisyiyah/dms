@@ -57,8 +57,8 @@
 
     <div class="row">
         <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
+        <x-bed-turn-over.bor spc="anak"></x-bed-turn-over.bor>
     </div>
-
 @endsection
 
 @push('scripts')

@@ -216,9 +216,11 @@ Route::middleware('auth')->group(function () {
         $route->get('tb/skrining/{year?}/{month?}', SkriningTbDataTableAction::class);
     });
 
+    Route::get('bor/{specialist}');
+
 });
 
-Route::get('test', [RanapController::class, 'jsonKamarInap']);
+// Route::get('test', [RanapController::class, 'jsonKamarInap']);
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 

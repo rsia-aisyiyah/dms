@@ -22,6 +22,11 @@ class KamarInap extends Model
     {
         return $this->hasMany(RegPeriksa::class, 'no_rawat', 'no_rawat');
     }
+    public function scopeLamaInap($year, $month)
+    {
+        return $this->select('lama')->whereMonth('tgl_keluar', $month)
+            ->whereYear('tgl_keluar', $year);
 
-    
+    }
+
 }
