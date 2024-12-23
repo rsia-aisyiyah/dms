@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Services\RsiaBorService;
 
 class BorController extends Controller
 {
-    public function index()
+    public function index(RsiaBorService $bor, string $specialist, int $year = null)
     {
-        
+        return $bor->get($specialist, $year);
     }
 }

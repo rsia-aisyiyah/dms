@@ -22,6 +22,15 @@ class RsiaBorService
     {
         $this->specialist = $specialist;
     }
+    function setMonth($month)
+    {
+        $this->month = $month;
+    }
+    function setYear($year)
+    {
+        $this->year = $year;
+    }
+
     function getCountRawat()
     {
         $kamarInap = KamarInap::whereMonth('tgl_keluar', $this->month)
@@ -48,19 +57,26 @@ class RsiaBorService
         return $kamarLog ? $kamarLog->jumlah : 0;
     }
 
-    function get(string $specialist)
+    function get(string $specialist, int $year = null)
     {
         $this->setSpecialist($specialist);
-        $numerator = $this->getCountRawat();
-        $denumerator = $this->getDaysOnMonth() * $this->getCountTempatTidur();
-        $jumlahBor = $this->getCountTempatTidur() ? $numerator / $denumerator * 100 : 0;
-        return [
-            'month' => Carbon::create()->month($this->month)->translatedFormat('F'),
-            'countRawat' => $this->getCountRawat(),
-            'daysOnMonth' => $this->getDaysOnMonth(),
-            'jumlahKamar' => $this->getCountTempatTidur(),
-            'jumlahBor' => number_format($jumlahBor, 2),
-        ];
+        $this->setYear($year ? $year : date('Y'));
+        for ($i = 1; $i <= 12; $i++) {
+            $this->setMonth($i);
+            $numerator = $this->getCountRawat();
+            $denumerator = $this->getDaysOnMonth() * $this->getCountTempatTidur();
+            $jumlahBor = $this->getCountTempatTidur() ? $numerator / $denumerator * 100 : 0;
+            $data[] = [
+                'month' => Carbon::create()->month($i)->translatedFormat('F'),
+                'year' => $this->year,
+                'countRawat' => $this->getCountRawat(),
+                'daysOnMonth' => $this->getDaysOnMonth(),
+                'jumlahKamar' => $this->getCountTempatTidur(),
+                'jumlahBor' => number_format($jumlahBor, 2),
+            ];
+        }
+
+        return $data;
     }
 
 }

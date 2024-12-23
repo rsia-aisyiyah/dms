@@ -57,7 +57,27 @@
 
     <div class="row">
         <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
-        <x-bed-turn-over.bor spc="anak"></x-bed-turn-over.bor>
+        <div class="col-lg-12 col-sm-12 col-md-12">
+            <x-card>
+                <x-card.header>
+                    <div class="card-title">
+                        <strong>Bed Turn Over</strong>
+                    </div>
+                </x-card.header>
+                <x-card.body>
+                    <div class="row">
+
+                        <div class="col-lg-6 col-sm-12 col-md-12">
+                            <x-bed-turn-over.bor spc="anak"></x-bed-turn-over.bor>
+                        </div>
+                        <div class="col-lg-6 col-sm-12 col-md-12">
+                            <x-bed-turn-over.bor spc="kandungan"></x-bed-turn-over.bor>
+                        </div>
+                    </div>
+
+                </x-card.body>
+            </x-card>
+        </div>
     </div>
 @endsection
 
