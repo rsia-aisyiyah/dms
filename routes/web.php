@@ -3,7 +3,6 @@
 use App\Http\Controllers\Actions\SkriningTbDataTableAction;
 use App\Http\Controllers\AskepKandunganRalanController;
 use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\BorController;
 use App\Http\Controllers\Collection\KunjunganPoliklinikDokterCollection;
 use App\Http\Controllers\DiagnosaPasienController;
 use App\Http\Controllers\DokterController;
@@ -27,7 +26,6 @@ use App\Http\Controllers\RegPeriksaController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\ResumePasienRanap;
-use App\Http\Controllers\RsiaLogJumlahKamarController;
 use App\Http\Controllers\SepController;
 use App\Http\Controllers\SpesialisController;
 use App\Http\Controllers\TarifLaboratorium;
@@ -218,12 +216,10 @@ Route::middleware('auth')->group(function () {
         $route->get('tb/skrining/{year?}/{month?}', SkriningTbDataTableAction::class);
     });
 
-    Route::get('bed-turn-over/bor/{specialist}/{year?}', [BorController::class, 'index']);
-    Route::get('log/kamar', [RsiaLogJumlahKamarController::class, 'index']);
-
 });
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 
 require __DIR__ . '/partial/rekammedis/tb.php';
+require __DIR__ . '/partial/rekammedis/bto.php';
 require __DIR__ . '/partial/beranda.php';

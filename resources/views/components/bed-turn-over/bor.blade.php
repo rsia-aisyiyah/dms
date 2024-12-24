@@ -35,10 +35,10 @@
 
                     const rows = data.map((item, index) => {
                         return `<tr>
-                            <td>${item.month} ${item.tahun}</td>
+                            <td>${item.month} ${item.year}</td>
                             <td>${item.countRawat}</td>
                             <td>${item.daysOnMonth}</td>
-                            <td>${item.jumlahKamar} ${item.jumlahKamar !==0 ?  '' : `<a href="javascript:void(0)" onclick="setJumlahKamarInap('${spesialis}','${item.jumlahKamar}' ,'${index}', ${item.tahun})" class="text-sm"><i class="fas fa-search"></i></a>` }</td>
+                            <td>${item.jumlahKamar} ${item.jumlahKamar !==0 ?  '' : `<a href="javascript:void(0)" onclick="setJumlahKamarInap('${spesialis}','${item.jumlahKamar}' ,'${index+1}', ${item.year})" class="text-sm"><i class="fas fa-search"></i></a>` }</td>
                             <td>${item.jumlahBor} %</td>
                             </tr>`;
                     })
@@ -51,13 +51,14 @@
         function setJumlahKamarInap(spesialis, jumlah, index, tahun) {
             $.post(`${url}/log/kamar`, {
                 _token: "{{ csrf_token() }}",
-                spesialis: spesialis,
+                kategori: spesialis,
                 jumlah: jumlah,
-                index: index,
+                bulan: index,
                 tahun: tahun,
-            }, (data) => {
-                console.log(data);
-                renderBor(spesialis);
+            }).done((response) => {
+                renderBor(spesialis, tahun);
+            }).fail((error) => {
+                alert(error.responseText)
             })
 
         }
