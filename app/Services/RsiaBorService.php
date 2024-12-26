@@ -34,12 +34,22 @@ class RsiaBorService
     function getCountRawat()
     {
         $kamarInap = KamarInap::whereMonth('tgl_keluar', $this->month)
-            ->whereYear('tgl_keluar', $this->year)->select('lama')
-            ->where('kd_kamar', 'like', '%' . $this->specialist . '%')
-            ->get()
-            ->sum('lama');
+            ->whereYear('tgl_keluar', $this->year)
+            ->select('lama');
+
+        if ($this->specialist === 'all') {
+            $kamarInap->where(function ($query) {
+                $query->where('kd_kamar', 'like', '%' . 'Kandungan' . '%')
+                    ->orWhere('kd_kamar', 'like', '%' . 'Anak' . '%');
+            });
+        } else {
+            $kamarInap->where('kd_kamar', 'like', '%' . $this->specialist . '%');
+        }
+
+        $kamarInap = $kamarInap->get()->sum('lama');
 
         return $kamarInap;
+
     }
 
     function getDaysOnMonth()
@@ -51,16 +61,23 @@ class RsiaBorService
     function getCountTempatTidur()
     {
         $kamarLog = RsiaLogJumlahKamar::where('tahun', $this->year)
-            ->where('bulan', $this->month)
-            ->where('kategori', 'like', '%' . $this->specialist . '%')
-            ->first();
-        return $kamarLog ? $kamarLog->jumlah : 0;
+            ->where('bulan', $this->month);
+        if ($this->specialist === 'all') {
+            return $kamarLog->where(function ($query) {
+                $query->where('kategori', 'like', '%' . 'Kandungan' . '%')
+                    ->orWhere('kategori', 'like', '%' . 'Anak' . '%');
+            })->get()->sum('jumlah');
+        } else {
+            $kamar = $kamarLog->where('kategori', 'like', '%' . $this->specialist . '%')->first();
+            return $kamar ? $kamar->jumlah : 0;
+        }
     }
 
     function get(string $specialist, int $year = null)
     {
         $this->setSpecialist($specialist);
         $this->setYear($year ? $year : date('Y'));
+
         for ($i = 1; $i <= 12; $i++) {
             $this->setMonth($i);
             $numerator = $this->getCountRawat();

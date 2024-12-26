@@ -57,7 +57,7 @@
 
     <div class="row">
         <x-beranda.card-grafik-dokter></x-beranda.card-grafik-dokter>
-        <div class="col-lg-12 col-sm-12 col-md-12">
+        {{-- <div class="col-lg-12 col-sm-12 col-md-12">
             <x-card>
                 <x-card.header>
                     <div class="card-title">
@@ -77,7 +77,7 @@
 
                 </x-card.body>
             </x-card>
-        </div>
+        </div> --}}
     </div>
 @endsection
 

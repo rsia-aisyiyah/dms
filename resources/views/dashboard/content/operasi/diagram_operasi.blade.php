@@ -20,91 +20,88 @@
                 <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
             </div>
         </div>
-            
+
     </div>
 </div>
 @push('scripts')
-<script>
-    
-    var scData = {!!json_encode($dataCaesar)!!};
-    var curetageData = {!!json_encode($dataCuretage)!!};
-    var lainData = {!!json_encode($dataLain)!!};
-    var lineChart;
-    
+    <script>
+        var scData = {!! json_encode($dataCaesar) !!};
+        var curetageData = {!! json_encode($dataCuretage) !!};
+        var lainData = {!! json_encode($dataLain) !!};
+        var lineChart;
 
-    $('#yearpicker').datetimepicker({
-        format: "YYYY",
-        useCurrent: false,
-        viewMode: "years"
-    });
 
-    
-    $('#yearpicker').on('change.datetimepicker', function(){
-        const tahun = $(this).val();
-        $.ajax({
-                url: 'diagram/operasi/'+tahun,
+        $('#yearpicker').datetimepicker({
+            format: "YYYY",
+            useCurrent: false,
+            viewMode: "years"
+        });
+
+
+        $('#yearpicker').on('change.datetimepicker', function() {
+            const tahun = $(this).val();
+            $.ajax({
+                url: 'diagram/operasi/' + tahun,
                 type: "GET",
-                data : {"_token":"{{ csrf_token() }}"},
+                data: {
+                    "_token": "{{ csrf_token() }}"
+                },
                 dataType: "json",
                 success: function(data) {
                     scData = data.sc;
                     curetageData = data.curetage;
+                    lainData = data.lain;
                     lineChart.destroy();
                     loadDiagram(scData, curetageData, lainData)
                 }
+            });
         });
-    });
-    
-    // console.log(curetageData)
 
-    loadDiagram(scData, curetageData, lainData);
+        loadDiagram(scData, curetageData, lainData);
 
-    function loadDiagram(scData, curetageData, lainData) {
-        var diagramPenytakit = document.getElementById("lineChart");
-        var dataFirst = {
-            label: "Sectio Caesaria / SC",
-            data: scData,
-            lineTension: 0,
-            backgroundColor: 'teal',
-            // borderWidth : 2,
-            // fill: false,
-            // borderColor: 'teal'
-        };
+        function loadDiagram(scData, curetageData, lainData) {
 
-        var dataSecond = {
-            label: "Curetage",
-            data: curetageData,
-            backgroundColor: 'salmon'
-        };
+            var diagramPenytakit = document.getElementById("lineChart");
+            var dataFirst = {
+                label: "Sectio Caesaria / SC",
+                data: scData,
+                lineTension: 0,
+                backgroundColor: 'teal',
+            };
 
-        var dataThird = {
-            label: "Tindakan Lainnya",
-            data: lainData,
-            backgroundColor: 'SkyBlue'
-        };
+            var dataSecond = {
+                label: "Curetage",
+                data: curetageData,
+                backgroundColor: 'salmon'
+            };
 
-        var dataPenyakit = {
-        labels: {!!json_encode($label)!!},
-        datasets: [dataFirst, dataSecond, dataThird]
-        };
+            var dataThird = {
+                label: "Tindakan Lainnya",
+                data: lainData,
+                backgroundColor: 'SkyBlue'
+            };
 
-        var chartOptions = {
-        legend: {
-            display: true,
-            position: 'top',
-            labels: {
-                boxWidth: 12,
-                fontColor: 'black'
-            }
+            var dataPenyakit = {
+                labels: {!! json_encode($label) !!},
+                datasets: [dataFirst, dataSecond, dataThird]
+            };
+
+            var chartOptions = {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        boxWidth: 12,
+                        fontColor: 'black'
+                    }
+                }
+            };
+
+            lineChart = new Chart(diagramPenytakit, {
+                type: 'bar',
+                data: dataPenyakit,
+                options: chartOptions
+            });
         }
-        };
-
-        lineChart = new Chart(diagramPenytakit, {
-            type: 'bar',
-            data: dataPenyakit,
-            options: chartOptions
-        });
-    }
-    
-</script>
+    </script>
 @endpush

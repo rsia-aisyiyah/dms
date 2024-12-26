@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Operasi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\DataTables;
 
 class OperasiController extends Controller
@@ -79,7 +78,7 @@ class OperasiController extends Controller
     }
     public function ambilSectio(Request $request)
     {
-        $data = Operasi::with(['regPeriksa.pasien', 'regPeriksa.dokter', 'regPeriksa.penjab',  'ranapGabung.askepBayi', 'ranapGabung.rp.pasien', 'paketOperasi', 'askepRanapKebidanan'])->with('kamarInap', function ($query) {
+        $data = Operasi::with(['regPeriksa.pasien', 'regPeriksa.dokter', 'regPeriksa.penjab', 'ranapGabung.askepBayi', 'ranapGabung.rp.pasien', 'paketOperasi', 'askepRanapKebidanan'])->with('kamarInap', function ($query) {
             $query->where('stts_pulang', '!=', 'Pindah Kamar')
                 ->where('tgl_keluar', '!=', '0000-00-00');
         })->whereHas('paketOperasi', function ($query) {
