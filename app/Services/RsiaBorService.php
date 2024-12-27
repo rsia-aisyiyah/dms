@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Models\KamarInap;
 use App\Models\RsiaLogJumlahKamar;
 use Carbon\Carbon;
+use App\Traits\DateTrait;
 
 class RsiaBorService
 {
+    use DateTrait;
     protected $month;
     protected $year;
     protected $specialist;
@@ -22,55 +24,15 @@ class RsiaBorService
     {
         $this->specialist = $specialist;
     }
-    function setMonth($month)
-    {
-        $this->month = $month;
-    }
-    function setYear($year)
-    {
-        $this->year = $year;
-    }
-
+  
     function getCountRawat()
     {
-        $kamarInap = KamarInap::whereMonth('tgl_keluar', $this->month)
-            ->whereYear('tgl_keluar', $this->year)
-            ->select('lama');
-
-        if ($this->specialist === 'all') {
-            $kamarInap->where(function ($query) {
-                $query->where('kd_kamar', 'like', '%' . 'Kandungan' . '%')
-                    ->orWhere('kd_kamar', 'like', '%' . 'Anak' . '%');
-            });
-        } else {
-            $kamarInap->where('kd_kamar', 'like', '%' . $this->specialist . '%');
-        }
-
-        $kamarInap = $kamarInap->get()->sum('lama');
-
-        return $kamarInap;
-
-    }
-
-    function getDaysOnMonth()
-    {
-        $carbon = Carbon::createFromDate($this->year, $this->month);
-        return $carbon->daysInMonth;
+        return KamarInapService::getLamaInap($this->specialist, $this->month, $this->year);
     }
 
     function getCountTempatTidur()
     {
-        $kamarLog = RsiaLogJumlahKamar::where('tahun', $this->year)
-            ->where('bulan', $this->month);
-        if ($this->specialist === 'all') {
-            return $kamarLog->where(function ($query) {
-                $query->where('kategori', 'like', '%' . 'Kandungan' . '%')
-                    ->orWhere('kategori', 'like', '%' . 'Anak' . '%');
-            })->get()->sum('jumlah');
-        } else {
-            $kamar = $kamarLog->where('kategori', 'like', '%' . $this->specialist . '%')->first();
-            return $kamar ? $kamar->jumlah : 0;
-        }
+        return RsiaLogJumlahKamarService::getJumlahKamar($this->specialist, $this->month, $this->year);
     }
 
     function get(string $specialist, int $year = null)
@@ -84,7 +46,7 @@ class RsiaBorService
             $denumerator = $this->getDaysOnMonth() * $this->getCountTempatTidur();
             $jumlahBor = $this->getCountTempatTidur() ? $numerator / $denumerator * 100 : 0;
             $data[] = [
-                'month' => Carbon::create()->month($i)->translatedFormat('F'),
+                'month' =>$this->getMonthName($i),
                 'year' => $this->year,
                 'countRawat' => $this->getCountRawat(),
                 'daysOnMonth' => $this->getDaysOnMonth(),

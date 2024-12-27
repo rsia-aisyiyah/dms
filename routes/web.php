@@ -33,6 +33,8 @@ use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\TindakanController;
 use App\Models\Dokter;
+use App\Services\KamarInapService;
+use App\Services\RsiaLosService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -219,6 +221,9 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
+
+
+Route::get('/test/{specialist}/{year}', [RsiaLosService::class, 'getLos']);
 
 require __DIR__ . '/partial/rekammedis/tb.php';
 require __DIR__ . '/partial/rekammedis/bto.php';

@@ -11,23 +11,15 @@ class RsiaLogJumlahKamarController extends Controller
 {
     protected $track;
 
-    public function index(RsiaMappingKamarInapService $mappingKamar, Request $request)
+    public function create(Request $request)
     {
-        $data = [
-            'tahun' => $request->tahun,
-            'bulan' => $request->bulan,
-            'kategori' => $request->kategori,
-            'jumlah' => $mappingKamar->getKamarInap($request->kategori),
-        ];
-
-        try {
-            $create = RsiaLogJumlahKamar::create($data);
-        } catch (QueryException $e) {
-            return response()->json($e->errorInfo);
-        }
-        return response()->json([
-            'status' => true,
-        ], 200);
+        $validated = $request->validate([
+            'kategori' => 'required',
+            'bulan' => 'required',
+            'tahun' => 'required',
+        ]);
+       RsiaMappingKamarInapService::create($validated);
+       return response()->json(['message' => 'Success'], 200);
 
     }
 }

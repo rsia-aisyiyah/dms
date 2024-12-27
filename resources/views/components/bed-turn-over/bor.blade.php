@@ -43,6 +43,7 @@
 
         function getBor(spesialis) {
             const year = $(`#yearBor-${spesialis}`).val();
+            toggleOverlayBor(spesialis);
             renderBor(spesialis, year);
         }
 
@@ -65,19 +66,19 @@
                 }
 
             }).done((response) => {
-                toggleOverlayBor(spesialis)
+                toggleOverlayBor(spesialis);
             })
         }
 
-        function setJumlahKamarInap(spesialis, jumlah, index, tahun) {
-            $.post(`${url}/log/kamar`, {
+        function setJumlahKamarInap(spesialis, index, tahun) {
+            $.post(`${url}/log/kamar/create`, {
                 _token: "{{ csrf_token() }}",
                 kategori: spesialis,
-                jumlah: jumlah,
                 bulan: index,
                 tahun: tahun,
             }).done((response) => {
                 renderBor(spesialis, tahun);
+                toggleOverlayBor(spesialis);
             }).fail((error) => {
                 alert(error.responseText)
             })
@@ -86,7 +87,8 @@
 
         function toggleOverlayBor(spesialis) {
             const overlayBor = $(`#overlayBor-${spesialis}`);
-            const isHasClass = overlayBor.hasClass('d-none')
+            const isHasClass = overlayBor.hasClass('d-none');
+
             if (isHasClass) {
                 overlayBor.removeClass('d-none')
             } else {
