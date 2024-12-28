@@ -30,7 +30,7 @@
                         <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                     </div>
                     <input type="text" id="yearBor-{{ $spc }}" class="form-control yearPicker" data-toggle="datetimepicker" aria-describedby="yearBor-{{ $spc }}" data-target="#yearBor-{{ $spc }}" autocomplete="off">
-                    <button type="button" class="btn btn-primary" onclick="getLos('{{ $spc }}')">
+                    <button type="button" class="btn btn-primary" onclick="getBor('{{ $spc }}')">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
