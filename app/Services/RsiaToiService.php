@@ -47,7 +47,7 @@ class RsiaToiService
 
         for ($i = 1; $i <= 12; $i++) {
             $this->setMonth($i);
-            $toi = (($this->getJumlahTempatTidur()*$this->getHariBulan())-$this->getJumlahLamaInap())/$this->getPasienPulang();
+            $toi = $this->getPasienPulang() === 0 ? 0:(($this->getJumlahTempatTidur()*$this->getHariBulan())-$this->getJumlahLamaInap())/$this->getPasienPulang();
             $data[] = [
                 'month' => $this->getMonthName($i),
                 'year' => $this->year,

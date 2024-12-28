@@ -46,6 +46,7 @@ class KamarInapService
                 })->where(function($q){
                     $q->where(function ($query) {
                         $query->where('kd_kamar', 'like', '%anak%')
+                        ->orWhere('kd_kamar', 'like', '%icu%')
                         ->orWhere('kd_kamar', 'like', '%kandungan%');
                     });
                 });

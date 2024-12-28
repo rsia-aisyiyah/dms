@@ -1,5 +1,11 @@
 @extends('dashboard.layouts.main')
-
+@push('scripts')
+    <style>
+        .table {
+            font-size: 13px !important;
+        }
+    </style>
+@endpush
 @section('content')
     <div class="row">
         <div class="col-md-12 col-sm-12 col-lg-4">
