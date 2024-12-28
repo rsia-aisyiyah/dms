@@ -35,6 +35,7 @@ use App\Http\Controllers\TindakanController;
 use App\Models\Dokter;
 use App\Services\KamarInapService;
 use App\Services\RsiaLosService;
+use App\Services\RsiaToiService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -223,8 +224,8 @@ Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 
 
-Route::get('/test/{specialist}/{year}', [RsiaLosService::class, 'getLos']);
+Route::get('/test/{specialist}/{year}', [RsiaToiService::class, 'getToi']);
 
 require __DIR__ . '/partial/rekammedis/tb.php';
-require __DIR__ . '/partial/rekammedis/bto.php';
+require __DIR__ . '/partial/rekammedis/indikator_ranap.php';
 require __DIR__ . '/partial/beranda.php';

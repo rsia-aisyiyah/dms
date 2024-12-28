@@ -35,7 +35,7 @@ class RsiaLosService
             $denumerator = KamarInapService::getPasienPulang($this->specialist, $i, $this->year);
             $data[] = [
                 'month' => $this->getMonthName($i),
-                'year' => $year,
+                'year' => $this->year,
                 'lamaInap' => $numerator,
                 'pasienPulang'=>$denumerator,
                 'los' => number_format($numerator / $denumerator, 2)

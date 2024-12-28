@@ -17,7 +17,7 @@ class RsiaMappingKamarInapService
     public static function getKamarInap($specialist)
     {
         $kamar = new RsiaMappingKamarInap();
-        return $kamar->where('kategori', $specialist)->get()->count();
+        return $kamar->where('kategori', 'like', '%' . $specialist . '%')->get()->count();
     }
 
     public static function create(array $data)
