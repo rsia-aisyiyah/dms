@@ -17,7 +17,9 @@ class RsiaLogJumlahKamarService
             return $kamarLog->where(function ($query) {
                 $query->where('kategori', 'like', '%' . 'Kandungan' . '%')
                     ->orWhere('kategori', 'like', '%' . 'Anak' . '%')
-                    ->orWhere('kategori', 'like', '%' . 'ICU' . '%');
+                    ->orWhere('kategori', 'like', '%' . 'ICU' . '%')
+                    ->orWhere('kategori', 'like', '%' . 'BYC' . '%')
+                    ->orWhere('kategori', 'like', '%' . 'ISO' . '%');
             })->get()->sum('jumlah');
         } else {
             $kamar = $kamarLog->where('kategori', 'like', '%' . $specialist . '%')->first();

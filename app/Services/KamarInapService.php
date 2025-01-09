@@ -47,7 +47,9 @@ class KamarInapService
                     $q->where(function ($query) {
                         $query->where('kd_kamar', 'like', '%anak%')
                         ->orWhere('kd_kamar', 'like', '%icu%')
-                        ->orWhere('kd_kamar', 'like', '%kandungan%');
+                        ->orWhere('kd_kamar', 'like', '%kandungan%')
+                        ->orWhere('kd_kamar', 'like', '%byc%')
+                        ->orWhere('kd_kamar', 'like', '%iso%');
                     });
                 });
             }
@@ -64,7 +66,9 @@ class KamarInapService
             $kamarInap->where(function ($query) {
                 $query->where('kd_kamar', 'like', '%' . 'Kandungan' . '%')
                     ->orWhere('kd_kamar', 'like', '%' . 'Anak' . '%')
-                    ->orWhere('kd_kamar', 'like', '%' . 'ICU' . '%');
+                    ->orWhere('kd_kamar', 'like', '%' . 'ICU' . '%')
+                    ->orWhere('kd_kamar', 'like', '%' . 'ISO' . '%')
+                    ->orWhere('kd_kamar', 'like', '%' . 'BYC' . '%');
             });
         } else {
             $kamarInap->where('kd_kamar', 'like', '%' . $specialist . '%');

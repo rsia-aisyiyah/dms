@@ -33,12 +33,13 @@ class RsiaLosService
             $this->setMonth($i);
             $numerator = KamarInapService::getLamaInap($this->specialist, $i, $this->year);
             $denumerator = KamarInapService::getPasienPulang($this->specialist, $i, $this->year);
+            $los = $denumerator ?  number_format($numerator / $denumerator, 2) : 0 ;
             $data[] = [
                 'month' => $this->getMonthName($i),
                 'year' => $this->year,
                 'lamaInap' => $numerator,
                 'pasienPulang'=>$denumerator,
-                'los' => number_format($numerator / $denumerator, 2)
+                'los' => $los,
             ];
         }
         return $data;
