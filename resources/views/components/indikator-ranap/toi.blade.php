@@ -31,7 +31,7 @@
                         <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                     </div>
                     <input type="text" id="yearToi-{{ $spc }}" class="form-control yearPicker" data-toggle="datetimepicker" aria-describedby="yearToi-{{ $spc }}" data-target="#yearToi-{{ $spc }}" autocomplete="off">
-                    <button type="button" class="btn btn-primary" onclick="getLos('{{ $spc }}')">
+                    <button type="button" class="btn btn-primary" onclick="getToi('{{ $spc }}')">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -50,7 +50,7 @@
             renderToi('{{ $spc }}');
         });
 
-        function getLos(spesialis) {
+        function getToi(spesialis) {
             const year = $(`#yearToi-${spesialis}`).val();
             toggleOverlayToi(spesialis);
             renderToi(spesialis, year);
