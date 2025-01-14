@@ -1,10 +1,10 @@
 <?php
 
-namespace App\View\Components\BedTurnOver;
+namespace App\View\Components\IndikatorRanap;
 
 use Illuminate\View\Component;
 
-class Bor extends Component
+class Los extends Component
 {
     /**
      * Create a new component instance.
@@ -25,7 +25,7 @@ class Bor extends Component
      */
     public function render()
     {
-        return view('components.bed-turn-over.bor', [
+        return view('components.indikator-ranap.los', [
             'spc' => $this->spc,
         ]);
     }

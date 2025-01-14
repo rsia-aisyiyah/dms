@@ -47,8 +47,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/dms/bed-turn-over" class="nav-link">
-                                <i class="nav-icon {{ Request::is('bed-turn-over') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <a href="/dms/indikator-ranap" class="nav-link">
+                                <i class="nav-icon {{ Request::is('indikator-ranap') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
                                 <p><i>Bed Turn Over</i></p>
                             </a>
                         </li>

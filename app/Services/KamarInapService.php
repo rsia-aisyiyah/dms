@@ -21,18 +21,39 @@ class KamarInapService
 
     public static function getPasienPulang($specialist, $month, $year):int{
         $kamarInap = KamarInap::whereMonth('tgl_keluar', $month)
-            ->whereHas('regPeriksa', function ($q) use ($specialist) {
-                $q->whereHas('dokter', function ($q) use ($specialist) {
-                    $q->whereHas('spesialis', function ($q) use ($specialist) {
-                        $q->where('nm_sps', 'like', '%' . $specialist . '%');
+            ->whereYear('tgl_keluar', $year)
+            ->where('stts_pulang', '!=', 'Pindah Kamar');
+            if($specialist !=='all'){
+                if ($specialist !== 'icu') {
+                    $kamarInap->whereHas('regPeriksa', function ($q) use ($specialist) {
+                        $q->whereHas('dokter', function ($q) use ($specialist) {
+                            $q->whereHas('spesialis', function ($q) use ($specialist) {
+                                $q->where('nm_sps', 'like', '%' . $specialist . '%');
+                            });
+                        });
+                    });
+                 }
+                    $kamarInap->where('kd_kamar', 'like', '%' . $specialist . '%');
+            }else{
+                $kamarInap->whereHas('regPeriksa', function ($q) use ($specialist) {
+                    $q->whereHas('dokter', function ($q) use ($specialist) {
+                        $q->whereHas('spesialis', function ($q) use ($specialist) {
+                            $q->where(function ($query) {
+                                $query->where('nm_sps', 'like', '%anak%')->orWhere('nm_sps', 'like', '%kandungan%');
+                            });
+                        });
+                    });
+                })->where(function($q){
+                    $q->where(function ($query) {
+                        $query->where('kd_kamar', 'like', '%anak%')
+                        ->orWhere('kd_kamar', 'like', '%icu%')
+                        ->orWhere('kd_kamar', 'like', '%kandungan%')
+                        ->orWhere('kd_kamar', 'like', '%byc%')
+                        ->orWhere('kd_kamar', 'like', '%iso%');
                     });
                 });
-            })
-            ->whereYear('tgl_keluar', $year)
-            ->where('kd_kamar', 'like', '%' . $specialist . '%')
-            ->where('lama', '>', 0)
-            ->groupBy('no_rawat')->get()->count();
-        return $kamarInap;
+            }
+        return $kamarInap->groupBy('no_rawat')->get()->count();;
     }
     
      public static function getLamaInap($specialist, $month, $year)
@@ -44,7 +65,10 @@ class KamarInapService
         if ($specialist === 'all') {
             $kamarInap->where(function ($query) {
                 $query->where('kd_kamar', 'like', '%' . 'Kandungan' . '%')
-                    ->orWhere('kd_kamar', 'like', '%' . 'Anak' . '%');
+                    ->orWhere('kd_kamar', 'like', '%' . 'Anak' . '%')
+                    ->orWhere('kd_kamar', 'like', '%' . 'ICU' . '%')
+                    ->orWhere('kd_kamar', 'like', '%' . 'ISO' . '%')
+                    ->orWhere('kd_kamar', 'like', '%' . 'BYC' . '%');
             });
         } else {
             $kamarInap->where('kd_kamar', 'like', '%' . $specialist . '%');
