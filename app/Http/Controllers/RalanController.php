@@ -294,11 +294,9 @@ class RalanController extends Controller
         $records = RegPeriksa::with('penjab', 'dokter')
             ->whereYear('tgl_registrasi', $tahun)
             ->where('status_lanjut', 'Ralan')
-            ->where('stts', '!=', 'Batal')
+            ->where('stts', 'Batal')
             ->whereHas('dokter', function ($q) {
-
                 $q->whereIn('dokter.kd_sps', ['S0001', 'S0003', 'S0005']);
-
             })
             ->get();
 
@@ -311,9 +309,15 @@ class RalanController extends Controller
                 return $specializationRecords->groupBy('penjab.png_jawab')
                     ->map(function ($item) {
                         return $item->count();
-                    })->mapWithKeys(function ($item, $key) {
-                    return strpos($key, 'BPJS') !== false ? ['bpjs' => $item] : [strtolower($key) => $item];
-                })->put('total', $specializationRecords->count());
+                    })->mapWithKeys(function ($item, $key) use (&$bpjsTotal) {
+                        if (stripos($key, 'BPJS') !== false) {
+                            $bpjsTotal += $item; // Accumulate BPJS counts
+                            return [];
+                        }
+                        return [strtolower($key) => $item];
+                    })
+                    ->put('bpjs', $bpjsTotal??0) // Add the accumulated BPJS total
+                    ->put('total', $specializationRecords->count());
             });
 
             $monthName = Carbon::createFromFormat('n', $monthNumber)->format('F') . " " . $tahun;
@@ -351,10 +355,12 @@ class RalanController extends Controller
 
     public function jsonDokterAnak(Request $request)
     {
+
+        // return 'wlwlwlwl';
         $tanggal = new Carbon('this month');
         $tahun = $request->tahun ? $request->tahun : date('Y');
 
-        if ($request->ajax()) {
+        // if ($request->ajax()) {
             for ($i = 1; $i <= 12; $i++) {
                 $query = RegPeriksa::select(DB::raw('count(*) as jumlah'))
                     ->whereYear('tgl_registrasi', $tahun)
@@ -384,8 +390,10 @@ class RalanController extends Controller
                     'total' => $total,
                 ];
             }
-        }
-        return DataTables::of($data)->make(true);
+        // }
+        // return DataTables::of($data)->make(true);
+        return $data;
+
     }
 
     public function jsonDokterObgyn(Request $request)

@@ -87,15 +87,12 @@
         </div>
     </div>
     <div class="row">
+        @include('dashboard.content.ralan.list_poli_ralan')
         @include('dashboard.content.ralan.list_pembayaran_ralan')
         @include('dashboard.content.ralan.list_status_daftar_ralan')
-        @include('dashboard.content.ralan.list_poli_ralan')
     </div>
     <div class="row">
-        <div class="col-12 col-sm-12 col-md-4">
-            @include('dashboard.content.ralan.list_dokter_obgyn_ralan')
-        </div>
-        <div class="col-12 col-sm-12 col-md-4">
+        <div class="col-12 col-sm-12 col-md-8">
             @include('dashboard.content.ralan.list_dokter_anak_ralan')
         </div>
         <div class="col-12 col-sm-12 col-md-4">

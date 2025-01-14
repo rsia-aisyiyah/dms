@@ -34,6 +34,7 @@ use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\TindakanController;
 use App\Models\Dokter;
 use App\Services\KamarInapService;
+use App\Services\KunjunganRalanServices;
 use App\Services\RsiaLosService;
 use Illuminate\Support\Facades\Route;
 
@@ -218,12 +219,14 @@ Route::middleware('auth')->group(function () {
         $route->get('tb/skrining/{year?}/{month?}', SkriningTbDataTableAction::class);
     });
 
+    Route::get('ralan/kunjungan/poli/{year?}', [KunjunganRalanServices::class, 'gropingByMonthAndDokter']);
+
 });
 Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 
 
-Route::get('/test/{specialist}/{year}', [RsiaLosService::class, 'getLos']);
+Route::get('/test/{year?}', [KunjunganRalanServices::class, 'gropingByMonthAndDokter']);
 
 require __DIR__ . '/partial/rekammedis/tb.php';
 require __DIR__ . '/partial/rekammedis/bto.php';

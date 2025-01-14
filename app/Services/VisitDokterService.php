@@ -27,7 +27,8 @@ class VisitDokterService
             ->with(['petugas', 'kamarInap.kamar.bangsal', 'regPeriksa' => function ($q) {
                 $q->with(['pasien', 'ranapGabung.kamarInap.kamar.bangsal']);
             }])
-            ->whereMonth('tgl_perawatan', $month)->whereYear('tgl_perawatan', $year)->get();
+            ->whereMonth('tgl_perawatan', $month)
+            ->whereYear('tgl_perawatan', $year)->get();
 
         return $pemeriksaan;
 
