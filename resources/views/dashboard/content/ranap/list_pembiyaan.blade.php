@@ -1,4 +1,4 @@
-    <div class="col-12 col-sm-12 col-md-6">
+    <div class="col-12 col-sm-12 col-md-8">
         <div class="card card-teal">
             <div class="card-header">
                 <p class="card-title border-bottom-0">Pasien Rawat Inap</p>
@@ -31,6 +31,7 @@
                                         <th rowspan="2">Bulan</th>
                                         <th colspan="3" class="text-center">Obgyn</th>
                                         <th colspan="3" class="text-center">Anak</th>
+                                        <th colspan="3" class="text-center">Bayi</th>
                                         <th rowspan="2" class="text-center">Total</th>
                                     </tr>
                                     <!-- Sub-headers -->
@@ -38,9 +39,14 @@
                                         <th class="bg-info text-white">BPJS</th>
                                         <th class="bg-success text-white">Umum</th>
                                         <th class="bg-warning text-dark">T. Obgyn</th>
+
                                         <th class="bg-info text-white">BPJS</th>
                                         <th class="bg-success text-white">Umum</th>
                                         <th class="bg-warning text-dark">T. Anak</th>
+
+                                        <th class="bg-info text-white">BPJS</th>
+                                        <th class="bg-success text-white">Umum</th>
+                                        <th class="bg-warning text-dark">T. Bayi</th>
 
                                     </tr>
                                 </thead>
@@ -125,64 +131,90 @@
                                 name: 'bulan'
                             },
                             {
-                                data: 'obgyn.bpjs',
+                                data: 'data.kandungan.BPJS',
+                                render: (data, type, row, meta) => {
+                                    return data ? data : 0;
+                                },
+                                name: 'data.kandungan.BPJS'
+
+                            },
+                            {
+                                data: 'data.kandungan.UMUM',
                                 render: (data, type, row, meta) => {
                                     return data ? data : 0;
 
                                 },
-                                name: 'obgyn.bpjs'
-
+                                name: 'data.kandungan.UMUM'
                             },
                             {
-                                data: 'obgyn.umum',
+                                data: 'data.kandungan',
                                 render: (data, type, row, meta) => {
-                                    return data ? data : 0;
+                                    const bpjs = data.BPJS ? data.BPJS : 0;
+                                    const umum = data.UMUM ? data.UMUM : 0;
 
-                                },
-                                name: 'obgyn.umum'
-                            },
-                            {
-                                data: 'obgyn.total',
-                                render: (data, type, row, meta) => {
-                                    return data ? data : 0;
-
+                                    return bpjs + umum;
                                 },
                                 name: 'obgyn.total'
                             },
                             {
-                                data: 'anak.bpjs',
+                                data: 'data.anak.BPJS',
+                                render: (data, type, row, meta) => {
+                                    return data ? data : 0;
+                                },
+                                name: 'data.anak.BPJS'
+
+                            },
+                            {
+                                data: 'data.anak.UMUM',
                                 render: (data, type, row, meta) => {
                                     return data ? data : 0;
 
                                 },
-                                name: 'anak.bpjs'
+                                name: 'data.anak.UMUM'
+                            },
+                            {
+                                data: 'data.anak',
+                                render: (data, type, row, meta) => {
+                                    const bpjs = data?.BPJS ? data?.BPJS : 0;
+                                    const umum = data?.UMUM ? data?.UMUM : 0;
+
+                                    return bpjs + umum;
+                                },
+                            },
+                            {
+                                data: 'data.bayi.BPJS',
+                                render: (data, type, row, meta) => {
+                                    return data ? data : 0;
+                                },
+                                name: 'data.bayi.BPJS'
 
                             },
                             {
-                                data: 'anak.umum',
+                                data: 'data.bayi.UMUM',
                                 render: (data, type, row, meta) => {
                                     return data ? data : 0;
 
                                 },
-                                name: 'anak.umum'
+                                name: 'data.bayi.UMUM'
                             },
                             {
-                                data: 'anak.total',
+                                data: 'data.bayi',
                                 render: (data, type, row, meta) => {
-                                    return data ? data : 0;
+                                    const bpjs = data?.BPJS ? data?.BPJS : 0;
+                                    const umum = data?.UMUM ? data?.UMUM : 0;
 
+                                    return bpjs + umum;
                                 },
-                                name: 'anak.total'
                             },
                             {
+                                data: '',
                                 render: (data, type, row, meta) => {
-                                    const {
-                                        anak,
-                                        obgyn
-                                    } = row;
-                                    return anak.total + obgyn.total;
+                                    const kandungan = row.data.kandungan.total;
+                                    const anak = row.data.anak.total;
+                                    const bayi = row.data.bayi.total;
+
+                                    return kandungan + anak + bayi;
                                 },
-                                name: 'total'
                             },
 
                         ],

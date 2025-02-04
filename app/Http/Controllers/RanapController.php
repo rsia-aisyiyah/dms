@@ -304,7 +304,13 @@ class RanapController extends Controller
 
         $tahun = $request->tahun ? $request->tahun : date('Y');
 
-        $records = RegPeriksa::with('penjab', 'dokter')
+        $records = RegPeriksa::select(
+            ['no_rawat', 'kd_dokter', 'kd_pj', 'status_lanjut', 'stts', 'tgl_registrasi', 'umurdaftar', 'sttsumur']
+         )->with(['penjab' => function($q){
+            return $q->select('kd_pj', 'png_jawab');
+         }, 'dokter' => function($q){
+            return $q->select('kd_dokter', 'nm_dokter');
+         }, 'spesialis', ])
             ->whereYear('tgl_registrasi', $tahun)
             ->where('status_lanjut', 'Ranap')
             ->whereHas('kamarInap', function ($query) {
@@ -312,36 +318,40 @@ class RanapController extends Controller
             })
             ->where('stts', '!=', 'Batal')
             ->whereHas('dokter', function ($q) {
-
                 $q->whereIn('dokter.kd_sps', ['S0001', 'S0003']);
-
-            })
+            })->orderBy('tgl_registrasi', 'asc')
             ->get();
+$groupedByMonth = $records->groupBy(function ($item) {
+    return Carbon::parse($item['tgl_registrasi'])->translatedFormat('F'); // Nama bulan
+})->map(function ($items) {
+    return $items->groupBy(function ($item) {
+        // Menentukan kategori BAYI, ANAK, KANDUNGAN
+        if ($item['sttsumur'] === "Hr" && $item['umurdaftar'] < 30) {
+            return "bayi";
+        }
+        return str_contains($item['spesialis']['nm_sps'], "ANAK") ? "anak" : "kandungan";
+    })->map(function ($group) {
+        // Mengelompokkan berdasarkan jenis BPJS
+        $grouped = $group->groupBy(function ($item) {
+            return str_contains($item['penjab']['png_jawab'], "BPJS") ? "BPJS" : $item['penjab']['png_jawab'];
+        })->map->count();
 
-        $data = $records->groupBy(function ($item) {
-            return Carbon::parse($item->tgl_registrasi)->translatedFormat('n'); // Group by numeric month (1, 2, ..., 12
-        })->map(function ($monthRecords, $monthNumber) use ($tahun) {
-            $groupBySpecialization = $monthRecords->groupBy(function ($item) {
-                return $item->dokter ? $item->dokter->kd_sps : '';
-            })->map(function ($specializationRecords) {
-                return $specializationRecords->groupBy('penjab.png_jawab')
-                    ->map(function ($item) {
-                        return $item->count();
-                    })->mapWithKeys(function ($item, $key) {
-                    return strpos($key, 'BPJS') !== false ? ['bpjs' => $item] : [strtolower($key) => $item];
-                })->put('total', $specializationRecords->count());
-            });
+        // Menambahkan total per kategori
+        $grouped['total'] = $grouped->sum();  // Total untuk kategori ini
 
-            $monthName = Carbon::create()->month($monthNumber)->format('F') . " " . $tahun;
+        return $grouped;
+    });
+});
 
-            return (object) [
-                'bulan' => $monthName,
-                'obgyn' => $groupBySpecialization['S0001'] ?? null,
-                'anak' => $groupBySpecialization['S0003'] ?? null,
-            ];
-        })->sortKeys();
-        return DataTables::of($data)->make(true);
+// Menyiapkan data untuk DataTables
+$formattedData = $groupedByMonth->map(function ($monthsData, $month) use ($tahun) {
+    return [
+        'bulan' => $month. " " . $tahun,  // Kolom bulan
+        'data' => $monthsData  // Menyimpan data spesialis dan BPJS
+    ];
+});
 
+return DataTables::of($formattedData)->make(true);
     }
     public function jsonGenderRanap(Request $request)
     {

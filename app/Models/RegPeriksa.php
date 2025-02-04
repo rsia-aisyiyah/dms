@@ -82,7 +82,7 @@ class RegPeriksa extends Model
 
     public function spesialis()
     {
-        return $this->hasOneThrough(Spesialis::class, Dokter::class, 'kd_sps', 'kd_sps', 'kd_dokter');
+        return $this->hasOneThrough(Spesialis::class, Dokter::class, 'kd_dokter', 'kd_sps', 'kd_dokter', 'kd_sps');
     }
 
     public function kamarInap()
@@ -320,8 +320,5 @@ class RegPeriksa extends Model
     {
         return $this->hasOneThrough(Kabupaten::class, Pasien::class, 'no_rkm_medis', 'kd_kab', 'no_rkm_medis', 'kd_kab');
     }
-    // public function propinsi(): HasOneThrough
-    // {
-    //     return $this->hasOneThrough(P::class, Pasien::class, 'no_rkm_medis', 'kd_kab', 'no_rkm_medis', 'kd_kab');
-    // }
+  
 }
