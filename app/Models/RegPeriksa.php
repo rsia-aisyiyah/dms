@@ -321,4 +321,10 @@ class RegPeriksa extends Model
         return $this->hasOneThrough(Kabupaten::class, Pasien::class, 'no_rkm_medis', 'kd_kab', 'no_rkm_medis', 'kd_kab');
     }
   
+    function estimasi(){
+        return $this->hasOne(EstimasiPoli::class, 'no_rawat', 'no_rawat');
+    }
+    function selesai(){
+        return $this->hasOne(SelesaiPoli::class, 'no_rawat', 'no_rawat');
+    }
 }

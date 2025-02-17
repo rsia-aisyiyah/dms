@@ -32,11 +32,14 @@ use App\Http\Controllers\TarifLaboratorium;
 use App\Http\Controllers\TarifRalanController;
 use App\Http\Controllers\TarifRanapController;
 use App\Http\Controllers\TindakanController;
+use App\Http\Controllers\WaktuTungguRawatJalan;
+use App\Http\Controllers\WaktuTungguRawatJalanController;
 use App\Models\Dokter;
 use App\Services\KamarInapService;
 use App\Services\KunjunganRalanServices;
 use App\Services\RsiaLosService;
 use App\Services\RsiaToiService;
+use App\Services\WaktuTungguRawatJalan as ServicesWaktuTungguRawatJalan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -114,6 +117,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/ralan/kandungan', [RalanController::class, 'ambilKandungan']);
 
     Route::get('/ralan/kandungan/json', [AskepKandunganRalanController::class, 'ambil']);
+    Route::get('/ralan/waktu-tunggu', [WaktuTungguRawatJalanController::class, 'index']);
+    Route::get('/ralan/waktu-tunggu/tahun/{year?}', [WaktuTungguRawatJalanController::class, 'getByYear']);
+    Route::get('/ralan/waktu-tunggu/get', [WaktuTungguRawatJalanController::class, 'get']);
+    
+
+
 
     Route::get('/ranap', [RanapController::class, 'index']);
     Route::get('/ranap/hitung', [BerandaController::class, 'countRanap']);
@@ -227,8 +236,10 @@ Route::get('spesialis', [SpesialisController::class, 'all']);
 Route::get('spesialis/dokter', [SpesialisController::class, 'getSpesialisDokter']);
 
 
-Route::get('/test/{specialist}/{year}', [RsiaToiService::class, 'getToi']);
-
+// Route::get('/test/{specialist}/{year}', [RsiaToiService::class, 'getToi']);
+Route::get('/satu', [ServicesWaktuTungguRawatJalan::class, 'get']);
+Route::get('/test/group/{year?}', [ServicesWaktuTungguRawatJalan::class, 'groupByMonth']);
+Route::get('/test/{year?}', [ServicesWaktuTungguRawatJalan::class, 'getByYear']);
 require __DIR__ . '/partial/rekammedis/tb.php';
 require __DIR__ . '/partial/rekammedis/indikator_ranap.php';
 require __DIR__ . '/partial/beranda.php';

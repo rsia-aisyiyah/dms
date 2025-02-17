@@ -211,6 +211,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ '/dms/ralan/waktu-tunggu' }}" class="nav-link">
+                            <i
+                                class="far fa-circle nav-icon {{ Request::is('ralan/waktu-tunggu') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>
+                            <p>Waktu Tunggu Layanan</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ '/dms/ralan/sep' }}" class="nav-link">
                             <i
                                 class="far fa-circle nav-icon {{ Request::is('ralan/sep') ? 'fas fa-circle text-teal' : 'far fa-circle' }}"></i>

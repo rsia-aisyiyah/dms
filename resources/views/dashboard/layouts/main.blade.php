@@ -279,6 +279,75 @@
         $('.yearPicker').on('blur', function() {
             $(this).datetimepicker('hide');
         });
+
+        Object.assign(DataTable.defaults, {
+            "processing": true,
+            "serverSide": true,
+            "destroy": true,
+            "deferRender": true,
+            "lengthChange": true,
+            "ordering": false,
+            "searching": true,
+            "stateSave": true,
+            "dom": 'Blfrtip',
+            "scroller": {
+                "loadingIndicator": true
+            },
+            buttons: [{
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy"></i> Salin',
+                    className: 'btn btn-info',
+                    title: '{{ rand(1000000, 9999999) }}'
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv"></i> CSV',
+                    className: 'btn btn-info',
+                    title: '{{ rand(1000000, 9999999) }}'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-info',
+                    title: '{{ rand(1000000, 9999999) }}'
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'btn btn-info',
+                    title: '{{ rand(1000000, 9999999) }}'
+                },
+            ],
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>',
+                zeroRecords: "Tidak Ditemukan Data",
+                infoEmpty: "",
+                info: "Menampilkan sebanyak _START_ ke _END_ dari _TOTAL_ data",
+                loadingRecords: "Sedang memuat ...",
+                infoFiltered: "(Disaring dari _MAX_ total baris)",
+                buttons: {
+                    copyTitle: 'Data telah disalin',
+                    copySuccess: {
+                        _: '%d baris data telah disalin',
+                    },
+                },
+                lengthMenu: '<div class="text-md mt-3">Tampilkan <select>' +
+                    '<option value="50">50</option>' +
+                    '<option value="100">100</option>' +
+                    '<option value="200">200</option>' +
+                    '<option value="250">250</option>' +
+                    '<option value="500">500</option>' +
+                    '<option value="-1">Semua</option>' +
+                    '</select> Baris',
+                paginate: {
+                    "first": "Pertama",
+                    "last": "Terakhir",
+                    "next": "Selanjutnya",
+                    "previous": "Sebelumnya"
+                },
+                search: 'Cari Pasien : ',
+            },
+        })
     </script>
     @stack('scripts')
 </body>
