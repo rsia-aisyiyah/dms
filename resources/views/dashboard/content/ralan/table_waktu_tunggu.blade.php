@@ -290,6 +290,20 @@
             return `${hours.toString().length < 2 ? '0' + hours : hours}:${minutes.toString().length < 2 ? '0' + minutes : minutes}:${seconds.toString().length < 2 ? '0' + seconds : seconds}`;
         }
 
+        function sumTime(times) {
+            let totalSeconds = times.reduce((acc, time) => {
+                let [hh, mm, ss] = time.split(":").map(Number);
+                return acc + hh * 3600 + mm * 60 + ss;
+            }, 0);
+
+            let hours = Math.floor(totalSeconds / 3600);
+            let minutes = Math.floor((totalSeconds % 3600) / 60);
+            let seconds = totalSeconds % 60;
+
+            return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        }
+
+
         function loadTableRataWaktuTunggu(year = '') {
             tableRataWaktuTunggu.DataTable({
                 "scrollY": 600,
@@ -323,6 +337,9 @@
                     },
                     {
                         data: 'total',
+                        render: (data, type, row, meta) => {
+                            return sumTime([row.waktu_tunggu_poli, row.waktu_tunggu_obat, row.waktu_layanan_poli, row.waktu_layanan_obat]);
+                        },
                         title: 'Total'
                     },
                 ]

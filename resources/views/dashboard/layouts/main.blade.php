@@ -290,9 +290,9 @@
             "searching": true,
             "stateSave": true,
             "dom": 'Blfrtip',
-            "scroller": {
-                "loadingIndicator": true
-            },
+            // "scroller": {
+            //     "loadingIndicator": true
+            // },
             buttons: [{
                     extend: 'copy',
                     text: '<i class="fas fa-copy"></i> Salin',

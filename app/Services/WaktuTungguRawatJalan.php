@@ -189,7 +189,8 @@ class WaktuTungguRawatJalan
 
     function hitungRataRataWaktu($waktuArray) {
         $totalDetik = 0;
-        $jumlahWaktu = count($waktuArray);
+        $arrayTime = array_diff($waktuArray->toArray(), ['00:00:00']);
+        $jumlahWaktu = count($arrayTime);
 
         if ($jumlahWaktu == 0) {
             return "00:00:00";
