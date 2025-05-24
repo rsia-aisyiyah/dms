@@ -17,7 +17,9 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
 
-        if (auth()->guest() || auth()->user()->username != 'admin' && auth()->user()->username != 'direksi') {
+        $user = auth()->user();
+        $role = ['admin', 'direksi'];
+        if ($user === null || !in_array($user->username, $role)) {
             return redirect('/');
         }
 

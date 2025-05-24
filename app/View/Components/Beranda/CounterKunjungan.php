@@ -13,7 +13,7 @@ class CounterKunjungan extends Component
      *
      * @return void
      */
-	protected $counterKunjungan;
+    protected $counterKunjungan;
     public function __construct()
     {
         $this->counterKunjungan = new RegPeriksaCollection();
@@ -26,7 +26,8 @@ class CounterKunjungan extends Component
      */
     public function render()
     {
-		$data = $this->counterKunjungan->getRegByStatusLanjut(new Request());
-        return view('components.beranda.counter-kunjungan', ['data' => $data]);
+        $data = $this->counterKunjungan->getRegByStatusLanjut(new Request());
+        $dataUgd = $this->counterKunjungan->getRegPeriksaOnUgd(new Request());
+        return view('components.beranda.counter-kunjungan', ['data' => $data, 'dataUgd' => $dataUgd]);
     }
 }

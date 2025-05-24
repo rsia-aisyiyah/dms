@@ -100,9 +100,9 @@ class RalanController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                . $data->pasien->kelurahan->nm_kel . ", "
-                . $data->pasien->kecamatan->nm_kec . ", "
-                . $data->pasien->kabupaten->nm_kab;
+                    . $data->pasien->kelurahan->nm_kel . ", "
+                    . $data->pasien->kecamatan->nm_kec . ", "
+                    . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('stts_daftar', function ($data) {
                 if ($data->stts_daftar == 'Lama') {
@@ -203,9 +203,9 @@ class RalanController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                . $data->pasien->kelurahan->nm_kel . ", "
-                . $data->pasien->kecamatan->nm_kec . ", "
-                . $data->pasien->kabupaten->nm_kab;
+                    . $data->pasien->kelurahan->nm_kel . ", "
+                    . $data->pasien->kecamatan->nm_kec . ", "
+                    . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_dokter', function ($data) {
                 return $data->dokter->nm_dokter;
@@ -294,7 +294,7 @@ class RalanController extends Controller
         $records = RegPeriksa::with('penjab', 'dokter')
             ->whereYear('tgl_registrasi', $tahun)
             ->where('status_lanjut', 'Ralan')
-            ->where('stts', 'Batal')
+            ->where('stts', '!=', 'Batal')
             ->whereHas('dokter', function ($q) {
                 $q->whereIn('dokter.kd_sps', ['S0001', 'S0003', 'S0005']);
             })
@@ -316,7 +316,7 @@ class RalanController extends Controller
                         }
                         return [strtolower($key) => $item];
                     })
-                    ->put('bpjs', $bpjsTotal??0) // Add the accumulated BPJS total
+                    ->put('bpjs', $bpjsTotal ?? 0) // Add the accumulated BPJS total
                     ->put('total', $specializationRecords->count());
             });
 
@@ -329,7 +329,7 @@ class RalanController extends Controller
                 'dalam' => $groupBySpecialization['S0005'] ?? null,
             ];
         });
-        
+
         return DataTables::of($data)->make(true);
     }
 
@@ -361,35 +361,35 @@ class RalanController extends Controller
         $tahun = $request->tahun ? $request->tahun : date('Y');
 
         // if ($request->ajax()) {
-            for ($i = 1; $i <= 12; $i++) {
-                $query = RegPeriksa::select(DB::raw('count(*) as jumlah'))
-                    ->whereYear('tgl_registrasi', $tahun)
-                    ->whereMonth('tgl_registrasi', $i)
-                    ->whereHas('dokter', function ($q) {
-                        $q->where('kd_sps', 'S0003');
-                    })
-                    ->where('status_lanjut', 'Ralan')
-                    ->where('stts', '!=', 'Batal')
-                    ->whereIn('kd_poli', ['P003', 'P008'])
-                    ->groupBy('kd_dokter')
-                    ->get()
-                    ->pluck('jumlah');
+        for ($i = 1; $i <= 12; $i++) {
+            $query = RegPeriksa::select(DB::raw('count(*) as jumlah'))
+                ->whereYear('tgl_registrasi', $tahun)
+                ->whereMonth('tgl_registrasi', $i)
+                ->whereHas('dokter', function ($q) {
+                    $q->where('kd_sps', 'S0003');
+                })
+                ->where('status_lanjut', 'Ralan')
+                ->where('stts', '!=', 'Batal')
+                ->whereIn('kd_poli', ['P003', 'P008'])
+                ->groupBy('kd_dokter')
+                ->get()
+                ->pluck('jumlah');
 
-                $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
+            $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
 
-                $query[0] = empty($query[0]) ? 0 : $query[0];
-                $query[1] = empty($query[1]) ? 0 : $query[1];
+            $query[0] = empty($query[0]) ? 0 : $query[0];
+            $query[1] = empty($query[1]) ? 0 : $query[1];
 
-                $jmlAnak1 = $query[0];
-                $jmlAnak2 = $query[1];
-                $total = $jmlAnak1 + $jmlAnak2;
-                $data["$indexBulan"] = (object) [
-                    'bulan' => $indexBulan . " " . $tahun,
-                    'anak1' => $jmlAnak1,
-                    'anak2' => $jmlAnak2,
-                    'total' => $total,
-                ];
-            }
+            $jmlAnak1 = $query[0];
+            $jmlAnak2 = $query[1];
+            $total = $jmlAnak1 + $jmlAnak2;
+            $data["$indexBulan"] = (object) [
+                'bulan' => $indexBulan . " " . $tahun,
+                'anak1' => $jmlAnak1,
+                'anak2' => $jmlAnak2,
+                'total' => $total,
+            ];
+        }
         // }
         // return DataTables::of($data)->make(true);
         return $data;

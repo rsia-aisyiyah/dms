@@ -70,7 +70,8 @@ class BerandaController extends Controller
 
                 // $jumlah[] = $query->get();
                 $arrHari[] = $i . ' ' . $namaBulan;
-            };
+            }
+            ;
             $jumlahDokter[] = $query;
             $nm_dokter[] = $dokter->nm_dokter;
         }
@@ -190,36 +191,36 @@ class BerandaController extends Controller
         $tgl_kedua = $request->tgl_kedua;
         $query = RegPeriksa::select(DB::raw('count(*) as jumlah'), 'kd_pj')
             ->where('status_lanjut', 'Ranap')
-	        ->with('penjab')
+            ->with('penjab')
             ->whereHas('kamarInap', function ($query) {
                 $query->where('stts_pulang', '!=', 'Pindah Kamar');
             });
-//        if ($request->ajax()) {
+        //        if ($request->ajax()) {
 
-            if ($tgl_pertama && $tgl_kedua) {
-                $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
-            } else {
-                $query->whereYear('tgl_registrasi', date('Y'))
-                    ->whereMonth('tgl_registrasi', $this->tanggal->month);
-            }
+        if ($tgl_pertama && $tgl_kedua) {
+            $query->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua]);
+        } else {
+            $query->whereYear('tgl_registrasi', date('Y'))
+                ->whereMonth('tgl_registrasi', $this->tanggal->month);
+        }
 
-           $dataRanap = collect($query->groupBy('kd_pj')->get());
+        $dataRanap = collect($query->groupBy('kd_pj')->get());
 
-			return $dataRanap->flatMap(function($item){
-				return [$item->penjab->png_jawab => $item->jumlah];
-			});
+        return $dataRanap->flatMap(function ($item) {
+            return [$item->penjab->png_jawab => $item->jumlah];
+        });
 
 
-            @$mandiri = $dataRanap[0] == 0 ? 0 : $dataRanap[0];
-            @$pbi = $dataRanap[2] == 0 ? 0 : $dataRanap[2];
-            @$umum = $dataRanap[1] == 0 ? 0 : $dataRanap[1];
+        @$mandiri = $dataRanap[0] == 0 ? 0 : $dataRanap[0];
+        @$pbi = $dataRanap[2] == 0 ? 0 : $dataRanap[2];
+        @$umum = $dataRanap[1] == 0 ? 0 : $dataRanap[1];
 
-            return $pembiayaanRanap = [
-                'mandiri' => $mandiri,
-                'pbi' => $pbi,
-                'umum' => $umum,
-            ];
-//        }
+        return $pembiayaanRanap = [
+            'mandiri' => $mandiri,
+            'pbi' => $pbi,
+            'umum' => $umum,
+        ];
+        //        }
     }
     public function pembiayaan(Request $request)
     {

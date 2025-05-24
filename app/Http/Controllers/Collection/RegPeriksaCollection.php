@@ -25,18 +25,26 @@ class RegPeriksaCollection extends Controller
 
     public function getAll(Request $request)
     {
-        return collect($this->regPeriksaController->getAll($request))->where('stts', 'Sudah');
+        return collect($this->regPeriksaController->getAll($request));
     }
 
     public function getRegByStatusLanjut(Request $request): array
     {
-        $regCollection = $this->getAll($request);
+        $regCollection = $this->getAll($request)->where('kd_poli', '!=', 'IGDK');
         $kunjungan = $regCollection->groupBy('status_lanjut')->mapWithKeys(function ($item, $key) {
             return [$key => $item->count()];
         })->toArray();
         $totalCount = array_sum($kunjungan);
-        $igd = $regCollection->where('kd_poli', 'IGDK')->count();
-        return array_merge($kunjungan, ['Total' => $totalCount, 'UGD' => $igd]);
+        // $igd = $regCollection->where('kd_poli', 'IGDK')->count();
+        return array_merge($kunjungan, ['Total' => $totalCount]);
+    }
+
+    public function getRegPeriksaOnUgd(Request $request)
+    {
+        $regCollection = $this->getAll($request)->where('kd_poli', 'IGDK');
+        return $regCollection->groupBy('status_lanjut')->mapWithKeys(function ($item, $key) {
+            return [$key => $item->count()];
+        })->toArray();
     }
 
     public function getByYear($year = ''): Collection
@@ -44,21 +52,21 @@ class RegPeriksaCollection extends Controller
         $penjab = $this->penjab->getAllPenjab();
         return $this->regPeriksaController->getByYear($year)->where('stts', 'Sudah')
             ->groupBy('status_lanjut')->map((function ($item) use ($penjab) {
-            return $item->groupBy(function ($item) {
-                return Carbon::parse($item->tgl_registrasi)->format('m');
-            })->mapWithKeys(function ($item, $key) use ($penjab) {
-                $keysMonth = Carbon::parse($item->first()->tgl_registrasi)->translatedFormat('F');
-                return [
-                    $keysMonth => $item->groupBy('kd_pj')->map(function ($items, $keys) use ($penjab) {
-                        $pngJawab = $penjab;
-                        return [
-                            'jumlah' => $items->count(),
-                            'penjab' => $pngJawab->where('kd_pj', $keys)->first()->png_jawab,
-                            'kd_pj' => $pngJawab->where('kd_pj', $keys)->first()->kd_pj,
-                        ];
-                    })->values(),
-                ];
-            });
-        }));
+                return $item->groupBy(function ($item) {
+                    return Carbon::parse($item->tgl_registrasi)->format('m');
+                })->mapWithKeys(function ($item, $key) use ($penjab) {
+                    $keysMonth = Carbon::parse($item->first()->tgl_registrasi)->translatedFormat('F');
+                    return [
+                        $keysMonth => $item->groupBy('kd_pj')->map(function ($items, $keys) use ($penjab) {
+                            $pngJawab = $penjab;
+                            return [
+                                'jumlah' => $items->count(),
+                                'penjab' => $pngJawab->where('kd_pj', $keys)->first()->png_jawab,
+                                'kd_pj' => $pngJawab->where('kd_pj', $keys)->first()->kd_pj,
+                            ];
+                        })->values(),
+                    ];
+                });
+            }));
     }
 }

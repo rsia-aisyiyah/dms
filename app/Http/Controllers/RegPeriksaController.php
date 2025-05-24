@@ -30,6 +30,10 @@ class RegPeriksaController extends Controller
         $year = $request->year ? $request->year : '';
 
         $data = $this->regPeriksaModel->month($month, $year)
+            ->whereHas('dokter', function ($query) {
+                $query->whereIn('kd_sps', ['S0001', 'S0003', 'S0005', 'S0007']);
+            })
+            ->where('stts', '!=', 'Batal')
             ->get();
         return $data;
     }
@@ -198,10 +202,10 @@ class RegPeriksaController extends Controller
             } else if ($isResep && $countObat == 0) {
                 $status = 'TIDAK DIAMBIL';
             } else {
-                $status =  '-';
+                $status = '-';
             }
         } else {
-            $status =  '-';
+            $status = '-';
         }
 
         return $status;
@@ -209,8 +213,8 @@ class RegPeriksaController extends Controller
 
     public function hitungStatusResep(Request $request)
     {
-        $resep =  $this->ambilResep($request)->get();
-        $total =  $this->ambilResep($request)->count();
+        $resep = $this->ambilResep($request)->get();
+        $total = $this->ambilResep($request)->count();
         $lengkap = 0;
         $tanpaResep = 0;
         $tidakAmbil = 0;

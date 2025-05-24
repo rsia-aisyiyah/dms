@@ -44,7 +44,7 @@ class LaporanIGDController extends Controller
 
         $igd = RegPeriksa::select(DB::raw('count(*) as jumlah'))
             ->where('kd_poli', 'IGDK')
-
+            ->where('stts', '!=', 'Batal')
             ->groupBy('status_lanjut');
 
         $hcu = KamarInap::where('kd_kamar', 'like', '%HCU%')
@@ -90,12 +90,12 @@ class LaporanIGDController extends Controller
 
         if ($request->ajax()) {
             $tgl_pertama && $tgl_kedua ?
-            $data->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua])
-                ->with('bridgingSep')
-            :
-            $data->whereMonth('tgl_registrasi', date('m'))
-                ->whereYear('tgl_registrasi', date('Y'))
-                ->with('bridgingSep');
+                $data->whereBetween('tgl_registrasi', [$tgl_pertama, $tgl_kedua])
+                    ->with('bridgingSep')
+                :
+                $data->whereMonth('tgl_registrasi', date('m'))
+                    ->whereYear('tgl_registrasi', date('Y'))
+                    ->with('bridgingSep');
 
             if ($spesialis) {
                 $data->whereHas('dokter.spesialis', function ($query) use ($spesialis) {
@@ -131,9 +131,9 @@ class LaporanIGDController extends Controller
             })
             ->editColumn('alamat', function ($data) {
                 return $data->pasien->alamat . ", "
-                . $data->pasien->kelurahan->nm_kel . ", "
-                . $data->pasien->kecamatan->nm_kec . ", "
-                . $data->pasien->kabupaten->nm_kab;
+                    . $data->pasien->kelurahan->nm_kel . ", "
+                    . $data->pasien->kecamatan->nm_kec . ", "
+                    . $data->pasien->kabupaten->nm_kab;
             })
             ->editColumn('nm_sps', function ($data) {
                 return $data->dokter->spesialis->nm_sps;

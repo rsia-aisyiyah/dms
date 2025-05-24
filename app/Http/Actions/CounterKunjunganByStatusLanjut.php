@@ -2,6 +2,7 @@
 
 namespace App\Http\Actions;
 
+use App\Http\Controllers\Collection\RegPeriksaCollection;
 use App\Models\RegPeriksa;
 use Illuminate\Http\Request;
 
@@ -10,25 +11,14 @@ class CounterKunjunganByStatusLanjut
 {
 
 
-	public function __invoke(RegPeriksa $regPeriksa, Request $request)
+	public function __invoke(RegPeriksaCollection $regPeriksa, Request $request)
 	{
-		// TODO: Implement __invoke() method.
+		$data = $regPeriksa->getRegByStatusLanjut($request);
+		$dataUgd = $regPeriksa->getRegPeriksaOnUgd($request);
 
-		 $query = $regPeriksa->month($request->month, $request->year)
-			->status()
-			->with('poliklinik')
-			->get();
-
-		 $collection = collect($query);
-
-		 $arrayStatus = $collection->groupBy('status_lanjut')->map(function ($item){
-			 return $item->count();
-		 })->toArray();
-
-		 $total = array_sum($arrayStatus);
-		 $igd = $collection->where('kd_poli', 'IGDK')->count();
-		 $arrayStatus = array_merge($arrayStatus, ['Total' => $total, 'UGD' => $igd]);
-
-		 return response()->json($arrayStatus);
+		return response()->json([
+			'data' => $data,
+			'dataUgd' => $dataUgd,
+		]);
 	}
 }
