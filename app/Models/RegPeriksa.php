@@ -39,7 +39,7 @@ class RegPeriksa extends Model
     public function diagnosa()
     {
         return $this->hasMany(DiagnosaPasien::class, 'no_rawat', 'no_rawat');
-//            ->where('kd_penyakit', 'not like', 'Z%');
+        //            ->where('kd_penyakit', 'not like', 'Z%');
     }
 
     public function diagnosaWithoutZ(): HasMany
@@ -320,11 +320,13 @@ class RegPeriksa extends Model
     {
         return $this->hasOneThrough(Kabupaten::class, Pasien::class, 'no_rkm_medis', 'kd_kab', 'no_rkm_medis', 'kd_kab');
     }
-  
-    function estimasi(){
+
+    function estimasi()
+    {
         return $this->hasOne(EstimasiPoli::class, 'no_rawat', 'no_rawat');
     }
-    function selesai(){
+    function selesai()
+    {
         return $this->hasOne(SelesaiPoli::class, 'no_rawat', 'no_rawat');
     }
 }

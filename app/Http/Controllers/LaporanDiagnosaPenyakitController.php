@@ -35,6 +35,7 @@ class LaporanDiagnosaPenyakitController extends Controller
         $status = $request->status;
         $diagnosa = $request->diagnosa;
         $pembiayaan = $request->pembiayaan;
+        $jk = $request->jk;
 
         $data = DiagnosaPasien::where('prioritas', 1);
 
@@ -60,6 +61,11 @@ class LaporanDiagnosaPenyakitController extends Controller
             if ($pembiayaan) {
                 $data->whereHas('regPeriksa.penjab', function ($query) use ($pembiayaan) {
                     $query->where('png_jawab', 'like', "%$pembiayaan%");
+                });
+            }
+            if ($jk) {
+                $data->whereHas('regPeriksa.pasien', function ($query) use ($jk) {
+                    $query->where('jk', $jk);
                 });
             }
         }
