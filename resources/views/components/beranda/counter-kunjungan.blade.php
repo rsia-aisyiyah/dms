@@ -71,11 +71,16 @@
                     'year': year,
                     'month': month
                 }).done((response) => {
+
+                    console.log(response.data);
+                    
+
                     for (const [key, value] of Object.entries(response.data)) {
                         if (value === 0) {
                             $('.info-box-number').find('span').text(0)
                         }
-                        $(`#count${key}`).text(value)
+                        $(`#count${key}`).html(value)
+
                     }
 
                     $('#kunjunganUgdRanap').text(`RI ${response.dataUgd['Ranap']}`)

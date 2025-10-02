@@ -41,10 +41,25 @@ class RegPeriksaCollection extends Controller
 
     public function getRegPeriksaOnUgd(Request $request)
     {
-        $regCollection = $this->getAll($request)->where('kd_poli', 'IGDK');
-        return $regCollection->groupBy('status_lanjut')->mapWithKeys(function ($item, $key) {
+       // Definisikan struktur default sebagai Collection
+    $defaultCounts = collect([
+        'Ranap' => 0,
+        'Ralan' => 0,
+    ]);
+
+    $regCollection = $this->getAll($request)->where('kd_poli', 'IGDK');
+
+    $actualCounts = $regCollection->groupBy('status_lanjut')->mapWithKeys(function ($item, $key) {
+        if ($key) {
             return [$key => $item->count()];
-        })->toArray();
+        }
+        return [];
+    });
+
+    // Gabungkan collection default dengan hasil aktual
+    $result = $defaultCounts->merge($actualCounts);
+
+    return $result->toArray();
     }
 
     public function getByYear($year = ''): Collection
