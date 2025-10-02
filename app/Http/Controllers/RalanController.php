@@ -263,19 +263,21 @@ class RalanController extends Controller
 
         if ($request->ajax()) {
             for ($i = 1; $i <= 12; $i++) {
-                $query = RegPeriksa::select(DB::raw('count(*) as jumlah'))
+                $query = RegPeriksa::select('stts_daftar', DB::raw('count(*) as jumlah'))
                     ->whereYear('tgl_registrasi', $tahun)
                     ->whereMonth('tgl_registrasi', $i)
                     ->where('status_lanjut', 'Ralan')
                     ->where('stts', '!=', 'Batal')
-                    ->whereIn('kd_poli', ['P001', 'P003', 'P008', 'P007', 'P009'])
+                    ->whereHas('dokter', function ($query) {
+                    $query->whereIn('kd_sps', ['S0001', 'S0003', 'S0005']);
+                })
                     ->groupBy('stts_daftar')
                     ->get()
-                    ->pluck('jumlah');
+                    ->pluck('jumlah', 'stts_daftar');
 
-                $lama = empty($query[0]) ? 0 : $query[0];
-                $baru = empty($query[1]) ? 0 : $query[1];
-
+                // Mengambil data secara aman, jika tidak ada maka nilainya 0
+                $lama = $query['Lama'] ?? 0;
+            $baru = $query['Baru'] ?? 0;
                 $indexBulan = $tanggal->startOfMonth()->month($i)->monthName;
                 $data["$indexBulan"] = (object) [
                     'bulan' => $indexBulan . " " . $tahun,
