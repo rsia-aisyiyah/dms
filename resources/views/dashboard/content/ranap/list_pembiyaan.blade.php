@@ -73,15 +73,13 @@
                 function renderTbPasienRanap(tahun) {
                     $('#tbPasienRanap').DataTable({
                         ajax: {
-                            url: `${url}/ranap/pembiayaan/json`,
+                            url: `/dms/ranap/pembiayaan/json`,
                             dataType: 'json',
-                            data: {
-                                tahun: tahun,
-                            },
+                            data: { tahun },
                         },
                         processing: true,
                         serverSide: true,
-                        destroy: false,
+                        destroy: true,
                         deferRender: true,
                         lengthChange: false,
                         ordering: false,
@@ -107,119 +105,51 @@
                             },
                         },
 
-                        buttons: [{
+                        buttons: [
+                            {
                                 extend: 'copy',
                                 text: '<i class="fas fa-copy"></i> Salin',
                                 className: 'btn btn-info',
-                                title: 'laporan-jumlah-kunjungan-poli-{{ date('dmy') }}'
+                                title: 'laporan-pasien-ranap-' + new Date().toLocaleDateString('id-ID')
                             },
                             {
                                 extend: 'csv',
                                 text: '<i class="fas fa-file-csv"></i> CSV',
                                 className: 'btn btn-info',
-                                title: 'laporan-jumlah-kunjungan-poli-{{ date('dmy') }}'
+                                title: 'laporan-pasien-ranap-' + new Date().toLocaleDateString('id-ID')
                             },
                             {
                                 extend: 'excel',
                                 text: '<i class="fas fa-file-excel"></i> Excel',
                                 className: 'btn btn-info',
-                                title: 'laporan-jumlah-kunjungan-poli-{{ date('dmy') }}'
+                                title: 'laporan-pasien-ranap-' + new Date().toLocaleDateString('id-ID')
                             },
                         ],
-                        columns: [{
-                                data: 'bulan',
-                                name: 'bulan'
-                            },
-                            {
-                                data: 'data.kandungan.BPJS',
-                                render: (data, type, row, meta) => {
-                                    return data ? data : 0;
-                                },
-                                name: 'data.kandungan.BPJS'
 
-                            },
-                            {
-                                data: 'data.kandungan.UMUM',
-                                render: (data, type, row, meta) => {
-                                    return data ? data : 0;
+                        columns: [
+                            { data: 'bulan', name: 'bulan' },
 
-                                },
-                                name: 'data.kandungan.UMUM'
-                            },
-                            {
-                                data: 'data.kandungan',
-                                render: (data, type, row, meta) => {
-                                    const bpjs = data.BPJS ? data.BPJS : 0;
-                                    const umum = data.UMUM ? data.UMUM : 0;
+                            // --- OBGYN ---
+                            { data: 'obgyn_bpjs', render: d => d ?? 0, className: 'text-center' },
+                            { data: 'obgyn_umum', render: d => d ?? 0, className: 'text-center' },
+                            { data: 'obgyn_total', render: d => d ?? 0, className: 'text-center fw-bold' },
 
-                                    return bpjs + umum;
-                                },
-                                name: 'obgyn.total'
-                            },
-                            {
-                                data: 'data.anak.BPJS',
-                                render: (data, type, row, meta) => {
-                                    return data ? data : 0;
-                                },
-                                name: 'data.anak.BPJS'
+                            // --- ANAK ---
+                            { data: 'anak_bpjs', render: d => d ?? 0, className: 'text-center' },
+                            { data: 'anak_umum', render: d => d ?? 0, className: 'text-center' },
+                            { data: 'anak_total', render: d => d ?? 0, className: 'text-center fw-bold' },
 
-                            },
-                            {
-                                data: 'data.anak.UMUM',
-                                render: (data, type, row, meta) => {
-                                    return data ? data : 0;
+                            // --- BAYI ---
+                            { data: 'bayi_bpjs', render: d => d ?? 0, className: 'text-center' },
+                            { data: 'bayi_umum', render: d => d ?? 0, className: 'text-center' },
+                            { data: 'bayi_total', render: d => d ?? 0, className: 'text-center fw-bold' },
 
-                                },
-                                name: 'data.anak.UMUM'
-                            },
-                            {
-                                data: 'data.anak',
-                                render: (data, type, row, meta) => {
-                                    const bpjs = data?.BPJS ? data?.BPJS : 0;
-                                    const umum = data?.UMUM ? data?.UMUM : 0;
-
-                                    return bpjs + umum;
-                                },
-                            },
-                            {
-                                data: 'data.bayi.BPJS',
-                                render: (data, type, row, meta) => {
-                                    return data ? data : 0;
-                                },
-                                name: 'data.bayi.BPJS'
-
-                            },
-                            {
-                                data: 'data.bayi.UMUM',
-                                render: (data, type, row, meta) => {
-                                    return data ? data : 0;
-
-                                },
-                                name: 'data.bayi.UMUM'
-                            },
-                            {
-                                data: 'data.bayi',
-                                render: (data, type, row, meta) => {
-                                    const bpjs = data?.BPJS ? data?.BPJS : 0;
-                                    const umum = data?.UMUM ? data?.UMUM : 0;
-
-                                    return bpjs + umum;
-                                },
-                            },
-                            {
-                                data: '',
-                                render: (data, type, row, meta) => {
-                                    const kandungan = row.data.kandungan.total;
-                                    const anak = row.data.anak.total;
-                                    const bayi = row.data.bayi.total;
-
-                                    return kandungan + anak + bayi;
-                                },
-                            },
-
+                            // --- TOTAL ---
+                            { data: 'total', render: d => d ?? 0, className: 'text-center fw-bold bg-light' },
                         ],
                     });
                 }
+
 
                 $('#yearpickerRanap').on('change.datetimepicker', function() {
                     var tahun = $(this).val();

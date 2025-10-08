@@ -299,61 +299,81 @@ class RanapController extends Controller
         }
     }
 
-    public function jsonpPembiayaan(Request $request)
-    {
+	public function jsonpPembiayaan(Request $request)
+	{
+		$tahun = $request->tahun ?? date('Y');
 
-        $tahun = $request->tahun ? $request->tahun : date('Y');
+		$records = RegPeriksa::select([
+			'no_rawat', 'kd_dokter', 'kd_pj', 'status_lanjut', 'stts',
+			'tgl_registrasi', 'umurdaftar', 'sttsumur'
+		])
+			->with([
+				'penjab:kd_pj,png_jawab',
+				'dokter:kd_dokter,nm_dokter,dokter.kd_sps',
+				'spesialis:spesialis.kd_sps,nm_sps'
+			])
+			->whereYear('tgl_registrasi', $tahun)
+			->where('status_lanjut', 'Ranap')
+			->whereHas('kamarInap', function ($query) {
+				$query->where('stts_pulang', '!=', 'Pindah Kamar');
+			})
+			->where('stts', '!=', 'Batal')
+			->whereHas('dokter', function ($q) {
+				$q->whereIn('dokter.kd_sps', ['S0001', 'S0003']); // Obgyn dan Anak
+			})
+			->orderBy('tgl_registrasi', 'asc')
+			->get();
 
-        $records = RegPeriksa::select(
-            ['no_rawat', 'kd_dokter', 'kd_pj', 'status_lanjut', 'stts', 'tgl_registrasi', 'umurdaftar', 'sttsumur']
-         )->with(['penjab' => function($q){
-            return $q->select('kd_pj', 'png_jawab');
-         }, 'dokter' => function($q){
-            return $q->select('kd_dokter', 'nm_dokter');
-         }, 'spesialis', ])
-            ->whereYear('tgl_registrasi', $tahun)
-            ->where('status_lanjut', 'Ranap')
-            ->whereHas('kamarInap', function ($query) {
-                $query->where('stts_pulang', '!=', 'Pindah Kamar');
-            })
-            ->where('stts', '!=', 'Batal')
-            ->whereHas('dokter', function ($q) {
-                $q->whereIn('dokter.kd_sps', ['S0001', 'S0003']);
-            })->orderBy('tgl_registrasi', 'asc')
-            ->get();
-$groupedByMonth = $records->groupBy(function ($item) {
-    return Carbon::parse($item['tgl_registrasi'])->translatedFormat('F'); // Nama bulan
-})->map(function ($items) {
-    return $items->groupBy(function ($item) {
-        // Menentukan kategori BAYI, ANAK, KANDUNGAN
-        if ($item['sttsumur'] === "Hr" && $item['umurdaftar'] < 30) {
-            return "bayi";
-        }
-        return str_contains($item['spesialis']['nm_sps'], "ANAK") ? "anak" : "kandungan";
-    })->map(function ($group) {
-        // Mengelompokkan berdasarkan jenis BPJS
-        $grouped = $group->groupBy(function ($item) {
-            return str_contains($item['penjab']['png_jawab'], "BPJS") ? "BPJS" : $item['penjab']['png_jawab'];
-        })->map->count();
+		$groupedByMonth = $records->groupBy(function ($item) {
+			return Carbon::parse($item->tgl_registrasi)->translatedFormat('F');
+		});
 
-        // Menambahkan total per kategori
-        $grouped['total'] = $grouped->sum();  // Total untuk kategori ini
+		$formattedData = $groupedByMonth->map(function ($items, $month) use ($tahun) {
+			// Inisialisasi kategori
+			$counts = [
+				'obgyn_bpjs' => 0,
+				'obgyn_umum' => 0,
+				'anak_bpjs' => 0,
+				'anak_umum' => 0,
+				'bayi_bpjs' => 0,
+				'bayi_umum' => 0,
+			];
 
-        return $grouped;
-    });
-});
+			foreach ($items as $item) {
+				// Tentukan kategori: bayi, anak, atau obgyn
+				if ($item->sttsumur === "Hr" && $item->umurdaftar < 30) {
+					$kategori = 'bayi';
+				} elseif (str_contains(strtoupper($item->spesialis->nm_sps ?? ''), 'ANAK')) {
+					$kategori = 'anak';
+				} else {
+					$kategori = 'obgyn';
+				}
 
-// Menyiapkan data untuk DataTables
-$formattedData = $groupedByMonth->map(function ($monthsData, $month) use ($tahun) {
-    return [
-        'bulan' => $month. " " . $tahun,  // Kolom bulan
-        'data' => $monthsData  // Menyimpan data spesialis dan BPJS
-    ];
-});
+				// Tentukan jenis pembiayaan
+				$jenis = str_contains(strtoupper($item->penjab->png_jawab ?? ''), 'BPJS') ? 'bpjs' : 'umum';
 
-return DataTables::of($formattedData)->make(true);
-    }
-    public function jsonGenderRanap(Request $request)
+				$key = "{$kategori}_{$jenis}";
+				if (isset($counts[$key])) {
+					$counts[$key]++;
+				}
+			}
+
+			// Hitung total per kategori dan total keseluruhan
+			$counts['obgyn_total'] = $counts['obgyn_bpjs'] + $counts['obgyn_umum'];
+			$counts['anak_total']  = $counts['anak_bpjs'] + $counts['anak_umum'];
+			$counts['bayi_total']  = $counts['bayi_bpjs'] + $counts['bayi_umum'];
+			$counts['total']       = $counts['obgyn_total'] + $counts['anak_total'] + $counts['bayi_total'];
+
+			return [
+				'bulan' => "{$month} {$tahun}",
+				...$counts
+			];
+		})->values();
+
+		return DataTables::of($formattedData)->make(true);
+	}
+
+	public function jsonGenderRanap(Request $request)
     {
 
         $tanggal = new Carbon('this month');
