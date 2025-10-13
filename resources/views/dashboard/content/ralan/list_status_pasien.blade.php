@@ -196,7 +196,8 @@
                 dokter = $(this).val();
                 cekTanggal();
                 $('#table-kunjungan').DataTable().destroy();
-                load_data(tgl_pertama, tgl_kedua, $('#daftar').val(), $('#poli').val(), dokter);
+                console.log(dokter)
+                load_data(tgl_pertama, tgl_kedua, $('#daftar').val(), $('#poli').val(), dokter, $('#pembiayaan').val());
             });
 
             $('#pembiayaan').on('change', function() {
@@ -224,7 +225,7 @@
                     },
                     processing: true,
                     serverSide: true,
-                    destroy: false,
+                    destroy: true,
                     deferRender: true,
                     lengthChange: true,
                     ordering: false,

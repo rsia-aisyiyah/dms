@@ -58,20 +58,19 @@ class RalanController extends Controller
             ->where('status_lanjut', 'Ralan')
             ->whereHas('dokter', function ($query) {
                 $query->whereIn('kd_sps', ['S0001', 'S0003', 'S0005']);
-            });
+            })
+	        ->whereHas('penjab', function ($query) use ($request) {
+		        $query->where('png_jawab', 'like', '%' . $request->pembiayaan . '%');
+	        })
+	        ->where('kd_dokter', $request->kd_dokter)
+	    ->whereHas('dokter', function ($query) use ($request) {
+	    $query->where('kd_sps', 'like', '%' . $request->poli . '%');
+    });
         if ($request->ajax()) {
             if ($request->tgl_pertama && $request->tgl_kedua) {
                 $data->where('stts_daftar', 'like', '%' . $request->daftar . '%')
-                    ->whereBetween('tgl_registrasi', [$request->tgl_pertama, $request->tgl_kedua])
-                    ->whereHas('dokter', function ($query) use ($request) {
-                        $query->where('kd_sps', 'like', '%' . $request->poli . '%');
-                    })
-                    ->whereHas('penjab', function ($query) use ($request) {
-                        $query->where('png_jawab', 'like', '%' . $request->pembiayaan . '%');
-                    })
-                    ->whereHas('dokter', function ($query) use ($request) {
-                        $query->where('kd_dokter', 'like', '%' . $request->kd_dokter . '%');
-                    });
+                    ->whereBetween('tgl_registrasi', [$request->tgl_pertama, $request->tgl_kedua]);
+
             } else {
                 $data->whereMonth('tgl_registrasi', date('m'))
                     ->whereYear('tgl_registrasi', date('Y'));
