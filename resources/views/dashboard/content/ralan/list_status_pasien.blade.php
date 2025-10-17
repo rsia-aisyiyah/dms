@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <form action="" id="filterPasienRajal">
                         <div class="row">
-                            <div class="col-lg-3 col-sm-12">
+                            <div class="col-lg-4 col-xl-3 col-sm-12">
                                 <div class="form-group">
                                     <label>Tanggal :</label>
                                     <div class="input-group">
@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-2 col-sm-12">
+                            <div class="col-lg-1 col-xl-2 col-sm-12">
                                 <div class="form-group">
                                     <label>Status Daftar :</label>
                                     <select name="daftar" id="daftar" class="custom-select form-control-border">

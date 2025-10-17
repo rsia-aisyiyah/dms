@@ -98,6 +98,7 @@ class RalanController extends Controller
 						$query->where('nm_pasien', 'like', '%' . $request->get('search')['value'] . '%');
 					});
 				}
+
 			})
 			->editColumn('kd_sps', function ($data) {
 				return $data->dokter->kd_sps;
