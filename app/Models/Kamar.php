@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\Bangsal;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Kamar extends Model
 {
-    use HasFactory;
-    protected $table = 'kamar';
+	use HasFactory;
 
-    public function bangsal()
-    {
-        return $this->belongsTo(Bangsal::class, 'kd_bangsal', 'kd_bangsal');
-    }
+	protected $table = 'kamar';
+
+	public function bangsal()
+	{
+		return $this->belongsTo(Bangsal::class, 'kd_bangsal', 'kd_bangsal');
+	}
+
+	public function inap()
+	{
+		return $this->hasMany(KamarInap::class, 'kd_kamar', 'kd_kamar');
+	}
 }

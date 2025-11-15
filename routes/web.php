@@ -140,6 +140,7 @@ Route::middleware('auth')->group(function () {
 
 	Route::get('/kamar', [KamarInapController::class, 'jumlahKamar']);
 	Route::get('/kamar/rekap', [KamarInapController::class, 'rekapKunjungan']);
+	Route::get('/kamar/detail/rekap', [KamarController::class, 'rekapKamar']);
 
 	Route::middleware('admin')->group(function () {
 		Route::get('/tarif/kamar', [KamarController::class, 'index']);
