@@ -30,39 +30,106 @@ class KamarInapController extends Controller
 		$bulan = $request->bulan ? $request->bulan : date('m');
 		foreach ($kelas as $i => $k) {
 
-			$kamarInap = KamarInap::where('stts_pulang', '!=', 'Pindah Kamar')
-				->whereYear('tgl_keluar', $tahun)
+			$kamarInap = KamarInap::whereYear('tgl_keluar', $tahun)
 				->whereMonth('tgl_keluar', $bulan)
+				->where('stts_pulang', '!=', 'Pindah Kamar')
 				->whereHas('kamar', function ($q) use ($k) {
-					$q->where('kelas', 'like', "%" . $k . "%");
+					$q->where('kelas', 'like', "%" . $k . "%")
+						->where('kd_bangsal', 'not like', '%BYA%');
 				})->get()->count();
-			$kamarHcu = KamarInap::where('stts_pulang', '!=', 'Pindah Kamar')
-				->whereYear('tgl_keluar', $tahun)
-				->whereMonth('tgl_keluar', $bulan)
-				->whereHas('kamar', function ($q) {
-					$q->whereIn('kd_bangsal', ['HCU1', 'HCU2']);
-				})->get()->count();
-			$kamarIcu = KamarInap::where('stts_pulang', '!=', 'Pindah Kamar')
-				->whereYear('tgl_keluar', $tahun)
-				->whereMonth('tgl_keluar', $bulan)
-				->whereHas('kamar', function ($q) {
-					$q->where('kd_bangsal', 'like', '%ICU%');
-				})->get()->count();
+
 
 			$data[] = [
 				'kelas' => $k,
 				'jumlahKelas' => $jumlahKelas[$i],
 				'data' => $kamarInap,
+				'lama' => KamarInap::whereMonth('tgl_keluar', $bulan)
+					->whereYear('tgl_keluar', $tahun)
+					->whereHas('kamar', function ($q) use ($k) {
+						$q->where('kelas', 'like', "%" . $k . "%");
+					})
+					->select('lama')->get()->sum('lama'),
 			];
 		}
 
-		$hcu[] = [
-			'kelas' => 'HCU',
-			'jumlahKelas' => Kamar::where('kd_kamar', 'like', '%HCU%')->get()->count(),
-			'data' => $kamarHcu,
+		$kamarVK = KamarInap::whereYear('tgl_keluar', $tahun)
+			->whereMonth('tgl_keluar', $bulan)
+			->where('stts_pulang', '!=', 'Pindah Kamar')
+			->whereHas('kamar', function ($q) {
+				$q->where('kd_bangsal', 'like', '%VK%');
+			})->get()->count();
+
+		$vk[] = [
+			'kelas' => 'VK',
+			'jumlahKelas' => Kamar::where('kd_kamar', 'like', '%VK%')->get()->count(),
+			'data' => $kamarVK,
+			'lama' => KamarInap::whereMonth('tgl_keluar', $bulan)
+				->whereYear('tgl_keluar', $tahun)
+				->select('lama')->where('kd_kamar', 'like', '%VK%')->get()->sum('lama'),
+		];
+		$kamarICU = KamarInap::whereYear('tgl_keluar', $tahun)
+			->whereMonth('tgl_keluar', $bulan)
+			->where('stts_pulang', '!=', 'Pindah Kamar')
+			->whereHas('kamar', function ($q) {
+				$q->where('kd_bangsal', 'like', 'ICU%');
+			})->get()->count();
+		$kamarPICU = KamarInap::whereYear('tgl_keluar', $tahun)
+			->whereMonth('tgl_keluar', $bulan)
+			->where('stts_pulang', '!=', 'Pindah Kamar')
+			->whereHas('kamar', function ($q) {
+				$q->where('kd_bangsal', 'like', 'PICU%');
+			})->get()->count();
+		$kamarNICU = KamarInap::whereYear('tgl_keluar', $tahun)
+			->whereMonth('tgl_keluar', $bulan)
+			->where('stts_pulang', '!=', 'Pindah Kamar')
+			->whereHas('kamar', function ($q) {
+				$q->where('kd_bangsal', 'like', 'NICU%');
+			})->get()->count();
+		$kamarIsolasi = KamarInap::whereYear('tgl_keluar', $tahun)
+			->whereMonth('tgl_keluar', $bulan)
+			->where('stts_pulang', '!=', 'Pindah Kamar')
+			->whereHas('kamar', function ($q) {
+				$q->where('kd_bangsal', 'like', '%ISO%');
+			})->get()->count();
+		$icu[] = [
+			'kelas' => 'ICU',
+			'jumlahKelas' => Kamar::where('kd_kamar', 'like', 'ICU%')
+				->where('statusdata', '1')->get()->count(),
+			'data' => $kamarICU,
+			'lama' => KamarInap::whereMonth('tgl_keluar', $bulan)
+				->whereYear('tgl_keluar', $tahun)
+				->select('lama')->where('kd_kamar', 'like', '%ICU%')->get()->sum('lama'),
+		];
+		$picu[] = [
+			'kelas' => 'PICU',
+			'jumlahKelas' => Kamar::where('kd_kamar', 'like', 'PICU%')
+				->where('statusdata', '1')->get()->count(),
+			'data' => $kamarPICU,
+			'lama' => KamarInap::whereMonth('tgl_keluar', $bulan)
+				->whereYear('tgl_keluar', $tahun)
+				->select('lama')->where('kd_kamar', 'like', '%PICU%')->get()->sum('lama'),
+		];
+		$nicu[] = [
+			'kelas' => 'NICU',
+			'jumlahKelas' => Kamar::where('kd_kamar', 'like', 'NICU%')
+				->where('statusdata', '1')->get()->count(),
+			'data' => $kamarNICU,
+			'lama' => KamarInap::whereMonth('tgl_keluar', $bulan)
+				->whereYear('tgl_keluar', $tahun)
+				->select('lama')->where('kd_kamar', 'like', '%NICU%')->get()->sum('lama'),
 		];
 
-		$dataMerge = array_merge($data, $hcu);
+		$isolasi[] = [
+			'kelas' => 'ISOLASI',
+			'jumlahKelas' => Kamar::where('kd_kamar', 'like', '%ISO%')
+				->where('statusdata', '1')->get()->count(),
+			'data' => $kamarIsolasi,
+			'lama' => KamarInap::whereMonth('tgl_keluar', $bulan)
+				->whereYear('tgl_keluar', $tahun)
+				->select('lama')->where('kd_kamar', 'like', '%ISO%')->get()->sum('lama'),
+		];
+
+		$dataMerge = array_merge($data, $vk, $icu, $picu, $nicu, $isolasi);
 		return DataTables::of($dataMerge)->make(true);
 	}
 
@@ -71,6 +138,7 @@ class KamarInapController extends Controller
 		$data = Kamar::select(DB::raw('count(*) as jumlah'), 'kelas')
 			->where('trf_kamar', '!=', 0)
 			->where('statusdata', '1')
+			->where('kelas', '!=', 'Kelas Utama')
 			->groupBy('kelas')->get();
 
 		$this->kelas = $data->pluck('kelas')->toArray();

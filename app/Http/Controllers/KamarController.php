@@ -64,40 +64,34 @@ class KamarController extends Controller
 
 	public function rekapKamar(Request $request)
 	{
-		// Tentukan Tahun dan Bulan yang akan difilter
-		// Anda bisa mengambil ini dari request ($request->input('tahun', '2025'))
-		$tahun = $request->tahun ? $request->tahun : date('Y');
-		$bulan = $request->bulan ? $request->bulan : date('m');
+		$tahun = $request->tahun ?? date('Y');
+		$bulan = $request->bulan ?? date('m');
+		$kelas = $request->kelas;
 
-		$kamar = Kamar::where('statusdata', '1')->whereHas('inap', function ($query) use ($tahun, $bulan) {
-			// 1. Memfilter Kamar: Hanya mengambil kamar yang memiliki relasi inap yang memenuhi kriteria
-			$query->whereYear('tgl_keluar', $tahun)->whereMonth('tgl_keluar', $bulan);
-		})
-			// 2. Eager Load Relasi 'inap': Memuat data inap yang difilter
-			->with(['inap' => function ($q) use ($tahun, $bulan) {
-				$q->whereYear('tgl_keluar', $tahun)->whereMonth('tgl_keluar', $bulan);
-			}])
-			->with('bangsal')
-			// 3. Menghitung Jumlah Relasi 'inap': Menambahkan 'inap_count'
-			->withCount(['inap' => function ($q) use ($tahun, $bulan) {
-				$q->whereYear('tgl_keluar', $tahun)->whereMonth('tgl_keluar', $bulan);
-			}])
-			// 4. Menghitung Total Lama Inap: Menambahkan 'inap_sum_lama' (nama kolom default)
-			// Saya akan menggunakan alias agar namanya menjadi 'total_lama_inap'
-			->withSum([
-				'inap' => function ($q) use ($tahun, $bulan) {
-					$q->whereYear('tgl_keluar', $tahun)->whereMonth('tgl_keluar', $bulan);
-				}
-			], 'lama')
-			->get()
-			// 5. Mengganti Nama Kolom Sum (Opsional):
-			// Jika Anda ingin nama kolomnya persis 'total_lama_inap' bukan 'inap_sum_lama'
-			->map(function ($k) {
-				$k->total_lama_inap = $k->inap_sum_lama;
-				unset($k->inap_sum_lama); // Hapus kolom asli jika tidak diperlukan
-				return $k;
-			});
+		$data = DB::table('kamar_inap as ki')
+			->select(
+				'ki.kd_kamar',
+				DB::raw('COUNT(DISTINCT ki.no_rawat) as total_pasien'),
+				DB::raw('SUM(ki.lama) as total_lama_inap'),
+				'kamar.kd_bangsal',
+				'kamar.kelas as kelas',
+				'bangsal.nm_bangsal',
 
-		return DataTables::of($kamar)->make(true);
+			)
+			->where('kamar.kd_bangsal', 'not like', '%BYA%')
+			->join('kamar', 'kamar.kd_kamar', '=', 'ki.kd_kamar')
+			->join('bangsal', 'bangsal.kd_bangsal', '=', 'kamar.kd_bangsal')
+			->whereYear('ki.tgl_keluar', $tahun)
+			->whereMonth('ki.tgl_keluar', $bulan)
+			->groupBy('ki.kd_kamar', 'kamar.kd_bangsal', 'bangsal.nm_bangsal');
+
+		if ($kelas) {
+			$data = $data->where('kamar.kelas', $kelas);
+		}
+
+		$data->get();
+
+		return DataTables::of($data)->make(true);
 	}
+
 }

@@ -23,7 +23,8 @@
                             <tr>
                                 <th>Kelas</th>
                                 <th>Jumlah Bed</th>
-                                <th>Jumlah Rawat</th>
+                                <th>Σ Lama Inap</th>
+                                <th>Σ Pasien</th>
                             </tr>
                             </thead>
                         </table>
@@ -40,8 +41,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-12">
-                    <label>Bulan</label>
+                <div class="col-6">
                     <div class="input-group mb-3">
                         <div class="input-group-append">
                             <span class="input-group-text" id="tahun-addon"><i
@@ -51,12 +51,27 @@
                                name="filterDetailLama" autocomplete="off" data-toggle="datetimepicker"
                                aria-describedby="tahun-addon" data-target="#monthPickerCpptVisit" autocomplete="off">
                     </div>
+                </div>
+                <div class="col-6">
+                    <select class="form-control" id="filterKelasKamarDetail">
+                        <option value="" selected>Semua Kelas</option>
+                        <option value="Kelas 1">Kelas 1</option>
+                        <option value="Kelas 2">Kelas 2</option>
+                        <option value="Kelas 3">Kelas 3</option>
+                        <option value="Kelas Utama">Kelas Utama</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label>Bulan</label>
+
+
                     <div class="table-responsive">
                         <table class="table table-striped text-sm" id="tbDetailLamaInap" style="width: 100%"
                                cellspacing="0">
                             <thead>
                             <tr>
                                 <th>Nama Kamar</th>
+                                <th>Kelas</th>
                                 <th>Σ Lama Inap</th>
                                 <th>Σ Pasien</th>
                             </tr>
@@ -162,6 +177,10 @@
                             name: 'jumlahKelas'
                         },
                         {
+                            data: 'lama',
+                            name: 'lama'
+                        },
+                        {
                             data: 'data',
                             name: 'data'
                         },
@@ -169,7 +188,7 @@
                 });
             }
 
-            function loadDataLamaInap(bulan = '', tahun = '') {
+            function loadDataLamaInap(bulan = '', tahun = '', kelas = '') {
                 $('#tbDetailLamaInap').DataTable({
                     ajax: {
                         url: '/dms/kamar/detail/rekap',
@@ -177,6 +196,7 @@
                         data: {
                             tahun: tahun,
                             bulan: bulan,
+                            kelas: kelas,
                         },
                     },
                     processing: true,
@@ -229,15 +249,18 @@
                     ],
                     columns: [
                         {
-                            data: 'bangsal.nm_bangsal',
-                            name: 'bangsal.nm_bangsal'
+                            data: 'nm_bangsal',
+                            name: 'nm_bangsal'
+                        }, {
+                            data: 'kelas',
+                            name: 'kelas'
                         },
                         {
                             data: 'total_lama_inap',
                             name: 'total_lama_inap'
                         }, {
-                            data: 'inap_count',
-                            name: 'inap_count'
+                            data: 'total_pasien',
+                            name: 'total_pasien'
                         },
 
                     ],
@@ -245,6 +268,14 @@
             }
 
 
+            $('#filterKelasKamarDetail').change(function (e) {
+                const date = $('#filterDetailLama').val().split('-');
+                const kelas = e.currentTarget.value
+                let bulan = date[0];
+                let tahun = date[1];
+                loadDataLamaInap(bulan, tahun, kelas);
+
+            })
         });
     </script>
 @endpush

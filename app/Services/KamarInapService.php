@@ -64,13 +64,7 @@ class KamarInapService
 			->select('lama');
 
 		if ($specialist === 'all') {
-			$kamarInap->where(function ($query) {
-				$query->where('kd_kamar', 'like', '%' . 'Kandungan' . '%')
-					->orWhere('kd_kamar', 'like', '%' . 'Anak' . '%')
-					->orWhere('kd_kamar', 'like', '%' . 'ICU' . '%')
-					->orWhere('kd_kamar', 'like', '%' . 'ISO' . '%')
-					->orWhere('kd_kamar', 'like', '%' . 'BYC' . '%');
-			});
+			$kamarInap->where('kd_kamar', 'not like', '%' . 'BYA' . '%');
 		} else {
 			$kamarInap->where('kd_kamar', 'like', '%' . $specialist . '%');
 		}
