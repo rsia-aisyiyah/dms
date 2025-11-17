@@ -363,10 +363,10 @@ class RanapController extends Controller
 			$counts['bayi_total'] = $counts['bayi_bpjs'] + $counts['bayi_umum'];
 			$counts['total'] = $counts['obgyn_total'] + $counts['anak_total'] + $counts['bayi_total'];
 
-			return [
-				'bulan' => "{$month} {$tahun}",
-				...$counts
-			];
+			return array_merge(
+				['bulan' => "{$month} {$tahun}"],
+				$counts
+			);
 		})->values();
 
 		return DataTables::of($formattedData)->make(true);
