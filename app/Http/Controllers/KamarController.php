@@ -64,36 +64,107 @@ class KamarController extends Controller
 
 	public function rekapKamar(Request $request)
 	{
-		$tahun = $request->tahun ?? date('Y');
-		$bulan = $request->bulan ?? date('m');
+//		$tahun = $request->tahun ?? date('Y');
+//		$bulan = $request->bulan ?? date('m');
+//		$kelas = $request->kelas;
+//		$data = DB::table('kamar as k')
+//			->select(
+//				'k.kd_kamar',
+//				'k.kelas',
+//				'k.kd_bangsal',
+//				'b.nm_bangsal',
+//				DB::raw('COUNT(DISTINCT ki.no_rawat) as total_pasien'),
+//				DB::raw('COALESCE(SUM(ki.lama), 0) as total_lama_inap')
+//			)
+//			->leftJoin('kamar_inap as ki', function ($join) use ($tahun, $bulan) {
+//				$join->on('ki.kd_kamar', '=', 'k.kd_kamar')
+//					->whereYear('ki.tgl_keluar', $tahun)
+//					->whereMonth('ki.tgl_keluar', $bulan)
+//					->where('ki.stts_pulang', '!=', 'Pindah Kamar');
+//			})
+//			->join('bangsal as b', 'b.kd_bangsal', '=', 'k.kd_bangsal')
+//			->where('k.kd_bangsal', 'not like', '%BYA%')
+//			->where('k.kd_bangsal', 'not like', '%HCU%')
+//			->where('k.statusdata', '1')
+//			->where('k.trf_kamar', '>', 0);
+//
+//		if ($kelas) {
+//			$data->where('k.kelas', $kelas);
+//		}
+//
+//		$data->groupBy('k.kd_kamar', 'k.kelas', 'k.kd_bangsal', 'b.nm_bangsal');
+
+		$tahun = $request->tahun ?: date('Y');
+		$bulan = $request->bulan ?: date('m');
 		$kelas = $request->kelas;
+
+		$qPasien = $this->queryTotalPasien($tahun, $bulan);
+		$qLama = $this->queryTotalLamaInap($tahun, $bulan);
+
 		$data = DB::table('kamar as k')
 			->select(
 				'k.kd_kamar',
 				'k.kelas',
 				'k.kd_bangsal',
 				'b.nm_bangsal',
-				DB::raw('COALESCE(COUNT(DISTINCT ki.no_rawat), 0) as total_pasien'),
-				DB::raw('COALESCE(SUM(ki.lama), 0) as total_lama_inap')
+				DB::raw('COALESCE(tp.total_pasien, 0) as total_pasien'),
+				DB::raw('COALESCE(tl.total_lama_inap, 0) as total_lama_inap')
 			)
-			->leftJoin('kamar_inap as ki', function ($join) use ($tahun, $bulan) {
-				$join->on('ki.kd_kamar', '=', 'k.kd_kamar')
-					->whereYear('ki.tgl_keluar', $tahun)
-					->whereMonth('ki.tgl_keluar', $bulan);
-			})
+			->leftJoinSub($qPasien, 'tp', 'tp.kd_kamar', '=', 'k.kd_kamar')
+			->leftJoinSub($qLama, 'tl', 'tl.kd_kamar', '=', 'k.kd_kamar')
 			->join('bangsal as b', 'b.kd_bangsal', '=', 'k.kd_bangsal')
-			->where('k.kd_bangsal', 'not like', '%BYA%')
 			->where('k.statusdata', '1')
-			->where('k.trf_kamar', '>', 0);
+			->where('k.trf_kamar', '>', 0)
+			->where('k.kd_bangsal', 'not like', '%BYA%')
+			->where('k.kd_bangsal', 'not like', '%HCU%');
 
 		if ($kelas) {
 			$data->where('k.kelas', $kelas);
 		}
 
-		$data->groupBy('k.kd_kamar', 'k.kelas', 'k.kd_bangsal', 'b.nm_bangsal');
+		return DataTables::of($data)->make(true);
+//		$data = KamarInap::whereYear('tgl_keluar', $tahun)
+//			->whereMonth('tgl_keluar', $bulan)
+//			->where('stts_pulang', '!=', 'Pindah Kamar')
+//			->whereHas('kamar', function ($q) use ($kelas) {
+//				$q->where('kelas', 'like', "%$kelas%")
+//					->where('statusdata', '1')
+//					->where('trf_kamar', '>', 0)
+//					->where('kd_bangsal', 'not like', '%BYA%')
+//					->where('kd_bangsal', 'not like', '%HCU%');
+//			})
+//			->select(
+//				'kamar.kd_bangsal',
+//				DB::raw('(SELECT nm_bangsal FROM bangsal b WHERE b.kd_bangsal = kamar.kd_bangsal) as nm_bangsal'),
+//				DB::raw('kamar.kelas as kelas'),
+//				DB::raw('COUNT(DISTINCT kamar_inap.no_rawat) as total_pasien'),
+//				DB::raw('SUM(kamar_inap.lama) as total_lama_inap')
+//			)
+//			->join('kamar', 'kamar.kd_kamar', '=', 'kamar_inap.kd_kamar')
+//			->groupBy('kamar.kd_bangsal', 'kamar.kelas')
+//			->get();
 
 		return DataTables::of($data)->make(true);
 
+	}
+
+	private function queryTotalPasien($tahun, $bulan)
+	{
+		return DB::table('kamar_inap as ki')
+			->select('ki.kd_kamar', DB::raw('COUNT(DISTINCT ki.no_rawat) as total_pasien'))
+			->whereYear('ki.tgl_keluar', $tahun)
+			->whereMonth('ki.tgl_keluar', $bulan)
+			->where('ki.stts_pulang', '!=', 'Pindah Kamar')
+			->groupBy('ki.kd_kamar');
+	}
+
+	private function queryTotalLamaInap($tahun, $bulan)
+	{
+		return DB::table('kamar_inap as ki')
+			->select('ki.kd_kamar', DB::raw('SUM(ki.lama) as total_lama_inap'))
+			->whereYear('ki.tgl_keluar', $tahun)
+			->whereMonth('ki.tgl_keluar', $bulan)
+			->groupBy('ki.kd_kamar');
 	}
 
 }

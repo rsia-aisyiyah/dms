@@ -27,6 +27,14 @@
                                 <th>Σ Pasien</th>
                             </tr>
                             </thead>
+                            <tfoot>
+                            <tr class="bg-gradient-green">
+                                <th>Total</th>
+                                <th></th>
+                                <th id="total-lama"></th>
+                                <th></th>
+                            </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -58,6 +66,7 @@
                         <option value="Kelas 1">Kelas 1</option>
                         <option value="Kelas 2">Kelas 2</option>
                         <option value="Kelas 3">Kelas 3</option>
+                        <option value="Kelas VIP">Kelas VIP</option>
                         <option value="Kelas Utama">Kelas Utama</option>
                     </select>
                 </div>
@@ -66,8 +75,7 @@
 
 
                     <div class="table-responsive">
-                        <table class="table table-striped text-sm" id="tbDetailLamaInap" style="width: 100%"
-                               cellspacing="0">
+                        <table class="table table-striped text-sm" id="tbDetailLamaInap" style="width: 100%">
                             <thead>
                             <tr>
                                 <th>Nama Kamar</th>
@@ -76,6 +84,14 @@
                                 <th>Σ Pasien</th>
                             </tr>
                             </thead>
+                            <tfoot>
+                            <tr class="bg-gradient-green">
+                                <th>Total</th>
+                                <th></th>
+                                <th id="total-lama"></th>
+                                <th></th>
+                            </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -134,8 +150,27 @@
                     paging: false,
                     dom: 'Blfrtip',
                     info: false,
+                    footerCallback: function (row, data, start, end, display) {
+                        let totalLama = data.reduce((sum, row) => {
+                            return sum + (parseInt(row.lama) || 0);
+                        }, 0);
+
+                        let totalPasien = data.reduce((sum, row) => {
+                            return sum + (parseInt(row.data) || 0);
+                        }, 0);
+
+                        let totalBed = data.reduce((sum, row) => {
+                            return sum + (parseInt(row.jumlahKelas) || 0);
+                        }, 0);
+
+                        $(this.api().column(1).footer()).html(totalBed);
+                        $(this.api().column(2).footer()).html(totalLama);
+                        $(this.api().column(3).footer()).html(totalPasien);
+                    },
                     initComplete: function (settings, json) {
                         toastr.success('Data telah dimuat', 'Berhasil');
+
+                        console.log('DATA ===', json)
                     },
                     language: {
                         processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>',
@@ -204,17 +239,29 @@
                     serverSide: true,
                     destroy: true,
                     deferRender: true,
-                    lengthChange: true,
+                    lengthChange: false,
                     ordering: false,
                     searching: false,
                     stateSave: false,
-                    paging: true,
-                    scrolY: '20vh',
-                    scrolX: 'true',
+                    paging: false,
+                    scrollY: '50vh',
+                    scrollCollapse: true,
                     dom: 'Blfrtip',
                     info: false,
+                    footerCallback: function (row, data, start, end, display) {
+                        let totalLama = data.reduce((sum, row) => {
+                            return sum + (parseInt(row.total_lama_inap) || 0);
+                        }, 0);
+                        let totalPasien = data.reduce((sum, row) => {
+                            return sum + (parseInt(row.total_pasien) || 0);
+                        }, 0);
+
+                        $(this.api().column(2).footer()).html(totalLama);
+                        $(this.api().column(3).footer()).html(totalPasien);
+                    },
                     initComplete: function (settings, json) {
                         toastr.success('Data telah dimuat', 'Berhasil');
+
                     },
                     language: {
                         processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>',
