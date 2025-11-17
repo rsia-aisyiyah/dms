@@ -35,7 +35,10 @@ class KamarInapController extends Controller
 				->where('stts_pulang', '!=', 'Pindah Kamar')
 				->whereHas('kamar', function ($q) use ($k) {
 					$q->where('kelas', 'like', "%" . $k . "%")
-						->where('kd_bangsal', 'not like', '%BYA%');
+						->where('statusdata', '1')
+						->where('trf_kamar', '>', 0)
+						->where('kd_bangsal', 'not like', '%BYA%')
+						->where('kd_bangsal', 'not like', '%HCU%');
 				})->get()->count();
 
 
@@ -136,9 +139,11 @@ class KamarInapController extends Controller
 	public function jumlahKamar()
 	{
 		$data = Kamar::select(DB::raw('count(*) as jumlah'), 'kelas')
-			->where('trf_kamar', '!=', 0)
 			->where('statusdata', '1')
 			->where('kelas', '!=', 'Kelas Utama')
+			->where('trf_kamar', '>', 0)
+			->where('kd_bangsal', 'not like', '%BYA%')
+			->where('kd_bangsal', 'not like', '%HCU%')
 			->groupBy('kelas')->get();
 
 		$this->kelas = $data->pluck('kelas')->toArray();
