@@ -67,31 +67,33 @@ class KamarController extends Controller
 		$tahun = $request->tahun ?? date('Y');
 		$bulan = $request->bulan ?? date('m');
 		$kelas = $request->kelas;
-
-		$data = DB::table('kamar_inap as ki')
+		$data = DB::table('kamar as k')
 			->select(
-				'ki.kd_kamar',
-				DB::raw('COUNT(DISTINCT ki.no_rawat) as total_pasien'),
-				DB::raw('SUM(ki.lama) as total_lama_inap'),
-				'kamar.kd_bangsal',
-				'kamar.kelas as kelas',
-				'bangsal.nm_bangsal',
-
+				'k.kd_kamar',
+				'k.kelas',
+				'k.kd_bangsal',
+				'b.nm_bangsal',
+				DB::raw('COALESCE(COUNT(DISTINCT ki.no_rawat), 0) as total_pasien'),
+				DB::raw('COALESCE(SUM(ki.lama), 0) as total_lama_inap')
 			)
-			->where('kamar.kd_bangsal', 'not like', '%BYA%')
-			->join('kamar', 'kamar.kd_kamar', '=', 'ki.kd_kamar')
-			->join('bangsal', 'bangsal.kd_bangsal', '=', 'kamar.kd_bangsal')
-			->whereYear('ki.tgl_keluar', $tahun)
-			->whereMonth('ki.tgl_keluar', $bulan)
-			->groupBy('ki.kd_kamar', 'kamar.kd_bangsal', 'bangsal.nm_bangsal');
+			->leftJoin('kamar_inap as ki', function ($join) use ($tahun, $bulan) {
+				$join->on('ki.kd_kamar', '=', 'k.kd_kamar')
+					->whereYear('ki.tgl_keluar', $tahun)
+					->whereMonth('ki.tgl_keluar', $bulan);
+			})
+			->join('bangsal as b', 'b.kd_bangsal', '=', 'k.kd_bangsal')
+			->where('k.kd_bangsal', 'not like', '%BYA%')
+			->where('k.statusdata', '1')
+			->where('k.trf_kamar', '>', 0);
 
 		if ($kelas) {
-			$data = $data->where('kamar.kelas', $kelas);
+			$data->where('k.kelas', $kelas);
 		}
 
-		$data->get();
+		$data->groupBy('k.kd_kamar', 'k.kelas', 'k.kd_bangsal', 'b.nm_bangsal');
 
 		return DataTables::of($data)->make(true);
+
 	}
 
 }

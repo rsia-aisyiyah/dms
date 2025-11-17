@@ -103,9 +103,10 @@
 
             $('#filterDetailLama').on('change.datetimepicker', function () {
                 var date = $(this).val().split('-');
+                var kelas = $('#filterKelasKamarDetail').val()
                 bulan = date[0];
                 tahun = date[1];
-                loadDataLamaInap(bulan, tahun);
+                loadDataLamaInap(bulan, tahun, kelas);
             });
 
 
