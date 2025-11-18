@@ -22,15 +22,107 @@ class KamarInapController extends Controller
 		$this->tanggal = new Carbon();
 	}
 
+//	public function rekapKunjungan(Request $request)
+//	{
+//		$tahun = $request->tahun ?: date('Y');
+//		$bulan = $request->bulan ?: date('m');
+//
+//		$rows = [];
+//
+//		// 🔹 KELAS BIASA
+//		foreach ($this->kelas as $i => $kelas) {
+//
+//			$rows[] = $this->getRekapKategori(
+//				$kelas,
+//				[
+//					['kelas', 'like', "%$kelas%"],
+//					['statusdata', '=', '1'],
+//					['trf_kamar', '>', 0],
+//					['kd_bangsal', 'not like', '%BYA%'],
+//					['kd_bangsal', 'not like', '%HCU%'],
+//				],
+//				$tahun,
+//				$bulan
+//			);
+//		}
+//
+//		$kategoriKhusus = [
+//			['VK', ['kd_bangsal', 'like', 'VK%'], ['kd_bangsal', 'like', '%VKISO%']],
+//			['ICU', ['kd_bangsal', 'like', 'ICU%']],
+//			['PICU', ['kd_bangsal', 'like', 'PICU%']],
+//			['NICU', ['kd_bangsal', 'like', 'NICU%']],
+//			['ISOLASI', ['kd_bangsal', 'like', '%ISO%']],
+//			['PERINATOLOGI', ['kd_bangsal', 'like', '%BYC%']],
+//		];
+//
+//		foreach ($kategoriKhusus as $item) {
+//			list($label, $filter) = $item;
+//
+//			$rows[] = $this->getRekapKategori(
+//				$label,
+//				[$filter],
+//				$tahun,
+//				$bulan
+//			);
+//		}
+//
+//		return DataTables::of($rows)->make(true);
+//	}
+//
+//	private function getRekapKategori($label, $filterBangsal, $tahun, $bulan)
+//	{
+//		// Hitung jumlah kamar
+//		$jumlahKelas = Kamar::where($filterBangsal)
+//			->where('statusdata', '1')
+//			->count();
+//
+//		// Hitung total pasien
+//		$totalPasien = KamarInap::whereYear('tgl_keluar', $tahun)
+//			->whereMonth('tgl_keluar', $bulan)
+//			->where('stts_pulang', '!=', 'Pindah Kamar')
+//			->whereHas('kamar', function ($q) use ($filterBangsal) {
+//				foreach ($filterBangsal as $filter) {
+//					$q->where($filter[0], $filter[1], $filter[2]);
+//				}
+//			})
+//			->count();
+//
+//		// Hitung total lama inap
+//		$totalLama = KamarInap::whereYear('tgl_keluar', $tahun)
+//			->whereMonth('tgl_keluar', $bulan)
+//			->whereHas('kamar', function ($q) use ($filterBangsal) {
+//				foreach ($filterBangsal as $filter) {
+//					$q->where($filter[0], $filter[1], $filter[2]);
+//				}
+//			})
+//			->sum('lama');
+//
+//		return [
+//			'kelas' => $label,
+//			'jumlahKelas' => $jumlahKelas,
+//			'data' => $totalPasien,
+//			'lama' => $totalLama,
+//		];
+//	}
+
 	public function rekapKunjungan(Request $request)
 	{
 		$tahun = $request->tahun ?: date('Y');
 		$bulan = $request->bulan ?: date('m');
 
+		$start = $request->tanggal ? $request->tanggal[0] : null;
+		$end = $request->tanggal ? $request->tanggal[1] : null;
+
+
+		// jika user pakai range tanggal → abaikan tahun-bulan
+		$useRange = ($start && $end);
+
 		$rows = [];
 
-		// 🔹 KELAS BIASA
-		foreach ($this->kelas as $i => $kelas) {
+		// ============================
+		// 1. KELAS NORMAL
+		// ============================
+		foreach ($this->kelas as $kelas) {
 
 			$rows[] = $this->getRekapKategori(
 				$kelas,
@@ -42,61 +134,86 @@ class KamarInapController extends Controller
 					['kd_bangsal', 'not like', '%HCU%'],
 				],
 				$tahun,
-				$bulan
+				$bulan,
+				$start,
+				$end,
+				$useRange
 			);
 		}
 
-		// 🔹 KATEGORI KHUSUS
+		// ============================
+		// 2. KATEGORI KHUSUS
+		// ============================
 		$kategoriKhusus = [
-			['VK', ['kd_bangsal', 'like', 'VK%']],
-			['ICU', ['kd_bangsal', 'like', 'ICU%']],
-			['PICU', ['kd_bangsal', 'like', 'PICU%']],
-			['NICU', ['kd_bangsal', 'like', 'NICU%']],
-			['ISOLASI', ['kd_bangsal', 'like', '%ISO%']],
-			['PERINATOLOGI', ['kd_bangsal', 'like', '%BYC%']],
+			// VK tapi exclude VKISO
+			['VK', [
+				['kd_bangsal', 'like', 'VK%'],
+				['kd_bangsal', 'not like', '%VKISO%'],
+			]],
+
+			['ICU', [['kd_bangsal', 'like', 'ICU%']]],
+			['PICU', [['kd_bangsal', 'like', 'PICU%']]],
+			['NICU', [['kd_bangsal', 'like', 'NICU%']]],
+			['ISOLASI', [['kd_bangsal', 'like', '%ISO%']]],
+			['PERINATOLOGI', [['kd_bangsal', 'like', '%BYC%']]],
 		];
 
-		foreach ($kategoriKhusus as $item) {
-			list($label, $filter) = $item;
+		foreach ($kategoriKhusus as [$label, $filter]) {
 
 			$rows[] = $this->getRekapKategori(
 				$label,
-				[$filter],
+				$filter,
 				$tahun,
-				$bulan
+				$bulan,
+				$start,
+				$end,
+				$useRange
 			);
 		}
 
 		return DataTables::of($rows)->make(true);
 	}
 
-	private function getRekapKategori($label, $filterBangsal, $tahun, $bulan)
+
+	private function getRekapKategori($label, $filterBangsal, $tahun, $bulan, $start, $end, $useRange)
 	{
-		// Hitung jumlah kamar
+		// ========== HITUNG JUMLAH KAMAR ==========
 		$jumlahKelas = Kamar::where($filterBangsal)
 			->where('statusdata', '1')
 			->count();
 
-		// Hitung total pasien
-		$totalPasien = KamarInap::whereYear('tgl_keluar', $tahun)
-			->whereMonth('tgl_keluar', $bulan)
-			->where('stts_pulang', '!=', 'Pindah Kamar')
-			->whereHas('kamar', function ($q) use ($filterBangsal) {
-				foreach ($filterBangsal as $filter) {
-					$q->where($filter[0], $filter[1], $filter[2]);
-				}
-			})
-			->count();
+		// Query dasar
+		$pasienQuery = KamarInap::where('stts_pulang', '!=', 'Pindah Kamar');
+		$lamaQuery = KamarInap::query();
 
-		// Hitung total lama inap
-		$totalLama = KamarInap::whereYear('tgl_keluar', $tahun)
-			->whereMonth('tgl_keluar', $bulan)
-			->whereHas('kamar', function ($q) use ($filterBangsal) {
-				foreach ($filterBangsal as $filter) {
-					$q->where($filter[0], $filter[1], $filter[2]);
-				}
-			})
-			->sum('lama');
+		// ========== FILTER TANGGAL ==========
+		if ($useRange) {
+			$pasienQuery->whereBetween('tgl_keluar', [$start, $end]);
+			$lamaQuery->whereBetween('tgl_keluar', [$start, $end]);
+		} else {
+			$pasienQuery->whereYear('tgl_keluar', $tahun)
+				->whereMonth('tgl_keluar', $bulan);
+
+			$lamaQuery->whereYear('tgl_keluar', $tahun)
+				->whereMonth('tgl_keluar', $bulan);
+		}
+
+		// ========== FILTER BANGSAL ==========
+		$pasienQuery->whereHas('kamar', function ($q) use ($filterBangsal) {
+			foreach ($filterBangsal as $filter) {
+				$q->where($filter[0], $filter[1], $filter[2]);
+			}
+		});
+
+		$lamaQuery->whereHas('kamar', function ($q) use ($filterBangsal) {
+			foreach ($filterBangsal as $filter) {
+				$q->where($filter[0], $filter[1], $filter[2]);
+			}
+		});
+
+		// ========== HITUNG ==========
+		$totalPasien = $pasienQuery->count();
+		$totalLama = $lamaQuery->sum('lama');
 
 		return [
 			'kelas' => $label,

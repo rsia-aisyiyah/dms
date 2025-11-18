@@ -97,9 +97,15 @@ class KamarController extends Controller
 		$tahun = $request->tahun ?: date('Y');
 		$bulan = $request->bulan ?: date('m');
 		$kelas = $request->kelas;
+		$tgl1 = $request->tanggal ? $request->tanggal[0] : null;
+		$tgl2 = $request->tanggal ? $request->tanggal[1] : null;
 
-		$qPasien = $this->queryTotalPasien($tahun, $bulan);
-		$qLama = $this->queryTotalLamaInap($tahun, $bulan);
+
+		// Jika ada range tanggal → abaikan tahun & bulan
+		$useRange = ($tgl1 && $tgl2);
+
+		$qPasien = $this->queryTotalPasien($tahun, $bulan, $tgl1, $tgl2, $useRange);
+		$qLama = $this->queryTotalLamaInap($tahun, $bulan, $tgl1, $tgl2, $useRange);
 
 		$data = DB::table('kamar as k')
 			->select(
@@ -148,23 +154,41 @@ class KamarController extends Controller
 
 	}
 
-	private function queryTotalPasien($tahun, $bulan)
+	private function queryTotalPasien($tahun, $bulan, $start, $end, $useRange)
 	{
-		return DB::table('kamar_inap as ki')
-			->select('ki.kd_kamar', DB::raw('COUNT(DISTINCT ki.no_rawat) as total_pasien'))
-			->whereYear('ki.tgl_keluar', $tahun)
-			->whereMonth('ki.tgl_keluar', $bulan)
-			->where('ki.stts_pulang', '!=', 'Pindah Kamar')
-			->groupBy('ki.kd_kamar');
+		$q = DB::table('kamar_inap')
+			->select(
+				'kd_kamar',
+				DB::raw('COUNT(DISTINCT no_rawat) as total_pasien')
+			)
+			->where('stts_pulang', '!=', 'Pindah Kamar');
+
+		if ($useRange) {
+			$q->whereBetween('tgl_keluar', [$start, $end]);
+		} else {
+			$q->whereYear('tgl_keluar', $tahun)
+				->whereMonth('tgl_keluar', $bulan);
+		}
+
+		return $q->groupBy('kd_kamar');
 	}
 
-	private function queryTotalLamaInap($tahun, $bulan)
+	private function queryTotalLamaInap($tahun, $bulan, $start, $end, $useRange)
 	{
-		return DB::table('kamar_inap as ki')
-			->select('ki.kd_kamar', DB::raw('SUM(ki.lama) as total_lama_inap'))
-			->whereYear('ki.tgl_keluar', $tahun)
-			->whereMonth('ki.tgl_keluar', $bulan)
-			->groupBy('ki.kd_kamar');
+		$q = DB::table('kamar_inap')
+			->select(
+				'kd_kamar',
+				DB::raw('SUM(lama) as total_lama_inap')
+			);
+
+		if ($useRange) {
+			$q->whereBetween('tgl_keluar', [$start, $end]);
+		} else {
+			$q->whereYear('tgl_keluar', $tahun)
+				->whereMonth('tgl_keluar', $bulan);
+		}
+
+		return $q->groupBy('kd_kamar');
 	}
 
 }
