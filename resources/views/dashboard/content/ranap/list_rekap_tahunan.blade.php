@@ -50,6 +50,7 @@
                                 <th>Jumlah Bed</th>
                                 <th>Σ Lama Inap</th>
                                 <th>Σ Pasien</th>
+                                <th>Σ Pulang</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -57,6 +58,7 @@
                                 <th>Total</th>
                                 <th></th>
                                 <th id="total-lama"></th>
+                                <th></th>
                                 <th></th>
                             </tr>
                             </tfoot>
@@ -67,7 +69,7 @@
         </div>
     </div>
 </div>
-<div class="col-lg-4 col-sm-12 col-md-12">
+<div class="col-lg-5 col-sm-12 col-md-12">
     <div class="card card-teal">
         <div class="card-header">
             <p class="card-title border-bottom-0">Detail Kamar</p>
@@ -128,6 +130,7 @@
                                 <th>Kelas</th>
                                 <th>Σ Lama Inap</th>
                                 <th>Σ Pasien</th>
+                                <th>Σ Pulang</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -135,6 +138,7 @@
                                 <th>Total</th>
                                 <th></th>
                                 <th id="total-lama"></th>
+                                <th></th>
                                 <th></th>
                             </tr>
                             </tfoot>
@@ -222,10 +226,14 @@
                     let totalBed = data.reduce((sum, row) => {
                         return sum + (parseInt(row.jumlahKelas) || 0);
                     }, 0);
+                    let totalPulang = data.reduce((sum, row) => {
+                        return sum + (parseInt(row.pulang) || 0);
+                    }, 0);
 
                     $(this.api().column(1).footer()).html(totalBed);
                     $(this.api().column(2).footer()).html(totalLama);
                     $(this.api().column(3).footer()).html(totalPasien);
+                    $(this.api().column(4).footer()).html(totalPulang);
                 },
                 initComplete: function (settings, json) {
                     toastr.success('Data telah dimuat', 'Berhasil');
@@ -279,6 +287,9 @@
                     {
                         data: 'data',
                         name: 'data'
+                    }, {
+                        data: 'pulang',
+                        name: 'pulang'
                     },
                 ],
             });
@@ -316,9 +327,13 @@
                     let totalPasien = data.reduce((sum, row) => {
                         return sum + (parseInt(row.total_pasien) || 0);
                     }, 0);
+                    let totalPulang = data.reduce((sum, row) => {
+                        return sum + (parseInt(row.total_pulang) || 0);
+                    }, 0);
 
                     $(this.api().column(2).footer()).html(totalLama);
                     $(this.api().column(3).footer()).html(totalPasien);
+                    $(this.api().column(4).footer()).html(totalPulang);
                 },
                 initComplete: function (settings, json) {
                     toastr.success('Data telah dimuat', 'Berhasil');
@@ -370,6 +385,10 @@
                     }, {
                         data: 'total_pasien',
                         name: 'total_pasien'
+                    },
+                    {
+                        data: 'total_pulang',
+                        name: 'total_pulang'
                     },
 
                 ],

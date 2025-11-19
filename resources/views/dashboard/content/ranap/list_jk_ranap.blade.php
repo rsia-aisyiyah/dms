@@ -1,4 +1,4 @@
-<div class="col-12 col-sm-12 col-md-4">
+<div class="col-lg-3 col-sm-12 col-md-12">
     <div class="card card-teal">
         <div class="card-header">
             <p class="card-title border-bottom-0">Berdasar Gender</p>
@@ -12,23 +12,23 @@
                             <div class="input-group mb-3">
                                 <div class="input-group-append">
                                     <span class="input-group-text" id="tahun-addon"><i
-                                            class="fas fa-calendar"></i></span>
+                                                class="fas fa-calendar"></i></span>
                                 </div>
                                 <input type="text" id="yearpicker-gender" class="form-control datetimepicker-input"
-                                    data-toggle="datetimepicker" aria-describedby="tahun-addon"
-                                    data-target="#yearpicker-gender" autocomplete="off" />
+                                       data-toggle="datetimepicker" aria-describedby="tahun-addon"
+                                       data-target="#yearpicker-gender" autocomplete="off"/>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped text-sm" id="table-jk" style="width: 100%" cellspacing="0">
                             <thead>
-                                <tr>
-                                    <th>Bulan</th>
-                                    <th>Laki-Laki</th>
-                                    <th>Perempuan</th>
-                                    <th>Jumlah</th>
-                                </tr>
+                            <tr>
+                                <th>Bulan</th>
+                                <th>Laki-Laki</th>
+                                <th>Perempuan</th>
+                                <th>Jumlah</th>
+                            </tr>
                             </thead>
                         </table>
                     </div>
@@ -39,7 +39,7 @@
 </div>
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
 
             $('#yearpicker-gender').datetimepicker({
@@ -70,7 +70,7 @@
                     paging: false,
                     dom: 'Blfrtip',
                     info: false,
-                    initComplete: function(settings, json) {
+                    initComplete: function (settings, json) {
                         toastr.success('Data telah dimuat', 'Berhasil');
                     },
                     language: {
@@ -87,11 +87,11 @@
                         },
                     },
                     buttons: [{
-                            extend: 'copy',
-                            text: '<i class="fas fa-copy"></i> Salin',
-                            className: 'btn btn-info',
-                            title: 'laporan-ranap-gender-{{ date('dmy') }}'
-                        },
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> Salin',
+                        className: 'btn btn-info',
+                        title: 'laporan-ranap-gender-{{ date('dmy') }}'
+                    },
                         {
                             extend: 'csv',
                             text: '<i class="fas fa-file-csv"></i> CSV',
@@ -106,9 +106,9 @@
                         },
                     ],
                     columns: [{
-                            data: 'bulan',
-                            name: 'bulan'
-                        },
+                        data: 'bulan',
+                        name: 'bulan'
+                    },
                         {
                             data: 'laki',
                             name: 'laki'
@@ -125,7 +125,7 @@
                 });
             }
 
-            $('#yearpicker-gender').on('change.datetimepicker', function() {
+            $('#yearpicker-gender').on('change.datetimepicker', function () {
                 var tahun = $(this).val();
                 $('#table-jk').DataTable().destroy();
                 load_data(tahun);

@@ -106,6 +106,7 @@ class KamarController extends Controller
 
 		$qPasien = $this->queryTotalPasien($tahun, $bulan, $tgl1, $tgl2, $useRange);
 		$qLama = $this->queryTotalLamaInap($tahun, $bulan, $tgl1, $tgl2, $useRange);
+		$qPulang = $this->queryTotalPasienPulang($tahun, $bulan, $tgl1, $tgl2, $useRange);
 
 		$data = DB::table('kamar as k')
 			->select(
@@ -114,15 +115,18 @@ class KamarController extends Controller
 				'k.kd_bangsal',
 				'b.nm_bangsal',
 				DB::raw('COALESCE(tp.total_pasien, 0) as total_pasien'),
+				DB::raw('COALESCE(tpl.total_pulang, 0) as total_pulang'),
 				DB::raw('COALESCE(tl.total_lama_inap, 0) as total_lama_inap')
 			)
 			->leftJoinSub($qPasien, 'tp', 'tp.kd_kamar', '=', 'k.kd_kamar')
 			->leftJoinSub($qLama, 'tl', 'tl.kd_kamar', '=', 'k.kd_kamar')
+			->leftJoinSub($qPulang, 'tpl', 'tpl.kd_kamar', '=', 'k.kd_kamar')
 			->join('bangsal as b', 'b.kd_bangsal', '=', 'k.kd_bangsal')
 			->where('k.statusdata', '1')
 			->where('k.trf_kamar', '>', 0)
 			->where('k.kd_bangsal', 'not like', '%BYA%')
 			->where('k.kd_bangsal', 'not like', '%HCU%');
+
 
 		if ($kelas) {
 			$data->where('k.kelas', $kelas);
@@ -149,9 +153,6 @@ class KamarController extends Controller
 //			->join('kamar', 'kamar.kd_kamar', '=', 'kamar_inap.kd_kamar')
 //			->groupBy('kamar.kd_bangsal', 'kamar.kelas')
 //			->get();
-
-		return DataTables::of($data)->make(true);
-
 	}
 
 	private function queryTotalPasien($tahun, $bulan, $start, $end, $useRange)
@@ -159,9 +160,9 @@ class KamarController extends Controller
 		$q = DB::table('kamar_inap')
 			->select(
 				'kd_kamar',
-				DB::raw('COUNT(DISTINCT no_rawat) as total_pasien')
-			)
-			->where('stts_pulang', '!=', 'Pindah Kamar');
+				DB::raw('COUNT(no_rawat) as total_pasien')
+			);
+//			->where('stts_pulang', '!=', 'Pindah Kamar');
 
 		if ($useRange) {
 			$q->whereBetween('tgl_keluar', [$start, $end]);
@@ -190,5 +191,25 @@ class KamarController extends Controller
 
 		return $q->groupBy('kd_kamar');
 	}
+
+	private function queryTotalPasienPulang($tahun, $bulan, $start, $end, $useRange)
+	{
+		$q = DB::table('kamar_inap')
+			->select(
+				'kd_kamar',
+				DB::raw('COUNT(DISTINCT no_rawat) as total_pulang')
+			)
+			->where('stts_pulang', '!=', 'Pindah Kamar');
+
+		if ($useRange) {
+			$q->whereBetween('tgl_keluar', [$start, $end]);
+		} else {
+			$q->whereYear('tgl_keluar', $tahun)
+				->whereMonth('tgl_keluar', $bulan);
+		}
+
+		return $q->groupBy('kd_kamar');
+	}
+
 
 }

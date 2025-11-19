@@ -146,14 +146,11 @@ class KamarInapController extends Controller
 		// ============================
 		$kategoriKhusus = [
 			// VK tapi exclude VKISO
-			['VK', [
-				['kd_bangsal', 'like', 'VK%'],
-			]],
-
+			['VK', [['kd_bangsal', 'like', 'VK%'], ['kd_bangsal', 'not like', '%VKISO%']]],
 			['ICU', [['kd_bangsal', 'like', 'ICU%']]],
 			['PICU', [['kd_bangsal', 'like', 'PICU%']]],
 			['NICU', [['kd_bangsal', 'like', 'NICU%']]],
-			['ISOLASI', [['kd_bangsal', 'like', '%ISO%']]],
+			['ISOLASI', [['kd_kamar', 'like', '%ISO%']]],
 			['PERINATOLOGI', [['kd_bangsal', 'like', '%BYC%']]],
 		];
 
@@ -182,14 +179,18 @@ class KamarInapController extends Controller
 			->count();
 
 		// Query dasar
-		$pasienQuery = KamarInap::where('stts_pulang', '!=', 'Pindah Kamar');
+		$pulangQuery = KamarInap::where('stts_pulang', '!=', 'Pindah Kamar');
+		$pasienQuery = KamarInap::query();
 		$lamaQuery = KamarInap::query();
 
 		// ========== FILTER TANGGAL ==========
 		if ($useRange) {
+			$pulangQuery->whereBetween('tgl_keluar', [$start, $end]);
 			$pasienQuery->whereBetween('tgl_keluar', [$start, $end]);
 			$lamaQuery->whereBetween('tgl_keluar', [$start, $end]);
 		} else {
+			$pulangQuery->whereYear('tgl_keluar', $tahun)
+				->whereMonth('tgl_keluar', $bulan);
 			$pasienQuery->whereYear('tgl_keluar', $tahun)
 				->whereMonth('tgl_keluar', $bulan);
 
@@ -198,6 +199,11 @@ class KamarInapController extends Controller
 		}
 
 		// ========== FILTER BANGSAL ==========
+		$pulangQuery->whereHas('kamar', function ($q) use ($filterBangsal) {
+			foreach ($filterBangsal as $filter) {
+				$q->where($filter[0], $filter[1], $filter[2]);
+			}
+		});
 		$pasienQuery->whereHas('kamar', function ($q) use ($filterBangsal) {
 			foreach ($filterBangsal as $filter) {
 				$q->where($filter[0], $filter[1], $filter[2]);
@@ -211,6 +217,7 @@ class KamarInapController extends Controller
 		});
 
 		// ========== HITUNG ==========
+		$totalPulang = $pulangQuery->count();
 		$totalPasien = $pasienQuery->count();
 		$totalLama = $lamaQuery->sum('lama');
 
@@ -218,6 +225,7 @@ class KamarInapController extends Controller
 			'kelas' => $label,
 			'jumlahKelas' => $jumlahKelas,
 			'data' => $totalPasien,
+			'pulang' => $totalPulang,
 			'lama' => $totalLama,
 		];
 	}
