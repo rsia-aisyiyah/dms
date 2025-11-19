@@ -26,14 +26,14 @@
                             </span>
                         </div>
                         <input type="date" class="form-control" name="tgl_pertama" id="tgl_pertama"
-                               value="{{date('Y-m-d')}}">
+                               value="">
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 s.d.
                             </span>
                         </div>
                         <input type="date" class="form-control" name="tgl_kedua" id="tgl_kedua"
-                               value="{{date('Y-m-d')}}">
+                               value="">
                         <button class="btn btn-primary" type="button" onclick="filterKelasRanapByTanggal()">
                             <i class="fas fa-search"></i>
                         </button>
@@ -106,14 +106,14 @@
                             </span>
                         </div>
                         <input type="date" class="form-control" name="tgl_pertama" id="tgl_pertama"
-                               value="{{date('Y-m-d')}}">
+                               value="">
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 s.d.
                             </span>
                         </div>
                         <input type="date" class="form-control" name="tgl_kedua" id="tgl_kedua"
-                               value="{{date('Y-m-d')}}">
+                               value="">
                         <button class="btn btn-primary" type="button" onclick="filterRekapRanapByTanggal()">
                             <i class="fas fa-search"></i>
                         </button>
