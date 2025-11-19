@@ -148,7 +148,6 @@ class KamarInapController extends Controller
 			// VK tapi exclude VKISO
 			['VK', [
 				['kd_bangsal', 'like', 'VK%'],
-				['kd_bangsal', 'not like', '%VKISO%'],
 			]],
 
 			['ICU', [['kd_bangsal', 'like', 'ICU%']]],
