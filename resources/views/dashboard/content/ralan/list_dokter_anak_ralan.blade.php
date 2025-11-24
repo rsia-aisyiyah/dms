@@ -60,7 +60,7 @@
             function load_data(tahun = '') {
                 console.log(tahun);
                 $.ajax({
-                    url: `${url}/ralan/kunjungan/poli/${tahun}`,
+                    url: `/dms/ralan/kunjungan/poli/${tahun}`,
                     method: "GET",
                     dataType: "json",
                     success: function (data) {
