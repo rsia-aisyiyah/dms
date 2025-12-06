@@ -73,11 +73,11 @@
 
 @push('scripts')
 <script>
-    
+
     var tgl_pertama;
     var tgl_kedua;
     $(document).ready(function(){
-    
+
 
         load_data();
         function load_data(tgl_pertama, tgl_kedua, poli) {
@@ -178,7 +178,7 @@
                         bulan[11] = "Desember";
                     var tanggal1 = new Date(tgl_pertama);
                     var tanggal2 = new Date(tgl_kedua);
-            
+
             hari1 = tanggal1.getDate();
             bulan1 = tanggal1.getMonth();
             tahun1 = tanggal1.getFullYear();
@@ -193,15 +193,15 @@
             $('#bulan').html('<strong>'+tgl1+' s/d '+tgl2+'</strong>');
             $('#tabel-ralan-bpjs').DataTable().destroy();
             console.log($('#poli').val());
-            load_data(tgl_pertama, tgl_kedua, $('#poli').val()); 
+            load_data(tgl_pertama, tgl_kedua, $('#poli').val());
         });
 
         $('#poli').change(function(){
             cekTanggal();
             $('#tabel-ralan-bpjs').DataTable().destroy();
-            load_data(tgl_pertama, tgl_kedua, $(this).val()); 
+            load_data(tgl_pertama, tgl_kedua, $(this).val());
         })
 });
 </script>
-    
+
 @endpush

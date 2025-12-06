@@ -19,6 +19,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OperasiController;
 use App\Http\Controllers\PaketOperasiController;
 use App\Http\Controllers\PasienBayiController;
+use App\Http\Controllers\PemeriksaanRalanController;
 use App\Http\Controllers\PenjabController;
 use App\Http\Controllers\PersalinanController;
 use App\Http\Controllers\PoliklinikController;
@@ -235,6 +236,8 @@ Route::middleware('auth')->group(function () {
 
 	Route::get('dokter-poliklinik', [DokterController::class, 'getDokterPoli']);
 	Route::get('dokter-spesialis', [DokterController::class, 'getDokterSpesialis']);
+
+	Route::get('ralan/pemeriksaan-ralan', [PemeriksaanRalanController::class, 'get']);
 
 });
 

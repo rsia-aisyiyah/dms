@@ -51,6 +51,18 @@
         .table tr th {
             white-space: nowrap;
         }
+
+        #tbPameriksaanRalan tfoot {
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            background: #fff;
+        }
+
+        #tbPameriksaanRalan tfoot input {
+            width: 100%;
+            box-sizing: border-box;
+        }
     </style>
     @stack('css')
 </head>

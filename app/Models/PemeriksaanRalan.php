@@ -7,22 +7,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class PemeriksaanRalan extends Model
 {
-    use HasFactory;
-    protected $table = 'pemeriksaan_ralan';
-    protected $primaryKey = 'no_rawat';
-    public $timestamps = false;
+	use HasFactory;
 
-    protected $casts = [
-        'no_rawat' => 'string',
-    ];
+	protected $table = 'pemeriksaan_ralan';
+	protected $primaryKey = 'no_rawat';
+	public $timestamps = false;
 
-    public function regPeriksa()
-    {
-        return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat');
-    }
-    
-    public function pegawai()
-    {
-        return $this->belongsTo(Pegawai::class, 'nip', 'nik');
-    }
+	protected $casts = [
+		'no_rawat' => 'string',
+	];
+
+	public function regPeriksa()
+	{
+		return $this->belongsTo(RegPeriksa::class, 'no_rawat', 'no_rawat');
+	}
+
+	public function pegawai()
+	{
+		return $this->belongsTo(Pegawai::class, 'nip', 'nik');
+	}
+
+	public function petugas()
+	{
+		return $this->belongsTo(Petugas::class, 'nip', 'nip');
+	}
+
+	public function dokter()
+	{
+		return $this->belongsTo(Dokter::class, 'nip', 'kd_dokter');
+	}
 }
