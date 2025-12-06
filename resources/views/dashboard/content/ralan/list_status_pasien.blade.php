@@ -104,10 +104,7 @@
             </div>
             <div class="card card-teal">
                 <div class="card-header">
-                    <p class="card-title border-bottom-0">{{ $title }} </p>
-                    <div class="card-tools mr-4" id="bulan">
-                        <span><strong>{{ $month }}</strong></span>
-                    </div>
+                    <p class="card-title border-bottom-0">Pemeriksaan Rawat Jalan</p>
                 </div>
                 <div class="card-body">
                     <form action="" id="filterPemeriksaanRajal">
