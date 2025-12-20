@@ -62,6 +62,24 @@
         <div class="col-md-12 col-sm-12 col-lg-4">
             <x-indikator-ranap.toi spc="all"></x-indikator-ranap.toi>
         </div>
+        <div class="col-md-12 col-sm-12 col-lg-4">
+            <x-indikator-ranap.bto spc="anak"></x-indikator-ranap.bto>
+        </div>
+        <div class="col-md-12 col-sm-12 col-lg-4">
+            <x-indikator-ranap.bto spc="kandungan"></x-indikator-ranap.bto>
+        </div>
+        <div class="col-md-12 col-sm-12 col-lg-4">
+            <x-indikator-ranap.bto spc="icu"></x-indikator-ranap.bto>
+        </div>
+        <div class="col-md-12 col-sm-12 col-lg-4">
+            <x-indikator-ranap.bto spc="byc"></x-indikator-ranap.bto>
+        </div>
+        <div class="col-md-12 col-sm-12 col-lg-4">
+            <x-indikator-ranap.bto spc="isolasi"></x-indikator-ranap.bto>
+        </div>
+        <div class="col-md-12 col-sm-12 col-lg-4">
+            <x-indikator-ranap.bto spc="all"></x-indikator-ranap.bto>
+        </div>
     </div>
 @endsection
 

@@ -74,5 +74,53 @@ class KamarInapService
 		return $kamarInap;
 	}
 
+	public static function getJumlahPasien($specialist, $month, $year): int
+	{
+		$kamarInap = KamarInap::whereMonth('tgl_keluar', $month)
+			->whereYear('tgl_keluar', $year)
+			->where('stts_pulang', '!=', 'Pindah Kamar');
+
+		if ($specialist !== 'all') {
+
+			// selain ICU → filter via dokter & spesialis
+			if ($specialist !== 'icu') {
+				$kamarInap->whereHas('regPeriksa', function ($q) use ($specialist) {
+					$q->whereHas('dokter', function ($q) use ($specialist) {
+						$q->whereHas('spesialis', function ($q) use ($specialist) {
+							$q->where('nm_sps', 'like', '%' . $specialist . '%');
+						});
+					});
+				});
+			}
+
+			// filter kamar
+			$kamarInap->where('kd_kamar', 'like', '%' . $specialist . '%');
+
+		} else {
+
+			// ALL = Anak + Kandungan + ICU + NICU + Isolasi
+			$kamarInap->whereHas('regPeriksa', function ($q) {
+				$q->whereHas('dokter', function ($q) {
+					$q->whereHas('spesialis', function ($q) {
+						$q->where(function ($query) {
+							$query->where('nm_sps', 'like', '%anak%')
+								->orWhere('nm_sps', 'like', '%kandungan%');
+						});
+					});
+				});
+			})->where(function ($q) {
+				$q->where('kd_kamar', 'like', '%anak%')
+					->orWhere('kd_kamar', 'like', '%icu%')
+					->orWhere('kd_kamar', 'like', '%kandungan%')
+					->orWhere('kd_kamar', 'like', '%byc%')
+					->orWhere('kd_kamar', 'like', '%iso%');
+			});
+		}
+
+		return $kamarInap
+			->distinct('no_rawat')
+			->count('no_rawat');
+	}
+
 
 }

@@ -244,6 +244,7 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/test/{specialist}/{year}', [RsiaToiService::class, 'getToi']);
 Route::get('/satu', [ServicesWaktuTungguRawatJalan::class, 'get']);
+
 Route::get('/test/group/{year?}', [ServicesWaktuTungguRawatJalan::class, 'groupByMonth']);
 Route::get('/test/{year?}', [ServicesWaktuTungguRawatJalan::class, 'getByYear']);
 require __DIR__ . '/partial/rekammedis/tb.php';
