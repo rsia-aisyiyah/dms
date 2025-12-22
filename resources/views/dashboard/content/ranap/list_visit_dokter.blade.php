@@ -123,7 +123,7 @@
         function loadTableCpptVisit(month = '', year = '') {
             $('#table-cppt-visit').DataTable({
                 ajax: {
-                    ururl: `/dms/ranap/visit/cppt/json`,
+                    url: `/dms/ranap/visit/cppt/json`,
                     data: {
                         month: month,
                         year: year,
@@ -310,7 +310,7 @@
 
             function load_data(tahun = '') {
                 $.ajax({
-                    ururl: `/dms/ranap/visit/json`,
+                    url: `/dms/ranap/visit/json`,
                     method: "GET",
                     data: {
                         tahun: tahun

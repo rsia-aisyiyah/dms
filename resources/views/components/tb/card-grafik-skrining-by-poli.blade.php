@@ -99,7 +99,7 @@
                                     let result = label;
 
                                     $.ajax({
-                                        ururl: `/dms/poli/show/${label}`,
+                                        url: `/dms/poli/show/${label}`,
                                         type: 'GET',
                                         dataType: 'json',
                                         async: false,

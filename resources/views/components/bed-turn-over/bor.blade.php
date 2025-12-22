@@ -51,7 +51,7 @@
         function renderBor(spesialis, tahun = '') {
             const table = $(`#bor-${spesialis}`).find('tbody')
             $.get({
-                ururl: `/dms/bed-turn-over/bor/${spesialis}/${tahun}`,
+                url: `/dms/bed-turn-over/bor/${spesialis}/${tahun}`,
                 success: (data) => {
 
                     const rows = data.map((item, index) => {

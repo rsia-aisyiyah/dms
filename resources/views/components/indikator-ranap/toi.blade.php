@@ -80,7 +80,7 @@
         function renderToi(spesialis, tahun = '') {
             const table = $(`#toi-${spesialis}`).find('tbody')
             $.get({
-                ururl: `/dms/indikator-ranap/toi/${spesialis}/${tahun}`,
+                url: `/dms/indikator-ranap/toi/${spesialis}/${tahun}`,
                 success: (data) => {
 
                     const rows = data.map((item, index) => {

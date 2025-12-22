@@ -129,7 +129,7 @@
                     ['50', '100', '200', '250', '500', 'Semua']
                 ],
                 ajax: {
-                    ururl: `/dms/datatable/tb/skrining/${year}/${month}`,
+                    url: `/dms/datatable/tb/skrining/${year}/${month}`,
                     type: 'GET',
                 },
                 buttons: [{

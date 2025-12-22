@@ -78,7 +78,7 @@
         function renderLos(spesialis, tahun = '') {
             const table = $(`#los-${spesialis}`).find('tbody')
             $.get({
-                ururl: `/dms/indikator-ranap/los/${spesialis}/${tahun}`,
+                url: `/dms/indikator-ranap/los/${spesialis}/${tahun}`,
                 success: (data) => {
 
                     const rows = data.map((item, index) => {

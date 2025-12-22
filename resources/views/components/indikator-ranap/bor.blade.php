@@ -80,7 +80,7 @@
         function renderBor(spesialis, tahun = '') {
             const table = $(`#bor-${spesialis}`).find('tbody')
             $.get({
-                ururl: `/dms/indikator-ranap/bor/${spesialis}/${tahun}`,
+                url: `/dms/indikator-ranap/bor/${spesialis}/${tahun}`,
                 success: (data) => {
 
                     const rows = data.map((item, index) => {

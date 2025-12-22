@@ -214,7 +214,7 @@
             function load_data(tgl_pertama, tgl_kedua, daftar, poli, kd_dokter, pembiyaan) {
                 $('#tabel-ranap').DataTable({
                     ajax: {
-                        ururl: `/dms/ranap/json`,
+                        url: `/dms/ranap/json`,
                         dataType: 'json',
                         data: {
                             tgl_pertama: tgl_pertama,

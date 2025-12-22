@@ -98,7 +98,7 @@
             function load_data(tgl_pertama, tgl_kedua) {
                 $('#table-transfusi').DataTable({
                     ajax: {
-                        ururl: `/dms/ranap/transfusi/json`,
+                        url: `/dms/ranap/transfusi/json`,
                         dataType: 'json',
                         data: {
                             tgl_pertama: tgl_pertama,

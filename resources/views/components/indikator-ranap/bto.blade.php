@@ -85,7 +85,7 @@
         function renderBto(spesialis, tahun = '') {
             const table = $(`#bto-${spesialis}`).find('tbody')
             $.get({
-                ururl: `/dms/indikator-ranap/bto/${spesialis}/${tahun}`,
+                url: `/dms/indikator-ranap/bto/${spesialis}/${tahun}`,
                 success: (data) => {
 
                     const rows = data.map((item, index) => {
