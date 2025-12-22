@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
-use function PHPUnit\Framework\isEmpty;
 
 class RalanController extends Controller
 {
@@ -52,6 +51,8 @@ class RalanController extends Controller
 
 	public function json(Request $request)
 	{
+
+
 		$data = RegPeriksa::where('stts', '!=', 'Batal')
 			->orderBy('tgl_registrasi', 'asc')
 			->where('status_lanjut', 'Ralan')
@@ -84,12 +85,10 @@ class RalanController extends Controller
 			$data = $data->where('kd_dokter', $request->dokter);
 		}
 
-		if (isEmpty($request)) {
-			$bulan = now()->translatedFormat('m');
-			$tahun = now()->translatedFormat('Y');
-			$data = $data->month($bulan, $tahun);
+		if ($request->filled(['tgl_pertama', 'tgl_kedua']) != 1) {
+			$data = $data->whereMonth('tgl_registrasi', now()->month)
+				->whereYear('tgl_registrasi', now()->year);
 		}
-
 
 		return DataTables::of($data)
 			->filter(function ($query) use ($request) {

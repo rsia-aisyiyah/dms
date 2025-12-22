@@ -157,6 +157,7 @@
             if (btoTahunan < 40) {
                 badge = 'info';
                 status = 'Rendah';
+                ra
             } else if (btoTahunan >= 40 && btoTahunan <= 50) {
                 badge = 'success';
                 status = 'Ideal';

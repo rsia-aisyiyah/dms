@@ -305,6 +305,8 @@
                 if (!params[name]) delete params[name]
             })
 
+            console.log('PRAMS ===', params)
+
             loadTbPasienRajal(params)
         }
 
