@@ -5,12 +5,12 @@
     <x-card.body>
         <table class="table table-bordered table-striped table-sm" id="los-{{ $spc }}" data-spesialis="{{ $spc }}">
             <thead>
-                <tr>
-                    <th>Bulan</th>
-                    <th>Lama Inap</th>
-                    <th>Σ Pulang</th>
-                    <th>LOS</th>
-                </tr>
+            <tr>
+                <th>Bulan</th>
+                <th>Lama Inap</th>
+                <th>Σ Pulang</th>
+                <th>LOS</th>
+            </tr>
             </thead>
             <tbody>
 
@@ -28,7 +28,9 @@
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                     </div>
-                    <input type="text" id="yearLos-{{ $spc }}" class="form-control yearPicker" data-toggle="datetimepicker" aria-describedby="yearLos-{{ $spc }}" data-target="#yearLos-{{ $spc }}" autocomplete="off">
+                    <input type="text" id="yearLos-{{ $spc }}" class="form-control yearPicker"
+                           data-toggle="datetimepicker" aria-describedby="yearLos-{{ $spc }}"
+                           data-target="#yearLos-{{ $spc }}" autocomplete="off">
                     <button type="button" class="btn btn-primary" onclick="getLos('{{ $spc }}')">
                         <i class="fas fa-search"></i>
                     </button>
@@ -36,7 +38,9 @@
             </div>
             <div class="col-md-6 col-sm-12 col-lg-6">
                 <div class="float-right">
-                    <button type="button" class="btn btn-success" id="exportLos-{{ $spc }}"><i class="fas fa-file-excel"></i> Export Excel</button>
+                    <button type="button" class="btn btn-success" id="exportLos-{{ $spc }}"><i
+                                class="fas fa-file-excel"></i> Export Excel
+                    </button>
                 </div>
             </div>
         </div>
@@ -44,7 +48,7 @@
 </x-card>
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             renderLos('{{ $spc }}');
         });
 
@@ -54,7 +58,7 @@
             renderLos(spesialis, year);
         }
 
-        $("#exportLos-{{ $spc }}").click(function(e) {
+        $("#exportLos-{{ $spc }}").click(function (e) {
             const table = $('#los-{{ $spc }}');
             if (table && table.length) {
                 var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
@@ -74,7 +78,7 @@
         function renderLos(spesialis, tahun = '') {
             const table = $(`#los-${spesialis}`).find('tbody')
             $.get({
-                url: `${url}/indikator-ranap/los/${spesialis}/${tahun}`,
+                ururl: `/dms/indikator-ranap/los/${spesialis}/${tahun}`,
                 success: (data) => {
 
                     const rows = data.map((item, index) => {

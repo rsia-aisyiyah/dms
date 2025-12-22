@@ -5,14 +5,14 @@
     <x-card.body>
         <table class="table table-bordered table-striped table-sm" id="toi-{{ $spc }}" data-spesialis="{{ $spc }}">
             <thead>
-                <tr>
-                    <th>Bulan</th>
-                    <th>Lama Inap</th>
-                    <th>Σ Hari</th>
-                    <th>Σ TT</th>
-                    <th>Σ Pulang</th>
-                    <th>TOI</th>
-                </tr>
+            <tr>
+                <th>Bulan</th>
+                <th>Lama Inap</th>
+                <th>Σ Hari</th>
+                <th>Σ TT</th>
+                <th>Σ Pulang</th>
+                <th>TOI</th>
+            </tr>
             </thead>
             <tbody>
 
@@ -30,7 +30,9 @@
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                     </div>
-                    <input type="text" id="yearToi-{{ $spc }}" class="form-control yearPicker" data-toggle="datetimepicker" aria-describedby="yearToi-{{ $spc }}" data-target="#yearToi-{{ $spc }}" autocomplete="off">
+                    <input type="text" id="yearToi-{{ $spc }}" class="form-control yearPicker"
+                           data-toggle="datetimepicker" aria-describedby="yearToi-{{ $spc }}"
+                           data-target="#yearToi-{{ $spc }}" autocomplete="off">
                     <button type="button" class="btn btn-primary" onclick="getToi('{{ $spc }}')">
                         <i class="fas fa-search"></i>
                     </button>
@@ -38,7 +40,9 @@
             </div>
             <div class="col-md-6 col-sm-12 col-lg-6">
                 <div class="float-right">
-                    <button type="button" class="btn btn-success" id="exportToi-{{ $spc }}"><i class="fas fa-file-excel"></i> Export Excel</button>
+                    <button type="button" class="btn btn-success" id="exportToi-{{ $spc }}"><i
+                                class="fas fa-file-excel"></i> Export Excel
+                    </button>
                 </div>
             </div>
         </div>
@@ -46,7 +50,7 @@
 </x-card>
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             renderToi('{{ $spc }}');
         });
 
@@ -56,7 +60,7 @@
             renderToi(spesialis, year);
         }
 
-        $("#exportToi-{{ $spc }}").click(function(e) {
+        $("#exportToi-{{ $spc }}").click(function (e) {
             const table = $('#toi-{{ $spc }}');
             if (table && table.length) {
                 var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
@@ -76,7 +80,7 @@
         function renderToi(spesialis, tahun = '') {
             const table = $(`#toi-${spesialis}`).find('tbody')
             $.get({
-                url: `${url}/indikator-ranap/toi/${spesialis}/${tahun}`,
+                ururl: `/dms/indikator-ranap/toi/${spesialis}/${tahun}`,
                 success: (data) => {
 
                     const rows = data.map((item, index) => {

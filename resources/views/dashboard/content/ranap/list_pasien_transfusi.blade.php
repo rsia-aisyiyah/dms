@@ -18,24 +18,26 @@
                                     <div class="form-group">
                                         <label>Tanggal</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="tanggal" name="tanggal" autocomplete="off" />
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal"
+                                                   autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="table-responsive text-sm">
-                                <table class="table table-striped" id="table-transfusi" style="width: 100%" cellspacing="0">
+                                <table class="table table-striped" id="table-transfusi" style="width: 100%"
+                                       cellspacing="0">
                                     <thead>
-                                        <tr>
-                                            <th>No Registrasi</th>
-                                            <th>Tanggal Transfusi</th>
-                                            <th>Nama Pasien</th>
-                                            <th>Jenis Transfusi</th>
-                                            <th>Jumlah Kantong</th>
-                                            <th>Dokter</th>
-                                            <th>Spesialis</th>
-                                            <th>Kamar</th>
-                                        </tr>
+                                    <tr>
+                                        <th>No Registrasi</th>
+                                        <th>Tanggal Transfusi</th>
+                                        <th>Nama Pasien</th>
+                                        <th>Jenis Transfusi</th>
+                                        <th>Jumlah Kantong</th>
+                                        <th>Dokter</th>
+                                        <th>Spesialis</th>
+                                        <th>Kamar</th>
+                                    </tr>
                                     </thead>
                                 </table>
                             </div>
@@ -52,10 +54,10 @@
 @push('scripts')
     <script>
         var tgl_pertama, tgl_kedua;
-        $(document).ready(function() {
+        $(document).ready(function () {
 
 
-            $('#tanggal').on('apply.daterangepicker', function(env, picker) {
+            $('#tanggal').on('apply.daterangepicker', function (env, picker) {
                 tgl_pertama = picker.startDate.format('YYYY-MM-DD');
                 tgl_kedua = picker.endDate.format('YYYY-MM-DD');
 
@@ -96,7 +98,7 @@
             function load_data(tgl_pertama, tgl_kedua) {
                 $('#table-transfusi').DataTable({
                     ajax: {
-                        url: `${url}/ranap/transfusi/json`,
+                        ururl: `/dms/ranap/transfusi/json`,
                         dataType: 'json',
                         data: {
                             tgl_pertama: tgl_pertama,
@@ -113,7 +115,7 @@
                     stateSave: true,
                     paging: false,
                     dom: 'Blfrtip',
-                    initComplete: function(settings, json) {
+                    initComplete: function (settings, json) {
                         toastr.success('Data telah dimuat', 'Berhasil');
                     },
                     language: {
@@ -131,11 +133,11 @@
                         },
                     },
                     buttons: [{
-                            extend: 'copy',
-                            text: '<i class="fas fa-copy"></i> Salin',
-                            className: 'btn btn-info',
-                            title: 'laporan-jumlah-pasien-bayi-{{ date('dmy') }}'
-                        },
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> Salin',
+                        className: 'btn btn-info',
+                        title: 'laporan-jumlah-pasien-bayi-{{ date('dmy') }}'
+                    },
                         {
                             extend: 'csv',
                             text: '<i class="fas fa-file-csv"></i> CSV',
@@ -150,9 +152,9 @@
                         },
                     ],
                     columns: [{
-                            data: 'no_rawat',
-                            name: 'no_rawat'
-                        },
+                        data: 'no_rawat',
+                        name: 'no_rawat'
+                    },
                         {
                             data: 'tgl_perawatan',
                             name: 'tgl_perawatan'
@@ -186,7 +188,7 @@
                 });
             }
 
-            $('#yearpicker').on('change.datetimepicker', function() {
+            $('#yearpicker').on('change.datetimepicker', function () {
                 var tahun = $(this).val();
                 $('#table-transfusi').DataTable().destroy();
                 load_data(tahun);

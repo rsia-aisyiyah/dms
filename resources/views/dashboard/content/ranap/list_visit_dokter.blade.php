@@ -18,30 +18,33 @@
                                     <label>Tahun</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-append">
-                                            <span class="input-group-text" id="tahun-addon"><i class="fas fa-calendar"></i></span>
+                                            <span class="input-group-text" id="tahun-addon"><i
+                                                        class="fas fa-calendar"></i></span>
                                         </div>
-                                        <input type="text" id="yearpicker" class="form-control datetimepicker-input" data-toggle="datetimepicker" aria-describedby="tahun-addon" data-target="#yearpicker" autocomplete="off" />
+                                        <input type="text" id="yearpicker" class="form-control datetimepicker-input"
+                                               data-toggle="datetimepicker" aria-describedby="tahun-addon"
+                                               data-target="#yearpicker" autocomplete="off"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="table-responsive text-sm">
                                 <table id="visitTable" class="table table-striped table-bordered">
                                     <thead>
-                                        <tr>
-                                            <th>Dokter</th>
-                                            <th>Januari</th>
-                                            <th>Februari</th>
-                                            <th>Maret</th>
-                                            <th>April</th>
-                                            <th>Mei</th>
-                                            <th>Juni</th>
-                                            <th>Juli</th>
-                                            <th>Agustus</th>
-                                            <th>September</th>
-                                            <th>Oktober</th>
-                                            <th>November</th>
-                                            <th>Desember</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Dokter</th>
+                                        <th>Januari</th>
+                                        <th>Februari</th>
+                                        <th>Maret</th>
+                                        <th>April</th>
+                                        <th>Mei</th>
+                                        <th>Juni</th>
+                                        <th>Juli</th>
+                                        <th>Agustus</th>
+                                        <th>September</th>
+                                        <th>Oktober</th>
+                                        <th>November</th>
+                                        <th>Desember</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -49,7 +52,8 @@
                             </div>
                         </div>
                     </div>
-                    <button id="exportVisit" class="btn btn-success"><i class="fas fa-file-excel mr-2"></i>Export ke XLS</button>
+                    <button id="exportVisit" class="btn btn-success"><i class="fas fa-file-excel mr-2"></i>Export ke XLS
+                    </button>
                 </div>
             </div>
         </div>
@@ -71,9 +75,13 @@
                                     <label>Bulan</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-append">
-                                            <span class="input-group-text" id="tahun-addon"><i class="fas fa-calendar"></i></span>
+                                            <span class="input-group-text" id="tahun-addon"><i
+                                                        class="fas fa-calendar"></i></span>
                                         </div>
-                                        <input type="text" id="monthPickerCpptVisit" class="form-control datetimepicker-input monthpicker" data-toggle="datetimepicker" aria-describedby="tahun-addon" data-target="#monthPickerCpptVisit" autocomplete="off" />
+                                        <input type="text" id="monthPickerCpptVisit"
+                                               class="form-control datetimepicker-input monthpicker"
+                                               data-toggle="datetimepicker" aria-describedby="tahun-addon"
+                                               data-target="#monthPickerCpptVisit" autocomplete="off"/>
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +110,6 @@
         }
 
 
-
         function isCpptInKamar(examTime, kamarInap) {
             const invalidTanggal = kamarInap.tgl_keluar === "0000-00-00" && kamarInap.jam_keluar === "00:00:00"
             if (invalidTanggal) {
@@ -116,7 +123,7 @@
         function loadTableCpptVisit(month = '', year = '') {
             $('#table-cppt-visit').DataTable({
                 ajax: {
-                    url: `${url}/ranap/visit/cppt/json`,
+                    ururl: `/dms/ranap/visit/cppt/json`,
                     data: {
                         month: month,
                         year: year,
@@ -137,7 +144,7 @@
                 },
                 paging: true,
                 dom: 'Blfrtip',
-                initComplete: function(settings, json) {
+                initComplete: function (settings, json) {
                     toastr.success('Data telah dimuat', 'Berhasil');
                 },
                 language: {
@@ -170,11 +177,11 @@
                     search: 'Cari Pasien : ',
                 },
                 buttons: [{
-                        extend: 'copy',
-                        text: '<i class="fas fa-copy"></i> Salin',
-                        className: 'btn btn-info',
-                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
-                    },
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy"></i> Salin',
+                    className: 'btn btn-info',
+                    title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                },
                     {
                         extend: 'csv',
                         text: '<i class="fas fa-file-csv"></i> CSV',
@@ -189,13 +196,13 @@
                     },
                 ],
                 columns: [{
-                        name: 'no_rawat',
-                        data: 'no_rawat',
-                        render: (data, type, row, meta) => {
-                            return data;
-                        },
-                        title: 'No. Rawat',
+                    name: 'no_rawat',
+                    data: 'no_rawat',
+                    render: (data, type, row, meta) => {
+                        return data;
                     },
+                    title: 'No. Rawat',
+                },
                     {
                         name: 'nama',
                         data: 'reg_periksa.pasien.nm_pasien',
@@ -252,10 +259,11 @@
                 ],
             });
         }
-        $(document).ready(function() {
+
+        $(document).ready(function () {
             loadTableCpptVisit()
 
-            $("#exportVisit").click(function(e) {
+            $("#exportVisit").click(function (e) {
                 const table = $('#visitTable');
                 if (table && table.length) {
                     var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
@@ -292,9 +300,7 @@
             });
 
 
-
-
-            $('#monthPickerCpptVisit').on('change.datetimepicker', function(e) {
+            $('#monthPickerCpptVisit').on('change.datetimepicker', function (e) {
                 const month = e.date.month() + 1;
                 const year = e.date.year();
                 loadTableCpptVisit(month, year)
@@ -304,20 +310,20 @@
 
             function load_data(tahun = '') {
                 $.ajax({
-                    url: `${url}/ranap/visit/json`,
+                    ururl: `/dms/ranap/visit/json`,
                     method: "GET",
                     data: {
                         tahun: tahun
                     },
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         var tableBody = $("#visitTable tbody");
                         tableBody.empty();
 
                         var doctorData = {};
 
-                        $.each(data, function(month, visits) {
-                            $.each(visits, function(doctor, count) {
+                        $.each(data, function (month, visits) {
+                            $.each(visits, function (doctor, count) {
                                 if (!doctorData[doctor]) {
                                     doctorData[doctor] = {
                                         "Januari": 0,
@@ -338,7 +344,7 @@
                             });
                         });
 
-                        $.each(doctorData, function(doctor, months) {
+                        $.each(doctorData, function (doctor, months) {
                             var row = "<tr>" +
                                 "<td>" + doctor + "</td>" +
                                 "<td>" + months.Januari + "</td>" +
@@ -357,13 +363,13 @@
                             tableBody.append(row);
                         });
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log("Error fetching data", error);
                     }
                 });
             }
 
-            $('#yearpicker').on('change.datetimepicker', function() {
+            $('#yearpicker').on('change.datetimepicker', function () {
                 var tahun = $(this).val();
                 $('#table-visit-dokter').DataTable().destroy();
                 load_data(tahun);
