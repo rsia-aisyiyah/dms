@@ -138,6 +138,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('/ranap/jk/json', [RanapController::class, 'jsonGenderRanap']);
 	Route::get('/ranap/transfusi/rekap/json', [RanapController::class, 'jsonRekapTransfusi']);
 	Route::get('/ranap/pembiayaan/json', [RanapController::class, 'jsonpPembiayaan']);
+	Route::get('/ranap/status/json', [RanapController::class, 'jsonStatusBaru']);
 
 	Route::get('/kamar', [KamarInapController::class, 'jumlahKamar']);
 	Route::get('/kamar/rekap', [KamarInapController::class, 'rekapKunjungan']);

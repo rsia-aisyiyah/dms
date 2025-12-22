@@ -1,7 +1,7 @@
-<div class="col-12 col-sm-12 col-md-3">
+<div class="col-lg-3 col-sm-12 col-md-12">
     <div class="card card-teal">
         <div class="card-header">
-            <p class="card-title border-bottom-0">Cara Bayar Pasien</p>
+            <p class="card-title border-bottom-0">Berdasar Status Registrasi</p>
         </div>
         <div class="card-body">
             <div class="row">
@@ -14,20 +14,20 @@
                                     <span class="input-group-text" id="tahun-addon"><i
                                                 class="fas fa-calendar"></i></span>
                                 </div>
-                                <input type="text" id="yearpicker" class="form-control datetimepicker-input"
+                                <input type="text" id="yearpicker-status" class="form-control datetimepicker-input"
                                        data-toggle="datetimepicker" aria-describedby="tahun-addon"
-                                       data-target="#yearpicker" autocomplete="off"/>
+                                       data-target="#yearpicker-status" autocomplete="off"/>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-striped text-sm" id="table-pembayaran" style="width: 100%"
+                        <table class="table table-striped text-sm" id="tableStatusRegRanap" style="width: 100%"
                                cellspacing="0">
                             <thead>
                             <tr>
                                 <th>Bulan</th>
-                                <th>BPJS</th>
-                                <th>Umum</th>
+                                <th>Baru</th>
+                                <th>Lama</th>
                                 <th>Jumlah</th>
                             </tr>
                             </thead>
@@ -43,7 +43,7 @@
         $(document).ready(function () {
 
 
-            $('#yearpicker').datetimepicker({
+            $('#yearpicker-status').datetimepicker({
                 format: "YYYY",
                 useCurrent: false,
                 viewMode: "years"
@@ -52,9 +52,9 @@
             load_data();
 
             function load_data(tahun) {
-                $('#table-pembayaran').DataTable({
+                $('#tableStatusRegRanap').DataTable({
                     ajax: {
-                        url: 'ranap/bayar/json',
+                        url: 'ranap/status/json',
                         dataType: 'json',
                         data: {
                             tahun: tahun,
@@ -87,38 +87,48 @@
                             },
                         },
                     },
-                    buttons: [
-                        {
-                            extend: 'copy',
-                            text: '<i class="fas fa-copy"></i> Salin',
-                            className: 'btn btn-info',
-                            title: 'laporan-jumlah-pasien-bayi-{{date("dmy")}}'
-                        },
+                    buttons: [{
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> Salin',
+                        className: 'btn btn-info',
+                        title: 'laporan-ranap-status-{{ date('dmy') }}'
+                    },
                         {
                             extend: 'csv',
                             text: '<i class="fas fa-file-csv"></i> CSV',
                             className: 'btn btn-info',
-                            title: 'laporan-jumlah-pasien-bayi-{{date("dmy")}}'
+                            title: 'laporan-ranap-status-{{ date('dmy') }}'
                         },
                         {
                             extend: 'excel',
                             text: '<i class="fas fa-file-excel"></i> Excel',
                             className: 'btn btn-info',
-                            title: 'laporan-jumlah-pasien-bayi-{{date("dmy")}}'
+                            title: 'laporan-ranap-status-{{ date('dmy') }}'
                         },
                     ],
-                    columns: [
-                        {data: 'bulan', name: 'bulan'},
-                        {data: 'bpjs', name: 'bpjs'},
-                        {data: 'umum', name: 'umum'},
-                        {data: 'jumlah', name: 'jumlah'},
+                    columns: [{
+                        data: 'bulan',
+                        name: 'bulan'
+                    },
+                        {
+                            data: 'baru',
+                            name: 'baru'
+                        },
+                        {
+                            data: 'lama',
+                            name: 'lama'
+                        },
+                        {
+                            data: 'jumlah',
+                            name: 'jumlah'
+                        },
                     ],
                 });
             }
 
-            $('#yearpicker').on('change.datetimepicker', function () {
+            $('#yearpicker-status').on('change.datetimepicker', function () {
                 var tahun = $(this).val();
-                $('#table-pembayaran').DataTable().destroy();
+                $('#tableStatusRegRanap').DataTable().destroy();
                 load_data(tahun);
             });
 

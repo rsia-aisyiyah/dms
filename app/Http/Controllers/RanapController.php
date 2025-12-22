@@ -407,6 +407,46 @@ class RanapController extends Controller
 		}
 	}
 
+	public function jsonStatusBaru(Request $request)
+	{
+		$tahun = $request->filled('tahun') ? $request->tahun : now()->year;
+
+//		if ($request->ajax()) {
+
+		$data = [];
+		$tanggal = Carbon::now();
+
+		for ($i = 1; $i <= 12; $i++) {
+
+			$baseQuery = KamarInap::whereYear('tgl_keluar', $tahun)
+				->whereMonth('tgl_keluar', $i)
+				->where('stts_pulang', '!=', 'Pindah Kamar');
+
+			$baru = (clone $baseQuery)
+				->whereHas('regPeriksa', function ($q) {
+					$q->where('stts_daftar', 'Baru');
+				})->count();
+
+			$lama = (clone $baseQuery)
+				->whereHas('regPeriksa', function ($q) {
+					$q->where('stts_daftar', 'Lama');
+				})->count();
+
+			$bulan = $tanggal->copy()->month($i)->translatedFormat('F');
+
+			$data[$bulan] = (object)[
+				'bulan' => $bulan . ' ' . $tahun,
+				'baru' => $baru,
+				'lama' => $lama,
+				'jumlah' => $baru + $lama,
+			];
+		}
+
+		return DataTables::of($data)->make(true);
+//		}
+
+	}
+
 	public function jsonVisitDokter(Request $request)
 	{
 		$visit = new VisitDokterService();

@@ -17,7 +17,7 @@
                                 <label>Filter Data </label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="tanggal" name="tanggal"
-                                        autocomplete="off" />
+                                           autocomplete="off"/>
                                 </div>
                             </div>
                         </div>
@@ -64,29 +64,29 @@
                         <div class="col-12">
                             <div class="table-responsive text-sm">
                                 <table class="table table-bordered table-striped" id="tabel-ranap" style="width: 100%"
-                                    cellspacing="0">
+                                       cellspacing="0">
                                     <thead>
-                                        <tr>
-                                            <th>No Rawat</th>
-                                            <th>Tanggal Registrasi</th>
-                                            <th>No. RM</th>
-                                            <th>Nama</th>
-                                            <th>JK</th>
-                                            <th>Umur</th>
-                                            <th>Tgl. Lahir</th>
-                                            <th>Alamat</th>
-                                            <th>No. HP</th>
-                                            <th>Status Daftar</th>
-                                            <th>DPJP</th>
-                                            <th>Spesialis</th>
-                                            <th>Kamar</th>
-                                            <th>Dx. Masuk</th>
-                                            <th>Dx. AKhir</th>
-                                            <th>Pembiayaan</th>
-                                            <th>Tanggal Masuk</th>
-                                            <th>Tanggal Keluar</th>
-                                            <th>Tanggal SEP</th>
-                                        </tr>
+                                    <tr>
+                                        <th>No Rawat</th>
+                                        <th>Tanggal Registrasi</th>
+                                        <th>No. RM</th>
+                                        <th>Nama</th>
+                                        <th>JK</th>
+                                        <th>Umur</th>
+                                        <th>Tgl. Lahir</th>
+                                        <th>Alamat</th>
+                                        <th>No. HP</th>
+                                        <th>Status Daftar</th>
+                                        <th>DPJP</th>
+                                        <th>Spesialis</th>
+                                        <th>Kamar</th>
+                                        <th>Dx. Masuk</th>
+                                        <th>Dx. AKhir</th>
+                                        <th>Pembiayaan</th>
+                                        <th>Tanggal Masuk</th>
+                                        <th>Tanggal Keluar</th>
+                                        <th>Tanggal SEP</th>
+                                    </tr>
                                     </thead>
                                 </table>
                             </div>
@@ -96,6 +96,7 @@
             </div>
         </div>
         @include('dashboard.content.ranap.list_pembayaran_ranap')
+        @include('dashboard.content.ranap.list_status')
         @include('dashboard.content.ranap.list_pembiyaan')
         @include('dashboard.content.ranap.list_rekap_tahunan')
         @include('dashboard.content.ranap.list_jk_ranap')
@@ -111,9 +112,9 @@
         var kd_dokter = '';
         var pembiayaan = $('#pembiayaan').val();
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-            $('#tanggal').on('apply.daterangepicker', function(env, picker) {
+            $('#tanggal').on('apply.daterangepicker', function (env, picker) {
 
                 tgl_pertama = picker.startDate.format('YYYY-MM-DD');
                 tgl_kedua = picker.endDate.format('YYYY-MM-DD');
@@ -150,14 +151,14 @@
                 load_data(tgl_pertama, tgl_kedua, daftar, poli, kd_dokter, pembiayaan);
             });
 
-            $('#daftar').on('change', function() {
+            $('#daftar').on('change', function () {
                 daftar = $(this).val();
                 cekTanggal();
                 $('#tabel-ranap').DataTable().destroy();
                 load_data(tgl_pertama, tgl_kedua, daftar);
             });
 
-            $('#poli').on('change', function() {
+            $('#poli').on('change', function () {
                 poli = $(this).val();
                 cekTanggal();
                 daftar = $('#daftar').val();
@@ -173,12 +174,12 @@
                             "_token": "{{ csrf_token() }}"
                         },
                         dataType: "json",
-                        success: function(data) {
+                        success: function (data) {
                             if (data) {
                                 $('#dokter').empty();
                                 $('#dokter').append(
                                     '<option hidden value="">Pilih Dokter</option>');
-                                $.each(data, function(key, dokter) {
+                                $.each(data, function (key, dokter) {
                                     $('select[name="dokter"]').append(
                                         '<option value="' + dokter.kd_dokter +
                                         '">' + dokter.nm_dokter + '</option>');
@@ -194,14 +195,14 @@
 
             });
 
-            $('#dokter').on('change', function() {
+            $('#dokter').on('change', function () {
                 dokter = $(this).val();
                 cekTanggal();
                 $('#tabel-ranap').DataTable().destroy();
                 load_data(tgl_pertama, tgl_kedua, $('#daftar').val(), $('#poli').val(), dokter);
             });
 
-            $('#pembiayaan').on('change', function() {
+            $('#pembiayaan').on('change', function () {
                 cekTanggal();
                 $('#tabel-ranap').DataTable().destroy();
                 load_data(tgl_pertama, tgl_kedua, $('#daftar').val(), $('#poli').val(), $('#dokter').val(),
@@ -239,7 +240,7 @@
                     },
                     paging: true,
                     dom: 'Blfrtip',
-                    initComplete: function(settings, json) {
+                    initComplete: function (settings, json) {
                         toastr.success('Data telah dimuat', 'Berhasil');
                     },
                     language: {
@@ -272,11 +273,11 @@
                         search: 'Cari Pasien : ',
                     },
                     buttons: [{
-                            extend: 'copy',
-                            text: '<i class="fas fa-copy"></i> Salin',
-                            className: 'btn btn-info',
-                            title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
-                        },
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> Salin',
+                        className: 'btn btn-info',
+                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                    },
                         {
                             extend: 'csv',
                             text: '<i class="fas fa-file-csv"></i> CSV',
@@ -291,9 +292,9 @@
                         },
                     ],
                     columns: [{
-                            data: 'no_rawat',
-                            name: 'no_rawat'
-                        },
+                        data: 'no_rawat',
+                        name: 'no_rawat'
+                    },
                         {
                             data: 'tgl_registrasi',
                             name: 'tgl_registrasi'
