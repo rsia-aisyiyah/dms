@@ -18,16 +18,15 @@
                                     <label>Tanggal :</label>
                                     <div class="input-group">
                                         <input type="date" class="form-control" id="tgl_pertama" name="tgl_pertama"
-                                               autocomplete="off"/>
+                                            autocomplete="off" />
                                         <div class="input-group-append">
                                             <span class="input-group-text">s.d</span>
                                         </div>
                                         <input type="date" class="form-control" id="tgl_kedua" name="tgl_kedua"
-                                               autocomplete="off"/>
+                                            autocomplete="off" />
 
                                         <div class="input-group-append">
-                                            <button type="button" onclick="reloadTbPasienRalan()"
-                                                    class="btn btn-success">
+                                            <button type="button" onclick="reloadTbPasienRalan()" class="btn btn-success">
                                                 <i class="fa fa-search"></i>
                                             </button>
                                         </div>
@@ -80,21 +79,25 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="table-responsive text-sm">
-                                <table class="table table-bordered" id="table-kunjungan-pasien-rajal"
-                                       style="width: 100%"
-                                       cellspacing="0">
+                                <table class="table table-bordered" id="table-kunjungan-pasien-rajal" style="width: 100%"
+                                    cellspacing="0">
                                     <thead>
-                                    <tr>
-                                        <th>Tanggal Registrasi</th>
-                                        <th>Nama Pasien</th>
-                                        <th>Tanggal Lahir</th>
-                                        <th>Alamat</th>
-                                        <th>Status Daftar</th>
-                                        <th>Pembiayaan</th>
-                                        <th>Penanggung Jawab</th>
-                                        <th>No. HP</th>
-                                        <th>Dokter PJ</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Tanggal Registrasi</th>
+                                            <th>No. Rawat</th>
+                                            <th>No. RM</th>
+                                            <th>Nama Pasien</th>
+                                            <th>Tanggal Lahir</th>
+                                            <th>Alamat</th>
+                                            <th>Status Daftar</th>
+                                            <th>Pembiayaan</th>
+                                            <th>Penanggung Jawab</th>
+                                            <th>No. HP</th>
+                                            <th>Poliklinik</th>
+                                            <th>Dokter PJ</th>
+                                            <th>Kode ICD</th>
+                                            <th>Status Layan</th>
+                                        </tr>
                                     </thead>
                                 </table>
                             </div>
@@ -113,17 +116,15 @@
                                 <div class="form-group">
                                     <label>Tanggal :</label>
                                     <div class="input-group">
-                                        <input type="date" class="form-control" id="tgl1" name="tgl1"
-                                               autocomplete="off"/>
+                                        <input type="date" class="form-control" id="tgl1" name="tgl1" autocomplete="off" />
                                         <div class="input-group-append">
                                             <span class="input-group-text">s.d</span>
                                         </div>
-                                        <input type="date" class="form-control" id="tgl2" name="tgl2"
-                                               autocomplete="off"/>
+                                        <input type="date" class="form-control" id="tgl2" name="tgl2" autocomplete="off" />
                                         <div class="input-group-append">
 
                                             <button type="button" onclick="reloadTbPemeriksaanRalan()"
-                                                    class="btn btn-success">
+                                                class="btn btn-success">
                                                 <i class="fa fa-search"></i>
                                             </button>
                                         </div>
@@ -157,9 +158,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="table-responsive text-sm">
-                                <table class="table table-bordered" id="tbPameriksaanRalan"
-                                       style="width: 100%"
-                                       cellspacing="0">
+                                <table class="table table-bordered" id="tbPameriksaanRalan" style="width: 100%"
+                                    cellspacing="0">
                                     <thead>
 
                                     </thead>
@@ -389,55 +389,79 @@
                     className: 'btn btn-info',
                     title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
                 },
-                    {
-                        extend: 'csv',
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        className: 'btn btn-info',
-                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
-                    },
-                    {
-                        extend: 'excel',
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-info',
-                        title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
-                    },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv"></i> CSV',
+                    className: 'btn btn-info',
+                    title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-info',
+                    title: 'laporan-kunjungan-pasien-rawat-jalan{{ date('dmy') }}'
+                },
                 ],
                 columns: [{
                     data: 'tgl_registrasi',
                     name: 'tgl_registrasi'
                 },
-                    {
-                        data: 'nm_pasien',
-                        name: 'nm_pasien'
-                    },
-                    {
-                        data: 'tgl_lahir',
-                        name: 'tgl_lahir'
-                    },
-                    {
-                        data: 'alamat',
-                        name: 'alamat'
-                    },
-                    {
-                        data: 'stts_daftar',
-                        name: 'stts_daftar'
-                    },
-                    {
-                        data: 'png_jawab',
-                        name: 'png_jawab'
-                    },
-                    {
-                        data: 'p_jawab',
-                        name: 'p_jawab'
-                    },
-                    {
-                        data: 'no_tlp',
-                        name: 'no_tlp'
-                    },
-                    {
-                        data: 'nm_dokter',
-                        name: 'nm_dokter'
-                    },
+                {
+                    data: 'no_rawat',
+                    name: 'no_rawat'
+                },
+                {
+                    data: 'no_rkm_medis',
+                    name: 'no_rkm_medis'
+                },
+                {
+                    data: 'nm_pasien',
+                    name: 'nm_pasien'
+                },
+
+                {
+                    data: 'tgl_lahir',
+                    name: 'tgl_lahir'
+                },
+                {
+                    data: 'alamat',
+                    name: 'alamat'
+                },
+                {
+                    data: 'stts_daftar',
+                    name: 'stts_daftar'
+                },
+                {
+                    data: 'png_jawab',
+                    name: 'png_jawab'
+                },
+                {
+                    data: 'p_jawab',
+                    name: 'p_jawab'
+                },
+                {
+                    data: 'no_tlp',
+                    name: 'no_tlp'
+                },
+                {
+                    data: 'poliklinik',
+                    name: 'poliklinik'
+                },
+                {
+                    data: 'nm_dokter',
+                    name: 'nm_dokter'
+                },
+                {
+                    data: 'diagnosis',
+                    name: 'diagnosis',
+                },
+                {
+                    data: 'status_layanan',
+                    name: 'status_layanan',
+                    render: (data, type, row, meta) => {
+                        return `<span class="badge bg-${data === 'Sudah' ? 'success' : 'danger'}">${data}</span>`
+                    }
+                }
                 ],
             });
         }
@@ -504,18 +528,18 @@
                     className: 'btn btn-info',
                     title: 'laporan-pemeriksaan-rawat-jalan{{ date('dmy') }}'
                 },
-                    {
-                        extend: 'csv',
-                        text: '<i class="fas fa-file-csv"></i> CSV',
-                        className: 'btn btn-info',
-                        title: 'laporan-pemeriksaan-rawat-jalan{{ date('dmy') }}'
-                    },
-                    {
-                        extend: 'excel',
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-info',
-                        title: 'laporan-pemeriksaan-rawat-jalan{{ date('dmy') }}'
-                    },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv"></i> CSV',
+                    className: 'btn btn-info',
+                    title: 'laporan-pemeriksaan-rawat-jalan{{ date('dmy') }}'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-info',
+                    title: 'laporan-pemeriksaan-rawat-jalan{{ date('dmy') }}'
+                },
                 ],
                 columns: [
                     {
@@ -636,6 +660,14 @@
                         data: 'dokter.spesialis.nm_sps',
                         name: 'dokter.spesialis.nm_sps',
                         title: 'Spesialis'
+                    },
+                    {
+                        data: 'reg_periksa.diagnosa_pasien',
+                        name: 'reg_periksa.diagnosa_pasien',
+                        title: 'Diagnosis',
+                        render: (data, type, row, meta) => {
+                            return data ? data.kd_penyakit : '-';
+                        }
                     },
 
 

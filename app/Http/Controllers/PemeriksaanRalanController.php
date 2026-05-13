@@ -20,7 +20,7 @@ class PemeriksaanRalanController extends Controller
 		$tgl1 = $request->tgl1;
 		$tgl2 = $request->tgl2;
 
-		$data = $this->model->with(['regPeriksa.pasien', 'petugas', 'dokter.spesialis'])
+		$data = $this->model->with(['regPeriksa.pasien', 'regPeriksa.diagnosaPasien', 'petugas', 'dokter.spesialis'])
 			->whereHas('regPeriksa', function ($q) {
 				return $q->where('stts', '!=', 'Batal');
 			})->whereHas('dokter');

@@ -54,10 +54,11 @@ class RalanController extends Controller
 
 
 		$data = RegPeriksa::where('stts', '!=', 'Batal')
-			->orderBy('tgl_registrasi', 'asc')
+			->orderBy('no_rawat', 'asc')
 			->where('status_lanjut', 'Ralan')
+			->whereDoesntHave('kamarInap')
 			->whereHas('dokter', function ($query) {
-				$query->whereIn('kd_sps', ['S0001', 'S0003', 'S0005']);
+				$query->whereIn('kd_sps', ['S0001', 'S0003', 'S0005', 'S0007']);
 			});
 
 
@@ -105,8 +106,11 @@ class RalanController extends Controller
 			->editColumn('tgl_registrasi', function ($data) {
 				return Carbon::parse($data->tgl_registrasi)->translatedFormat('d F Y');
 			})
+			->editColumn('no_rkm_medis', function ($data) {
+				return $data->no_rkm_medis;
+			})
 			->editColumn('nm_pasien', function ($data) {
-				return $data->pasien->nm_pasien . " ( No. RM " . $data->no_rkm_medis . ")";
+				return $data->pasien->nm_pasien;
 			})
 			->editColumn('tgl_lahir', function ($data) {
 				return Carbon::parse($data->pasien->tgl_lahir)->translatedFormat('d F Y');
@@ -125,13 +129,24 @@ class RalanController extends Controller
 			->editColumn('png_jawab', function ($data) {
 				return $data->penjab->png_jawab;
 			})
+			->editColumn('poliklinik', function ($data) {
+				return $data->poliklinik->nm_poli;
+			})
 			->editColumn('no_tlp', function ($data) {
 				return $data->pasien->no_tlp;
 			})
 			->editColumn('nm_dokter', function ($data) {
 				return $data->dokter->nm_dokter;
 			})
-			->rawColumns(['stts_daftar'])
+			->editColumn('status_layanan', function ($data) {
+				return $data->stts;
+			})
+			->editColumn('diagnosis', function ($data) {
+				return $data->diagnosa->filter(function ($item) {
+					return $item->prioritas == 1;
+				})->pluck('penyakit.kd_penyakit')->implode('<br/>');
+			})
+			->rawColumns(['stts_daftar', 'diagnosis', 'status_layanan'])
 			->make(true);
 	}
 
